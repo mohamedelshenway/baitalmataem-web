@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#151515"/>
+      <stop offset="55%" stop-color="#322f2d"/>
+      <stop offset="100%" stop-color="#5c1216"/>
+    </linearGradient>
+    <pattern id="dots" width="42" height="42" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#c8a45d" fill-opacity="0.10"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <rect width="1200" height="800" fill="url(#dots)"/>
+<g transform="translate(600.0,360.0)">
+    <circle cx="0" cy="0" r="76" fill="none" stroke="#c8a45d" stroke-opacity="0.55" stroke-width="1.5"/>
+    <g fill="none" stroke="#e8d9b8" stroke-opacity="0.95" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="50.0,0.0 37.0,15.3 35.4,35.4 15.3,37.0 0.0,50.0 -15.3,37.0 -35.4,35.4 -37.0,15.3 -50.0,0.0 -37.0,-15.3 -35.4,-35.4 -15.3,-37.0 -0.0,-50.0 15.3,-37.0 35.4,-35.4 37.0,-15.3"/>
+      <circle cx="0" cy="0" r="18"/>
+    </g>
+  </g>
+  <text x="600.0" y="730" font-family="Tahoma, Arial, sans-serif" font-size="30" fill="#ffffff" text-anchor="middle" font-weight="700">تشغيل وتطوير المطاعم</text>
+  <text x="600.0" y="762" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" fill-opacity="0.75" text-anchor="middle" letter-spacing="1">Bait Al Mataem — Placeholder</text>
+</svg>

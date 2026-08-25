@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#151515"/>
+      <stop offset="55%" stop-color="#322f2d"/>
+      <stop offset="100%" stop-color="#5c1216"/>
+    </linearGradient>
+    <pattern id="dots" width="42" height="42" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#c8a45d" fill-opacity="0.10"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <rect width="1200" height="800" fill="url(#dots)"/>
+<g transform="translate(600.0,360.0)"><circle cx="0" cy="0" r="76" fill="none" stroke="#c8a45d" stroke-opacity="0.55" stroke-width="1.5"/><line x1="0" y1="-56" x2="-52" y2="-10" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="0" y1="-56" x2="52" y2="-10" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="0" y1="-56" x2="-32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="0" y1="-56" x2="32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="-52" y1="-10" x2="52" y2="-10" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="-52" y1="-10" x2="-32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="-52" y1="-10" x2="32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="52" y1="-10" x2="-32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="52" y1="-10" x2="32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><line x1="-32" y1="54" x2="32" y2="54" stroke="#e8d9b8" stroke-opacity="0.35" stroke-width="1.6"/><circle cx="0" cy="-56" r="7" fill="#e8d9b8"/><circle cx="-52" cy="-10" r="7" fill="#e8d9b8"/><circle cx="52" cy="-10" r="7" fill="#e8d9b8"/><circle cx="-32" cy="54" r="7" fill="#e8d9b8"/><circle cx="32" cy="54" r="7" fill="#e8d9b8"/></g>
+  <text x="600.0" y="730" font-family="Tahoma, Arial, sans-serif" font-size="30" fill="#ffffff" text-anchor="middle" font-weight="700">فريق بيت المطاعم</text>
+  <text x="600.0" y="762" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" fill-opacity="0.75" text-anchor="middle" letter-spacing="1">Bait Al Mataem — Placeholder</text>
+</svg>

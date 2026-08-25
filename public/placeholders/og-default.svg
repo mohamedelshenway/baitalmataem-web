@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#151515"/>
+      <stop offset="60%" stop-color="#322f2d"/>
+      <stop offset="100%" stop-color="#5c1216"/>
+    </linearGradient>
+    <pattern id="dots" width="42" height="42" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#c8a45d" fill-opacity="0.10"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#dots)"/>
+  <line x1="500" y1="330" x2="700" y2="330" stroke="#c8a45d" stroke-width="3"/>
+  <text x="600" y="300" font-family="Tahoma, Arial, sans-serif" font-size="66" fill="#ffffff" text-anchor="middle" font-weight="700">بيت المطاعم</text>
+  <text x="600" y="372" font-family="Arial, sans-serif" font-size="24" fill="#e8d9b8" text-anchor="middle" letter-spacing="4">BAIT AL MATAEM</text>
+  <text x="600" y="410" font-family="Arial, sans-serif" font-size="20" fill="#ffffff" fill-opacity="0.7" text-anchor="middle">baitalmataem.com</text>
+</svg>

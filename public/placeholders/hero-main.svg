@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="hg" x1="0" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#151515"/>
+      <stop offset="45%" stop-color="#322f2d"/>
+      <stop offset="100%" stop-color="#5c1216"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#8b1e24" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#8b1e24" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="46" height="46" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.5" fill="#c8a45d" fill-opacity="0.08"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#hg)"/>
+  <rect width="1920" height="1080" fill="url(#glow)"/>
+  <rect width="1920" height="1080" fill="url(#dots)"/>
+  <line x1="0" y1="140" x2="1920" y2="140" stroke="#c8a45d" stroke-opacity="0.18" stroke-width="1"/>
+  <g opacity="0.9">
+    <rect x="-20" y="602" width="111" height="158" fill="#151515" fill-opacity="0.55"/><rect x="-6" y="628" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="36" y="628" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="109" y="622" width="76" height="138" fill="#151515" fill-opacity="0.55"/><rect x="123" y="648" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="147" y="648" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="194" y="491" width="116" height="269" fill="#151515" fill-opacity="0.55"/><rect x="208" y="517" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="252" y="517" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="317" y="586" width="134" height="174" fill="#151515" fill-opacity="0.55"/><rect x="331" y="612" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="384" y="612" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="458" y="529" width="81" height="231" fill="#151515" fill-opacity="0.55"/><rect x="472" y="555" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="498" y="555" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="558" y="579" width="78" height="181" fill="#151515" fill-opacity="0.55"/><rect x="572" y="605" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="597" y="605" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="644" y="532" width="140" height="228" fill="#151515" fill-opacity="0.55"/><rect x="658" y="558" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="714" y="558" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="791" y="609" width="142" height="151" fill="#151515" fill-opacity="0.55"/><rect x="805" y="635" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="862" y="635" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="946" y="480" width="150" height="280" fill="#151515" fill-opacity="0.55"/><rect x="960" y="506" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1021" y="506" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1103" y="491" width="143" height="269" fill="#151515" fill-opacity="0.55"/><rect x="1117" y="517" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1174" y="517" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1264" y="584" width="76" height="176" fill="#151515" fill-opacity="0.55"/><rect x="1278" y="610" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1302" y="610" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1347" y="421" width="141" height="339" fill="#151515" fill-opacity="0.55"/><rect x="1361" y="447" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1418" y="447" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1498" y="533" width="107" height="227" fill="#151515" fill-opacity="0.55"/><rect x="1512" y="559" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1552" y="559" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1615" y="610" width="139" height="150" fill="#151515" fill-opacity="0.55"/><rect x="1629" y="636" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1684" y="636" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1769" y="432" width="141" height="328" fill="#151515" fill-opacity="0.55"/><rect x="1783" y="458" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1840" y="458" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1921" y="492" width="83" height="268" fill="#151515" fill-opacity="0.55"/><rect x="1935" y="518" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/><rect x="1962" y="518" width="8" height="12" fill="#c8a45d" fill-opacity="0.35"/>
+  </g>
+  <rect x="0" y="756" width="1920" height="324" fill="#151515"/>
+  <line x1="60" y1="960" x2="360" y2="960" stroke="#c8a45d" stroke-opacity="0.5" stroke-width="2"/>
+  <text x="60" y="1030" font-family="Arial, sans-serif" font-size="20" fill="#ffffff" fill-opacity="0.35" letter-spacing="1">Placeholder visual — Bait Al Mataem</text>
+</svg>
