@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  @apply bg-sand-50 text-ink-900 antialiased;
+}
+
+/* كل الكلاسات المخصصة أدناه داخل @layer components عمدًا، حتى تُدرج في الـCascade قبل طبقة utilities —
+   بدون هذا، أي محاولة override لاحقًا بكلاس utility (مثال: eyebrow mb-5 text-gold-500) قد تُهزم بصمت
+   لأن الكلاس المخصص كان سيُدرج بعد الـutilities في المخرج النهائي رغم تساوي الـspecificity. */
+@layer components {
+  /* RTL-aware focus ring */
+  .focus-ring {
+    @apply outline-none ring-2 ring-ember-600 ring-offset-2 ring-offset-sand-50;
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .input-field {
+    @apply focus-ring w-full rounded-btn border border-sand-200 bg-white p-3 text-sm text-ink-900 transition-colors placeholder:text-ink-400;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.08em] text-ember-600;
+  }
+
+  .prose-article :where(h2) {
+    @apply mb-3 mt-10 text-2xl font-bold text-ink-900;
+  }
+  .prose-article :where(h3) {
+    @apply mb-2 mt-7 text-xl font-bold text-ink-900;
+  }
+  .prose-article :where(p) {
+    @apply mb-4 leading-8 text-ink-700;
+  }
+  .prose-article :where(ul) {
+    @apply mb-4 list-disc space-y-2 pe-6 marker:text-ember-600;
+  }
+  .prose-article :where(blockquote) {
+    @apply my-6 border-e-4 border-gold-500 bg-sand-100 py-4 pe-6 ps-5 text-ink-800;
+  }
+  .prose-article :where(table) {
+    @apply w-full border-collapse overflow-hidden rounded-card text-sm;
+  }
+  .prose-article :where(th) {
+    @apply bg-ink-950 p-2 text-start text-white;
+  }
+  .prose-article :where(td) {
+    @apply border-b border-sand-200 p-2;
+  }
+  .prose-article :where(a) {
+    @apply text-ember-600 underline decoration-ember-600/30 underline-offset-2 hover:decoration-ember-600;
+  }
+}
+
+/* Line clamp utilities (no plugin dependency) */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* -------- Scroll reveal (fade-up), respects reduced-motion -------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Subtle image zoom on card hover */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.img-zoom:hover img {
+  transform: scale(1.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .img-zoom img {
+    transition: none;
+  }
+  .img-zoom:hover img {
+    transform: none;
+  }
+}
+
+/* CTA arrow micro-movement — icon is a direct child span with data-arrow */
+.cta-arrow [data-arrow] {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cta-arrow:hover [data-arrow] {
+  transform: translateX(-3px);
+}
+[dir="ltr"] .cta-arrow:hover [data-arrow] {
+  transform: translateX(3px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-arrow [data-arrow] {
+    transition: none;
+  }
+  .cta-arrow:hover [data-arrow] {
+    transform: none;
+  }
+}
