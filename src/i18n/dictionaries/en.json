@@ -1,0 +1,393 @@
+{
+  "common": {
+    "siteName": "Bait Al Mataem",
+    "sampleDataNotice": "Sample data for preview purposes — not real listings yet",
+    "whatsapp": "Contact on WhatsApp",
+    "call": "Call",
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "priceOnRequest": "Price on request",
+    "contactNow": "Contact us now"
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "marketplace": "Opportunities",
+    "blog": "Blog",
+    "about": "About",
+    "contact": "Contact",
+    "addListing": "List Your Opportunity",
+    "consultCta": "Request a Consultation"
+  },
+  "languageBanner": {
+    "message": "It looks like your browser is in English. Would you like to view Bait Al Mataem in English?",
+    "switch": "English",
+    "stay": "العربية"
+  },
+  "home": {
+    "heroKicker": "Bait Al Mataem — Jeddah & Makkah",
+    "heroTitle": "Everything your restaurant project needs… in one place",
+    "heroSubtitle": "From feasibility studies and setup, to operations and development, to investing in and buying or selling restaurant opportunities across Saudi Arabia.",
+    "heroCta1": "Explore Opportunities",
+    "heroCta2": "List Your Restaurant or Site",
+    "heroCta3": "Request a Consultation",
+    "search": {
+      "label": "What are you looking for?",
+      "city": "City",
+      "allCities": "All cities",
+      "activity": "Activity",
+      "activityPlaceholder": "e.g. seafood, grill...",
+      "button": "Search opportunities",
+      "mobileTrigger": "Advanced opportunity search"
+    },
+    "trustStripTitle": "Specialized expertise. Operational vision. A clearer investment decision.",
+    "trustStripSubtitle": "Bait Al Mataem brings together specialized expertise to serve restaurant owners and investors in one place.",
+    "how": {
+      "title": "How can Bait Al Mataem help you?",
+      "subtitle": "Choose your goal and we'll connect you directly to the right service or opportunity.",
+      "opportunityTitle": "I'm looking for an investment opportunity",
+      "opportunityDesc": "Browse selected restaurants, sites, and investment opportunities across Saudi Arabia.",
+      "opportunityCta": "Explore the marketplace",
+      "listTitle": "I want to list a restaurant or site",
+      "listDesc": "Upload photos, video, and details easily — every listing is reviewed before it goes live.",
+      "listCta": "List your opportunity",
+      "feasibility": "I need a feasibility study",
+      "develop": "I want to develop my restaurant",
+      "consult": "I need an operational consultation"
+    },
+    "marketplaceKicker": "Selected opportunities",
+    "servicesTitle": "Bait Al Mataem Services",
+    "servicesSubtitle": "From the first idea to developing an existing business.",
+    "servicesFeatured1Title": "Restaurant Setup & Feasibility Studies",
+    "servicesFeatured1Desc": "Market study, site selection, and full operational setup — built on real numbers, not general assumptions.",
+    "servicesFeatured2Title": "Restaurant Operations & Development",
+    "servicesFeatured2Desc": "Clear operating systems and measurable development plans across 30, 60 and 90-day phases — instead of relying on specific individuals.",
+    "listingsTitle": "New opportunities in the restaurant market",
+    "listingsSubtitle": "Selected restaurants, sites, and investment opportunities across Saudi Arabia.",
+    "listingsCta": "View all opportunities",
+    "marketplaceTabAll": "All",
+    "blogTitle": "Bait Al Mataem Blog",
+    "blogHeadline": "Knowledge that helps you decide better",
+    "blogSubtitle": "Practical analysis and guides for restaurant owners and investors",
+    "blogCta": "Browse the blog",
+    "why": {
+      "title": "To us, a restaurant is an investment project… not just a place that sells food",
+      "desc": "We connect operations to numbers, market, and profitability before any decision.",
+      "point1": "Diagnose before solving",
+      "point2": "Decisions grounded in numbers",
+      "point3": "Real, on-the-ground operating experience",
+      "point4": "We view the project through both an investor's and an operator's eyes"
+    },
+    "team": {
+      "title": "Specialized expertise working as one team",
+      "text": "Bait Al Mataem brings together specialized expertise in restaurant setup, operations, development and investment, to give restaurant owners and investors an integrated view instead of handling each part of the project separately.",
+      "areas": ["Setup & Operations", "Feasibility Studies", "Opportunity Valuation", "Cost Management", "Process Development", "Marketing", "Customer Experience", "Investment Analysis"],
+      "execLabel": "Executive Leadership",
+      "execName": "Mohamed Elshenawy",
+      "execTitle": "Executive Director — Bait Al Mataem"
+    },
+    "investor": {
+      "title": "Thinking of investing in an existing restaurant?",
+      "subtitle": "Don't just buy the equipment and fit-out… understand the project's real value before deciding.",
+      "step1": "Screen the opportunity",
+      "step2": "Analyze operations and numbers",
+      "step3": "Evaluate price and risk",
+      "cta": "Request an opportunity evaluation",
+      "secondaryCta": "Browse available restaurants"
+    },
+    "listYours": {
+      "title": "Have a restaurant or site and looking for a buyer or investor?",
+      "subtitle": "Add your listing details yourself, upload up to 10 photos and two videos, and it will be reviewed before appearing on the platform.",
+      "benefit1": "Easy to submit from your phone",
+      "benefit2": "Reviewed before publishing",
+      "benefit3": "Communication handled through Bait Al Mataem",
+      "cta": "List your opportunity now"
+    },
+    "trustTitle": "How we work",
+    "trustSubtitle": "Bait Al Mataem doesn't rely on impressions — every decision is grounded in verified numbers",
+    "trustStep1Title": "Verify before opinion",
+    "trustStep1Desc": "We don't rely on a seller's or owner's numbers alone without attempting to verify them.",
+    "trustStep2Title": "Clear separation of fact and estimate",
+    "trustStep2Desc": "Every report or study distinguishes confirmed information from assumptions and professional opinion.",
+    "trustStep3Title": "Credibility before the deal",
+    "trustStep3Desc": "We don't hide material risks or promise guaranteed profits, even if it costs a deal."
+  },
+  "services": {
+    "pageTitle": "Bait Al Mataem Services",
+    "pageSubtitle": "End-to-end services for restaurant owners and investors in Saudi Arabia — from setup to development, valuation and brokerage",
+    "ctaGeneric": "Request this service",
+    "relatedTitle": "Other services you may need",
+    "list": {
+      "restaurant-setup": {
+        "title": "Restaurant Setup",
+        "short": "From idea to opening day: market study, site selection, and full operational setup.",
+        "body": [
+          "Opening a restaurant is a major decision that starts well before signing a lease. Bait Al Mataem helps you study the concept, market and competitors, and choose the right activity, location and size before spending a single riyal.",
+          "We also cover setup cost estimates, equipment, staffing needs, and a full pre-opening and opening plan — so you start on solid ground, not just enthusiasm."
+        ],
+        "keywords": ["restaurant setup Saudi Arabia", "opening a new restaurant"]
+      },
+      "restaurant-operations": {
+        "title": "Restaurant Operations & Management",
+        "short": "Clear operating systems instead of relying on specific individuals.",
+        "body": [
+          "Good operations is a system, not a dependency on one manager or chef. We help build the org structure, job descriptions, and standard operating procedures (SOPs) for every stage: receiving, storage, prep, production, service, cleanliness and food safety.",
+          "We also cover inventory, waste, purchasing, suppliers and performance evaluation, with recurring reports so you can track your business without being there every minute."
+        ],
+        "keywords": ["restaurant operations", "restaurant management", "restaurant SOPs"]
+      },
+      "restaurant-development": {
+        "title": "Restaurant Development",
+        "short": "Weak sales? We find the real cause before proposing any fix.",
+        "body": [
+          "When a restaurant underperforms, we don't assume the market is the problem. We analyze location, product, pricing, quality, service, menu, food cost, labor, waste, inventory and customer experience to find the real cause first.",
+          "Then we build a measurable development plan across 30, 60 and 90-day phases, with clear KPIs for each stage."
+        ],
+        "keywords": ["restaurant development", "struggling restaurant", "increase restaurant sales"]
+      },
+      "feasibility-study": {
+        "title": "Feasibility Studies",
+        "short": "Before you invest your capital, know — with numbers — whether the idea is worth it.",
+        "body": [
+          "A restaurant feasibility study in Saudi Arabia, as we build it, covers at minimum: activity description, market/area/competitor analysis, target audience, initial investment and setup costs, fixed and variable costs, projected sales, food cost and labor cost, break-even point, cash flow, ROI, and scenario analysis (conservative, expected, optimistic).",
+          "We don't invent numbers. When data is insufficient, we use reasonable estimates and state clearly that they are assumptions needing verification, always ending with a clear recommendation."
+        ],
+        "keywords": ["restaurant feasibility study", "feasibility study Saudi Arabia", "feasibility study Makkah", "feasibility study Jeddah"]
+      },
+      "restaurant-valuation": {
+        "title": "Restaurant Valuation Before Purchase",
+        "short": "Don't buy an opportunity based on the seller's numbers alone.",
+        "body": [
+          "Before buying or taking over an existing restaurant, we help verify actual sales, expenses, staffing, rent, liabilities, license status and equipment condition — instead of relying on the seller's word.",
+          "We calculate the real economic value of the opportunity, not just the asking price, and help you reach a clear decision: buy, buy after negotiation, further study, or decline."
+        ],
+        "keywords": ["restaurant valuation before purchase", "buying an existing restaurant"]
+      },
+      "restaurant-brokerage": {
+        "title": "Buying, Selling & Taking Over Restaurants",
+        "short": "Brokerage that reaches genuinely serious buyers and investors.",
+        "body": [
+          "Whether you want to sell or hand over your restaurant, or you're looking for an existing business to buy, Bait Al Mataem manages the process professionally: qualifying the other party, arranging viewings, managing negotiation, and following the deal through to close.",
+          "We protect your project's data from non-serious inquiries, and we never hide material information that affects an investor's decision."
+        ],
+        "keywords": ["restaurant for takeover", "restaurant for sale", "buy a restaurant", "restaurant takeover Makkah", "restaurant takeover Jeddah"]
+      },
+      "restaurant-consulting": {
+        "title": "Restaurant Consulting",
+        "short": "A direct professional opinion, even when it's not what you want to hear.",
+        "body": [
+          "Flexible consulting for restaurant owners and investors on any operational or investment decision: from site selection to menu pricing to evaluating an expansion opportunity.",
+          "We don't agree with an idea just because it's yours. If a decision is weak or the risk is high, we say so clearly and present alternatives."
+        ],
+        "keywords": ["restaurant consultant Saudi Arabia", "restaurant consultant Makkah", "restaurant consultant Jeddah"]
+      },
+      "cost-profitability": {
+        "title": "Cost & Profitability Analysis",
+        "short": "High sales alone don't mean a successful restaurant.",
+        "body": [
+          "We analyze the full relationship between sales, food cost, labor cost, rent, operating expenses, gross and net profit, and cash flow — because rising sales alone isn't proof of success.",
+          "The goal is healthy sales, real profitability and sustainable cash flow, not just an attractive sales figure on paper."
+        ],
+        "keywords": ["food cost", "labor cost", "restaurant profitability"]
+      },
+      "waste-management": {
+        "title": "Waste Management",
+        "short": "A large share of lost profit disappears in waste, not in sales.",
+        "body": [
+          "We review the receiving, storage, prep and inventory cycle to identify real sources of waste: poor storage, portion drift from recipes, weak inventory control, or mispricing.",
+          "We set clear, measurable operating procedures to reduce waste — not generic advice with no implementation."
+        ],
+        "keywords": ["restaurant waste reduction"]
+      },
+      "menu-development": {
+        "title": "Menu Development",
+        "short": "A menu built on numbers, not personal taste alone.",
+        "body": [
+          "We review each item's sales, profitability and food cost, identify your highest-margin and weakest-selling items, and propose changes that reduce operational complexity while raising margin.",
+          "The goal is a menu that's simpler to run and more profitable — not just more varied."
+        ],
+        "keywords": ["restaurant menu development", "menu engineering"]
+      },
+      "restaurant-marketing": {
+        "title": "Restaurant Marketing",
+        "short": "Marketing aimed at more orders and profit, not just views.",
+        "body": [
+          "We build a marketing plan tied to a clear business goal: more orders, a higher average check, more repeat visits, and better visibility on Google Maps, delivery apps and social media.",
+          "Every marketing activity we propose is tied to a measurable indicator, not just because it's trending."
+        ],
+        "keywords": ["restaurant marketing", "restaurant marketing Saudi Arabia"]
+      }
+    }
+  },
+  "marketplace": {
+    "pageTitle": "Opportunities Marketplace",
+    "pageSubtitle": "Restaurants for takeover and sale, units for lease, and investment opportunities in Jeddah and Makkah",
+    "addListingCta": "List your opportunity",
+    "filters": {
+      "title": "Filter results",
+      "city": "City",
+      "allCities": "All cities",
+      "kind": "Opportunity type",
+      "allKinds": "All types",
+      "priceRange": "Price range (SAR)",
+      "minPrice": "Min",
+      "maxPrice": "Max",
+      "minSize": "Minimum size (sqm)",
+      "reset": "Reset",
+      "resultsCount": "{count} opportunities"
+    },
+    "kinds": {
+      "restaurant_taqbeel": "Restaurant for takeover",
+      "restaurant_sale": "Restaurant for sale",
+      "lease_unit": "Unit for lease",
+      "investment_opportunity": "Investment opportunity",
+      "seeking_investor": "Restaurant seeking investor",
+      "operating_partner_needed": "Needs operating partner",
+      "site_for_restaurant": "Site suited for a restaurant"
+    },
+    "status": {
+      "available": "Available",
+      "negotiating": "In negotiation",
+      "reserved": "Reserved",
+      "closed": "Deal closed",
+      "unavailable": "Unavailable"
+    },
+    "noResults": "No opportunities match this search right now. Try adjusting the filters or contact us directly."
+  },
+  "listing": {
+    "backToMarketplace": "Back to opportunities",
+    "gallery": { "photos": "Photos", "videos": "Video" },
+    "specs": {
+      "title": "Opportunity details",
+      "activityType": "Activity type",
+      "dealType": "Deal type",
+      "price": "Price",
+      "rent": "Monthly rent",
+      "size": "Size",
+      "city": "City",
+      "area": "Area",
+      "operatingState": "Operating status",
+      "openings": "Openings",
+      "seating": "Seating capacity",
+      "equipment": "Equipment",
+      "kitchen": "Kitchen",
+      "parking": "Parking",
+      "parkingYes": "Available",
+      "parkingNo": "Not available"
+    },
+    "operatingStates": {
+      "operating": "Currently operating",
+      "closed_temporarily": "Temporarily closed",
+      "closed_permanently": "Permanently closed",
+      "not_applicable": "Not applicable"
+    },
+    "featuresTitle": "Key features",
+    "descriptionTitle": "Description",
+    "locationNotice": "Only the general area is shown here. The exact location and the owner's direct contact details are shared after coordination through Bait Al Mataem, to protect both parties.",
+    "ctaViewDetails": "View details",
+    "ctaViewing": "Request a viewing",
+    "ctaContact": "Contact Bait Al Mataem",
+    "ctaEvaluate": "Request an evaluation of this opportunity",
+    "similarTitle": "Similar opportunities",
+    "views": "{count} views"
+  },
+  "newListing": {
+    "title": "List Your Opportunity",
+    "subtitle": "Simple steps — every submission is reviewed by Bait Al Mataem before publishing. Nothing goes live automatically.",
+    "steps": {
+      "1": "Opportunity type",
+      "2": "City & area",
+      "3": "Activity",
+      "4": "Price",
+      "5": "Size",
+      "6": "Details",
+      "7": "Photos",
+      "8": "Video",
+      "9": "Contact details",
+      "10": "Review & submit"
+    },
+    "next": "Next",
+    "back": "Back",
+    "submit": "Submit for review",
+    "photosHint": "Up to 10 photos, via drag & drop or file picker. Drag to reorder — the first photo is the cover image.",
+    "setCover": "Set as cover",
+    "remove": "Remove",
+    "videosHint": "Up to two videos, 30 seconds max each.",
+    "videoTooLong": "This video is longer than 30 seconds and wasn't accepted. Please upload a shorter clip.",
+    "maxPhotosReached": "You've reached the limit (10 photos).",
+    "maxVideosReached": "You've reached the limit (2 videos).",
+    "contactName": "Name",
+    "contactPhone": "Phone number",
+    "contactCity": "City",
+    "reviewNotice": "Once submitted, your listing enters \"Pending Review\" and won't be published until Bait Al Mataem's team approves it. We may contact you to clarify or adjust details first.",
+    "successTitle": "Your opportunity has been received",
+    "successBody": "Thank you. Your listing is now under review by the Bait Al Mataem team, and we'll be in touch soon.",
+    "mvpStorageNotice": "Temporary technical note: this is an early MVP version of the site and the database is still being connected. To make sure your listing reaches our team right now, please contact us directly on WhatsApp or by email.",
+    "submitting": "Submitting...",
+    "errorGeneric": "Something went wrong while submitting. Please try again or reach us directly on WhatsApp."
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "pageSubtitle": "Specialized content on restaurant operations, development, valuation and investment",
+    "minutesRead": "{count} min read",
+    "relatedServiceCta": "Related service",
+    "relatedListingsTitle": "Currently available opportunities"
+  },
+  "about": {
+    "title": "About Us",
+    "body": [
+      "Bait Al Mataem is a specialized platform for restaurant setup, operations, development and investment, bringing together operational knowledge, investment analysis and marketing in one system that helps restaurant owners and investors make clearer, lower-risk decisions.",
+      "We work through specialized expertise and an integrated team across the different areas of the restaurant sector — from studying the concept, location and investment feasibility, through setup, operations and cost control, to development, marketing and evaluating sale and purchase opportunities.",
+      "We're starting with a focus on Jeddah and Makkah, while building a platform designed from the ground up to expand to the rest of Saudi Arabia."
+    ]
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Tell us about your project or question, and we'll respond as soon as possible",
+    "whatsappTitle": "The fastest way to reach us",
+    "emailTitle": "Email",
+    "formTitle": "Or send a message directly",
+    "formName": "Name",
+    "formPhone": "Phone / WhatsApp number",
+    "formMessage": "Message",
+    "formSubmit": "Send message",
+    "formSuccess": "Thank you — your message has been received. Bait Al Mataem will get back to you soon.",
+    "formMvpNotice": "Temporary technical note: this is an early MVP version of the site, and no email is automatically connected to receive this form yet. To make sure your message reaches us right now, please contact us directly on WhatsApp or by email.",
+    "formError": "Something went wrong while sending. Please try again or reach us directly on WhatsApp."
+  },
+  "admin": {
+    "title": "Bait Al Mataem Admin",
+    "previewNotice": "This is a UI preview only, to illustrate the intended admin experience. Buttons are not yet functional — wiring this to a real database and authentication is the next technical step.",
+    "pendingTitle": "Listings pending review",
+    "columns": { "title": "Title", "city": "City", "kind": "Type", "submitted": "Submitted", "actions": "Action" },
+    "approve": "Approve",
+    "reject": "Reject",
+    "requestChanges": "Request changes"
+  },
+  "footer": {
+    "servicesTitle": "Services",
+    "companyTitle": "Company",
+    "socialTitle": "Follow us",
+    "rights": "All rights reserved",
+    "focusNotice": "Currently focused on Jeddah and Makkah, with a plan to expand across Saudi Arabia",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "legal": {
+    "privacyTitle": "Privacy Policy",
+    "privacyIntro": "This page explains how Bait Al Mataem handles visitor and prospective-client data. This is an early, condensed version that will be finalized and legally reviewed as the platform grows and is connected to a real database; until then, treat this page as an initial notice rather than a final legal document.",
+    "privacyBody": [
+      "The data we may currently collect is limited to what a visitor submits directly through the contact form or the \"List Your Opportunity\" form (such as name, phone number, city, and listing details). This data is not yet stored in a permanent database, since the site is at an early MVP stage.",
+      "Bait Al Mataem does not share client data with any third party for marketing purposes without explicit consent. Contact details are used solely to respond to an inquiry or review a submitted listing.",
+      "Once the site is connected to a real database, this policy will be updated with precise details on data storage, retention, and a user's right to access or delete their data."
+    ],
+    "termsTitle": "Terms & Conditions",
+    "termsIntro": "These terms govern your use of the Bait Al Mataem website. This is an early, condensed version that will be finalized and legally reviewed as the platform grows; until then, treat this page as an initial notice rather than a final legal document.",
+    "termsBody": [
+      "Content shown in the Opportunities Marketplace (restaurants, sites, and investment opportunities) is reviewed by the Bait Al Mataem team before publishing; however, Bait Al Mataem does not guarantee the accuracy of every detail supplied by a listing owner, and advises any investor to conduct independent verification before making a purchase or investment decision.",
+      "Prices and financial figures shown in feasibility studies or opportunity valuations are estimates or analytical projections by nature unless explicitly stated otherwise, and do not constitute a guarantee of any future return or outcome.",
+      "Using the site to list an opportunity or to contact Bait Al Mataem does not create any contractual obligation unless followed by a separate written agreement between the parties."
+    ]
+  }
+}
