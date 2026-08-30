@@ -18,8 +18,8 @@ export function Hero({ dict, locale, cities }: { dict: Dictionary; locale: Local
     <section className="relative">
       <div className="relative flex min-h-[82vh] items-center overflow-hidden bg-ink-950 sm:min-h-[88vh]">
         <Image
-          src="/placeholders/hero-main.svg"
-          alt=""
+          src="/images/editorial/restaurant-interior-lg.webp"
+          alt={dict.home.imageAlts.hero}
           fill
           priority
           sizes="100vw"
@@ -93,7 +93,13 @@ export function HowWeHelp({ dict, locale }: { dict: Dictionary; locale: Locale }
             <Link href={`/${locale}/marketplace`} className="focus-ring group block h-full">
               <Card className="relative flex h-full min-h-[280px] flex-col justify-end overflow-hidden p-0">
                 <div className="img-zoom absolute inset-0">
-                  <Image src="/placeholders/investor.svg" alt="" fill sizes="60vw" className="object-cover" />
+                  <Image
+                    src="/images/editorial/feasibility-analysis-lg.webp"
+                    alt={dict.home.imageAlts.investment}
+                    fill
+                    sizes="(min-width: 1024px) 60vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/35 to-transparent" />
                 <div className="relative p-7 sm:p-9">
@@ -111,7 +117,13 @@ export function HowWeHelp({ dict, locale }: { dict: Dictionary; locale: Locale }
             <Link href={`/${locale}/marketplace/new`} className="focus-ring group block h-full">
               <Card className="relative flex h-full min-h-[280px] flex-col justify-end overflow-hidden p-0">
                 <div className="img-zoom absolute inset-0">
-                  <Image src="/placeholders/listing-5.svg" alt="" fill sizes="30vw" className="object-cover" />
+                  <Image
+                    src="/images/editorial/restaurant-interior-lg.webp"
+                    alt={dict.home.imageAlts.hero}
+                    fill
+                    sizes="(min-width: 1024px) 30vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent" />
                 <div className="relative p-6">
@@ -188,8 +200,18 @@ export function TeamSection({ dict }: { dict: Dictionary }) {
     <section className="py-16 sm:py-20">
       <div className="container-page grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
         <Reveal>
-          <div className="img-zoom relative aspect-[4/3] w-full overflow-hidden rounded-cardLg">
-            <Image src="/placeholders/about-team.svg" alt="" fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
+          <div className="img-zoom relative aspect-[4/3] w-full overflow-hidden rounded-cardLg bg-ink-100">
+            <Image
+              src="/images/editorial/operations-team-lg.webp"
+              alt={dict.home.imageAlts.operationsTeam}
+              fill
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="object-cover"
+              style={{ objectPosition: "center 58%" }}
+            />
+            <p className="absolute inset-x-3 bottom-3 rounded-btn bg-ink-950/75 px-3 py-2 text-[11px] leading-5 text-white/85 backdrop-blur-sm">
+              {dict.home.team.photoNote}
+            </p>
           </div>
         </Reveal>
         <Reveal delay={80}>
@@ -247,7 +269,13 @@ export function ServicesSection({ dict, locale }: { dict: Dictionary; locale: Lo
             <Link href={`/${locale}/services/restaurant-setup`} className="focus-ring group block h-full">
               <Card className="relative flex h-full min-h-[260px] flex-col justify-end overflow-hidden p-0">
                 <div className="img-zoom absolute inset-0">
-                  <Image src="/placeholders/service-setup.svg" alt="" fill sizes="45vw" className="object-cover" />
+                  <Image
+                    src="/images/editorial/restaurant-equipment-lg.webp"
+                    alt={dict.home.imageAlts.equipment}
+                    fill
+                    sizes="(min-width: 640px) 45vw, 100vw"
+                    className="object-cover"
+                  />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/88 via-ink-950/30 to-transparent" />
                 <div className="relative p-7">
@@ -266,7 +294,14 @@ export function ServicesSection({ dict, locale }: { dict: Dictionary; locale: Lo
             <Link href={`/${locale}/services/restaurant-operations`} className="focus-ring group block h-full">
               <Card className="relative flex h-full min-h-[260px] flex-col justify-end overflow-hidden p-0">
                 <div className="img-zoom absolute inset-0">
-                  <Image src="/placeholders/service-operations.svg" alt="" fill sizes="45vw" className="object-cover" />
+                  <Image
+                    src="/images/editorial/operations-team-lg.webp"
+                    alt={dict.home.imageAlts.operationsTeam}
+                    fill
+                    sizes="(min-width: 640px) 45vw, 100vw"
+                    className="object-cover"
+                    style={{ objectPosition: "center 58%" }}
+                  />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/88 via-ink-950/30 to-transparent" />
                 <div className="relative p-7">
@@ -322,8 +357,16 @@ export function InvestorSection({ dict, locale }: { dict: Dictionary; locale: Lo
     { n: "3", label: dict.home.investor.step3 },
   ];
   return (
-    <section className="bg-ember-800 py-16 text-white sm:py-20">
-      <div className="container-page text-center">
+    <section className="relative overflow-hidden bg-ember-800 py-16 text-white sm:py-20">
+      <Image
+        src="/images/editorial/management-meeting-lg.webp"
+        alt={dict.home.imageAlts.investment}
+        fill
+        sizes="100vw"
+        className="object-cover opacity-25 mix-blend-luminosity"
+      />
+      <div className="absolute inset-0 bg-gradient-to-l from-ember-900/95 via-ember-800/90 to-ink-950/90" />
+      <div className="container-page relative text-center">
         <h2 className="mx-auto max-w-2xl text-2xl font-bold sm:text-3xl" style={{ textWrap: "balance" }}>
           {dict.home.investor.title}
         </h2>
@@ -376,10 +419,20 @@ export function ListYourOpportunitySection({ dict, locale }: { dict: Dictionary;
               ))}
             </ul>
           </div>
-          <div className="flex justify-start lg:justify-end">
-            <Button href={`/${locale}/marketplace/new`} variant="primary" arrow className="w-full justify-center sm:w-auto">
-              {dict.home.listYours.cta}
-            </Button>
+          <div className="relative min-h-[240px] overflow-hidden rounded-cardLg">
+            <Image
+              src="/images/editorial/restaurant-interior-lg.webp"
+              alt={dict.home.imageAlts.hero}
+              fill
+              sizes="(min-width: 1024px) 35vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink-950/80 via-transparent to-transparent" />
+            <div className="absolute inset-x-5 bottom-5">
+              <Button href={`/${locale}/marketplace/new`} variant="light" arrow className="w-full justify-center sm:w-auto">
+                {dict.home.listYours.cta}
+              </Button>
+            </div>
           </div>
         </Card>
       </div>

@@ -39,7 +39,10 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const cities = Array.from(new Set(approvedListings.map((l) => l.city.ar)));
 
   const latestPosts = [...POSTS].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
-  const postImages = ["/placeholders/blog-1.svg", "/placeholders/blog-2.svg"];
+  const postImages = [
+    "/images/editorial/feasibility-analysis-lg.webp",
+    "/images/editorial/restaurant-equipment-lg.webp",
+  ];
 
   return (
     <>

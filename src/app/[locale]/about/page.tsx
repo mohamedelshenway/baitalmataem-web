@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -27,6 +28,20 @@ export default async function AboutPage({ params }: { params: { locale: string }
       <div className="container-page max-w-3xl">
         <p className="eyebrow mb-3">{dict.common.siteName}</p>
         <h1 className="mb-6 text-2xl font-bold leading-tight text-ink-900 sm:text-3xl">{dict.about.title}</h1>
+        <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-cardLg bg-ink-100 shadow-card">
+          <Image
+            src="/images/editorial/operations-team-lg.webp"
+            alt={dict.home.imageAlts.operationsTeam}
+            fill
+            priority
+            sizes="(min-width: 768px) 768px, 100vw"
+            className="object-cover"
+            style={{ objectPosition: "center 58%" }}
+          />
+          <p className="absolute inset-x-3 bottom-3 rounded-btn bg-ink-950/75 px-3 py-2 text-[11px] leading-5 text-white/85 backdrop-blur-sm">
+            {dict.home.team.photoNote}
+          </p>
+        </div>
         <div className="space-y-5 text-lg leading-8 text-ink-700">
           {dict.about.body.map((p: string, i: number) => (
             <p key={i}>{p}</p>

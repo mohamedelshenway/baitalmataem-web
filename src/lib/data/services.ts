@@ -16,20 +16,22 @@ export interface ServiceMeta {
     | "menu"
     | "marketing";
   featured: boolean; // يظهر في معاينة الصفحة الرئيسية
+  image: string;
+  imagePosition?: string;
 }
 
 export const SERVICES: ServiceMeta[] = [
-  { slug: "feasibility-study", icon: "feasibility", featured: true },
-  { slug: "restaurant-valuation", icon: "valuation", featured: true },
-  { slug: "restaurant-brokerage", icon: "brokerage", featured: true },
-  { slug: "restaurant-consulting", icon: "consulting", featured: true },
-  { slug: "restaurant-setup", icon: "setup", featured: false },
-  { slug: "restaurant-operations", icon: "operations", featured: false },
-  { slug: "restaurant-development", icon: "development", featured: false },
-  { slug: "cost-profitability", icon: "cost", featured: false },
-  { slug: "waste-management", icon: "waste", featured: false },
-  { slug: "menu-development", icon: "menu", featured: false },
-  { slug: "restaurant-marketing", icon: "marketing", featured: false },
+  { slug: "feasibility-study", icon: "feasibility", featured: true, image: "/images/editorial/feasibility-analysis-lg.webp" },
+  { slug: "restaurant-valuation", icon: "valuation", featured: true, image: "/images/editorial/management-meeting-lg.webp" },
+  { slug: "restaurant-brokerage", icon: "brokerage", featured: true, image: "/images/editorial/restaurant-interior-lg.webp" },
+  { slug: "restaurant-consulting", icon: "consulting", featured: true, image: "/images/editorial/management-meeting-lg.webp" },
+  { slug: "restaurant-setup", icon: "setup", featured: false, image: "/images/editorial/restaurant-equipment-lg.webp" },
+  { slug: "restaurant-operations", icon: "operations", featured: false, image: "/images/editorial/operations-team-lg.webp", imagePosition: "center 58%" },
+  { slug: "restaurant-development", icon: "development", featured: false, image: "/images/editorial/commercial-kitchen-lg.webp" },
+  { slug: "cost-profitability", icon: "cost", featured: false, image: "/images/editorial/feasibility-analysis-lg.webp" },
+  { slug: "waste-management", icon: "waste", featured: false, image: "/images/editorial/commercial-kitchen-lg.webp" },
+  { slug: "menu-development", icon: "menu", featured: false, image: "/images/editorial/catering-service-lg.webp" },
+  { slug: "restaurant-marketing", icon: "marketing", featured: false, image: "/images/editorial/restaurant-marketing-lg.webp" },
 ];
 
 export function getServiceMeta(slug: string): ServiceMeta | undefined {

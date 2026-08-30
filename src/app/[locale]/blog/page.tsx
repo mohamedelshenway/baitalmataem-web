@@ -7,7 +7,10 @@ import { POSTS } from "@/lib/data/posts";
 import { SectionHeading } from "@/components/ui";
 import { BlogList } from "@/components/blog-list";
 
-const IMAGES = ["/placeholders/blog-1.svg", "/placeholders/blog-2.svg"];
+const IMAGES = [
+  "/images/editorial/feasibility-analysis-lg.webp",
+  "/images/editorial/restaurant-equipment-lg.webp",
+];
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};

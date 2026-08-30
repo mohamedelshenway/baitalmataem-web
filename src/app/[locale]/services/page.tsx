@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
@@ -40,17 +41,29 @@ export default async function ServicesPage({ params }: { params: { locale: strin
             const item = dict.services.list[s.slug as keyof typeof dict.services.list];
             return (
               <Reveal key={s.slug} delay={(i % 3) * 60}>
-                <Card className="flex h-full flex-col p-6">
-                  <h2 className="mb-2 text-lg font-bold text-ink-900">{item.title}</h2>
-                  <p className="mb-5 flex-1 text-sm leading-7 text-ink-600">{item.short}</p>
-                  <GoldDivider className="mb-4" />
-                  <Link
-                    href={`/${locale}/services/${s.slug}`}
-                    className="cta-arrow focus-ring inline-flex items-center gap-1.5 text-sm font-semibold text-ember-600"
-                  >
-                    {dict.common.learnMore}
-                    <span data-arrow aria-hidden>←</span>
-                  </Link>
+                <Card className="flex h-full flex-col overflow-hidden p-0">
+                  <div className="img-zoom relative aspect-[16/10] w-full bg-ink-100">
+                    <Image
+                      src={s.image}
+                      alt={item.title}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="object-cover"
+                      style={{ objectPosition: s.imagePosition }}
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col p-6">
+                    <h2 className="mb-2 text-lg font-bold text-ink-900">{item.title}</h2>
+                    <p className="mb-5 flex-1 text-sm leading-7 text-ink-600">{item.short}</p>
+                    <GoldDivider className="mb-4" />
+                    <Link
+                      href={`/${locale}/services/${s.slug}`}
+                      className="cta-arrow focus-ring inline-flex items-center gap-1.5 text-sm font-semibold text-ember-600"
+                    >
+                      {dict.common.learnMore}
+                      <span data-arrow aria-hidden>←</span>
+                    </Link>
+                  </div>
                 </Card>
               </Reveal>
             );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, isLocale, type Locale } from "@/i18n/config";
@@ -12,6 +13,11 @@ import { parseContent } from "@/lib/format-content";
 import { Badge, Button, GoldDivider } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
 
+const POST_IMAGES: Record<string, string> = {
+  "how-to-evaluate-a-restaurant-before-buying": "/images/editorial/feasibility-analysis-lg.webp",
+  "food-cost-why-it-creeps-up-without-noticing": "/images/editorial/restaurant-equipment-lg.webp",
+};
+
 export function generateStaticParams() {
   return locales.flatMap((locale) => POSTS.map((p) => ({ locale, slug: p.slug })));
 }
@@ -24,12 +30,14 @@ export async function generateMetadata({
   if (!isLocale(params.locale)) return {};
   const post = getPostBySlug(params.slug);
   if (!post) return {};
+  const postImage = POST_IMAGES[post.slug];
   return buildMetadata({
     title: post.title[params.locale],
     description: post.excerpt[params.locale],
     locale: params.locale,
     path: `/blog/${params.slug}`,
     keywords: post.tags,
+    ogImagePath: postImage,
   });
 }
 
@@ -38,6 +46,7 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
   const locale = params.locale as Locale;
   const post = getPostBySlug(params.slug);
   if (!post) notFound();
+  const postImage = POST_IMAGES[post.slug];
   const dict = await getDictionary(locale);
   const blocks = parseContent(post.content[locale]);
 
@@ -80,6 +89,18 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
         </div>
         <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-4xl">{post.title[locale]}</h1>
         <p className="mb-8 text-lg leading-8 text-ink-600">{post.excerpt[locale]}</p>
+        {postImage && (
+          <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-cardLg bg-ink-100 shadow-card">
+            <Image
+              src={postImage}
+              alt={post.title[locale]}
+              fill
+              priority
+              sizes="(min-width: 768px) 768px, 100vw"
+              className="object-cover"
+            />
+          </div>
+        )}
         <GoldDivider className="mb-8" />
 
         <div className="prose-article">

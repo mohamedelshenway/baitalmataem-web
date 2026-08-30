@@ -79,9 +79,16 @@
       "point3": "Real, on-the-ground operating experience",
       "point4": "We view the project through both an investor's and an operator's eyes"
     },
+    "imageAlts": {
+      "hero": "Modern restaurant interior with warm lighting",
+      "investment": "Feasibility and data analysis for a restaurant investment opportunity",
+      "operationsTeam": "Illustrative photo of an operations team working in a commercial kitchen",
+      "equipment": "Professional equipment inside a restaurant kitchen"
+    },
     "team": {
       "title": "Specialized expertise working as one team",
       "text": "Bait Al Mataem brings together specialized expertise in restaurant setup, operations, development and investment, to give restaurant owners and investors an integrated view instead of handling each part of the project separately.",
+      "photoNote": "Licensed illustrative photo; the people shown are not Bait Al Mataem staff.",
       "areas": ["Setup & Operations", "Feasibility Studies", "Opportunity Valuation", "Cost Management", "Process Development", "Marketing", "Customer Experience", "Investment Analysis"],
       "execLabel": "Executive Leadership",
       "execName": "Mohamed Elshenawy",

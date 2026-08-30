@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locales, isLocale, type Locale } from "@/i18n/config";
@@ -29,6 +30,7 @@ export async function generateMetadata({
     locale: params.locale,
     path: `/services/${params.slug}`,
     keywords: item.keywords,
+    ogImagePath: meta.image,
   });
 }
 
@@ -60,6 +62,17 @@ export default async function ServiceDetailPage({ params }: { params: { locale: 
             <p className="eyebrow mb-3">{dict.nav.services}</p>
             <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-3xl">{item.title}</h1>
             <p className="mb-8 text-lg leading-8 text-ink-600">{item.short}</p>
+            <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-cardLg bg-ink-100 shadow-card">
+              <Image
+                src={meta.image}
+                alt={item.title}
+                fill
+                priority
+                sizes="(min-width: 1024px) 760px, 100vw"
+                className="object-cover"
+                style={{ objectPosition: meta.imagePosition }}
+              />
+            </div>
             <GoldDivider className="mb-8" />
             <div className="prose-article">
               {item.body.map((paragraph: string, i: number) => (
