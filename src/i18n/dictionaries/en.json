@@ -1,4 +1,5 @@
-{
+abc
+def
   "common": {
     "siteName": "Bait Al Mataem",
     "sampleDataNotice": "Sample data for preview purposes — not real listings yet",
@@ -8,7 +9,8 @@
     "viewAll": "View all",
     "learnMore": "Learn more",
     "priceOnRequest": "Price on request",
-    "contactNow": "Contact us now"
+    "contactNow": "Contact us now",
+    "optional": "optional"
   },
   "nav": {
     "home": "Home",
@@ -224,6 +226,16 @@
           "Every marketing activity we propose is tied to a measurable indicator, not just because it's trending."
         ],
         "keywords": ["restaurant marketing", "restaurant marketing Saudi Arabia"]
+      },
+      "staff-recruitment": {
+        "title": "Staff Recruitment & Hiring",
+        "short": "We help you choose and hire the right team, from initial candidate screening through interviews.",
+        "body": [
+          "Bait Al Mataem offers a specialized recruitment service for restaurant, hotel, catering, café and buffet owners, helping them select the right team instead of spending significant time and effort searching and screening on their own.",
+          "We take in your hiring needs (roles, number of openings, requirements), screen suitable candidates, conduct initial interviews, and shortlist the closest matches so you can make the final decision yourself.",
+          "The service is available to restaurant, hotel, café, buffet, catering and food-service business owners. The service fee depends on the number of roles and openings — contact us for details."
+        ],
+        "keywords": ["restaurant staff recruitment", "hotel hiring Saudi Arabia", "restaurant team hiring", "restaurant interview service", "cafe and buffet staffing"]
       }
     }
   },
@@ -317,13 +329,15 @@
     "next": "Next",
     "back": "Back",
     "submit": "Submit for review",
-    "photosHint": "Up to 10 photos, via drag & drop or file picker. Drag to reorder — the first photo is the cover image.",
+    "photosHint": "Up to 10 photos, via drag & drop or file picker. Drag to reorder — the first photo is the cover image. At least one photo is required to continue.",
     "setCover": "Set as cover",
     "remove": "Remove",
     "videosHint": "Up to two videos, 30 seconds max each.",
     "videoTooLong": "This video is longer than 30 seconds and wasn't accepted. Please upload a shorter clip.",
     "maxPhotosReached": "You've reached the limit (10 photos).",
     "maxVideosReached": "You've reached the limit (2 videos).",
+    "choosePhotosPrompt": "Choose photos or drag them here",
+    "chooseVideoPrompt": "Choose a video clip (30 seconds max)",
     "region": "Region",
     "regionPlaceholder": "Select region",
     "city": "City",
@@ -333,7 +347,7 @@
     "districtPlaceholder": "e.g. Al Rawdah district",
     "contactName": "Name",
     "contactPhone": "Phone number",
-    "contactCity": "City",
+    "contactCity": "Your city (where you live)",
     "reviewNotice": "Once submitted, your listing enters \"Pending Review\" and won't be published until Bait Al Mataem's team approves it. We may contact you to clarify or adjust details first.",
     "successTitle": "Your opportunity has been received",
     "successBody": "Thank you. Your listing is now under review by the Bait Al Mataem team, and we'll be in touch soon.",
@@ -355,6 +369,26 @@
       "We work through specialized expertise and an integrated team across the different areas of the restaurant sector — from studying the concept, location and investment feasibility, through setup, operations and cost control, to development, marketing and evaluating sale and purchase opportunities.",
       "We're starting with a focus on Jeddah and Makkah, while building a platform designed from the ground up to expand to the rest of Saudi Arabia."
     ]
+  },
+  "joinUs": {
+    "pageTitle": "Work With Bait Al Mataem",
+    "pageSubtitle": "Two ways to work with Bait Al Mataem: join us part-time, or become a referral partner who brings us real opportunities for a commission.",
+    "partTime": {
+      "title": "Part-time work",
+      "body": [
+        "If you'd like to join the Bait Al Mataem team part-time in marketing, operations or admin tasks, send us your details and experience through the contact form, and we'll get back to you if a suitable opening comes up."
+      ],
+      "cta": "Contact us"
+    },
+    "referral": {
+      "title": "Become a referral partner",
+      "body": [
+        "If you have a network in the restaurant sector and know of a real opportunity — a restaurant for sale or takeover, a suitable space for lease, or an investor looking for a deal — you can submit it to us through the \"List Your Opportunity\" form.",
+        "If the deal closes through you, you earn a commission on it."
+      ],
+      "note": "The commission rate and terms are agreed directly between you and Bait Al Mataem before work begins on each opportunity, and vary by the type and size of the opportunity — contact us for full details.",
+      "cta": "Submit the opportunity now"
+    }
   },
   "contact": {
     "title": "Contact Us",
