@@ -68,7 +68,7 @@ export function organizationJsonLd() {
     name: SITE.legalName,
     url: SITE.url,
     description: SITE.tagline.ar,
-    areaServed: ["Jeddah", "Makkah", "Saudi Arabia"],
+    areaServed: ["Saudi Arabia"],
     // مصدر واحد للحقيقة: نفس الروابط المعتمدة في src/lib/constants.ts، بدل تكرارها هنا يدويًا
     sameAs: [SOCIALS.facebook, SOCIALS.instagram, SOCIALS.youtube, SOCIALS.snapchat, SOCIALS.x],
   };
