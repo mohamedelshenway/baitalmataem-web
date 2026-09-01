@@ -27,7 +27,7 @@
     "stay": "العربية"
   },
   "home": {
-    "heroKicker": "Bait Al Mataem — Jeddah & Makkah",
+    "heroKicker": "Bait Al Mataem — Saudi Arabia",
     "heroTitle": "Everything your restaurant project needs… in one place",
     "heroSubtitle": "From feasibility studies and setup, to operations and development, to investing in and buying or selling restaurant opportunities across Saudi Arabia.",
     "heroCta1": "Explore Opportunities",
@@ -240,7 +240,7 @@
   },
   "marketplace": {
     "pageTitle": "Opportunities Marketplace",
-    "pageSubtitle": "Restaurants for takeover and sale, units for lease, and investment opportunities in Jeddah and Makkah",
+    "pageSubtitle": "Restaurants for takeover and sale, units for lease, and investment opportunities across Saudi Arabia",
     "addListingCta": "List your opportunity",
     "filters": {
       "title": "Filter results",
@@ -366,7 +366,7 @@
     "body": [
       "Bait Al Mataem is a specialized platform for restaurant setup, operations, development and investment, bringing together operational knowledge, investment analysis and marketing in one system that helps restaurant owners and investors make clearer, lower-risk decisions.",
       "We work through specialized expertise and an integrated team across the different areas of the restaurant sector — from studying the concept, location and investment feasibility, through setup, operations and cost control, to development, marketing and evaluating sale and purchase opportunities.",
-      "We're starting with a focus on Jeddah and Makkah, while building a platform designed from the ground up to expand to the rest of Saudi Arabia."
+      "We launched from Jeddah and Makkah, and built the platform from the ground up to now cover regions across Saudi Arabia."
     ]
   },
   "joinUs": {
@@ -417,7 +417,7 @@
     "companyTitle": "Company",
     "socialTitle": "Follow us",
     "rights": "All rights reserved",
-    "focusNotice": "Currently focused on Jeddah and Makkah, with a plan to expand across Saudi Arabia",
+    "focusNotice": "Restaurant opportunities and services across Saudi Arabia",
     "privacy": "Privacy Policy",
     "terms": "Terms & Conditions"
   },
