@@ -5,6 +5,7 @@ import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import type { ListingKind } from "@/lib/types";
 import { HAS_WHATSAPP, whatsappLink, mailtoLink } from "@/lib/constants";
+import { SAUDI_REGIONS, citiesForRegion } from "@/lib/saudi-regions";
 
 type PhotoItem = { id: string; file: File; previewUrl: string };
 type VideoItem = { id: string; file: File; previewUrl: string; durationSeconds: number };
@@ -27,6 +28,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [kind, setKind] = useState<ListingKind | "">("");
+  const [region, setRegion] = useState("");
   const [city, setCity] = useState("");
   const [area, setArea] = useState("");
   const [activityType, setActivityType] = useState("");
@@ -119,7 +121,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
       case 1:
         return Boolean(kind);
       case 2:
-        return Boolean(city && area);
+        return Boolean(region && city);
       case 3:
         return Boolean(activityType);
       case 4:
@@ -137,7 +139,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
       default:
         return true;
     }
-  }, [step, kind, city, area, activityType, sizeSqm, description, photos.length, contactName, contactPhone, contactCity]);
+  }, [step, kind, region, city, activityType, sizeSqm, description, photos.length, contactName, contactPhone, contactCity]);
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -145,6 +147,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
     try {
       const form = new FormData();
       form.append("kind", kind);
+      form.append("region", region);
       form.append("city", city);
       form.append("area", area);
       form.append("activityType", activityType);
@@ -220,11 +223,45 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
 
         {step === 2 && (
           <div className="space-y-5">
-            <Field label={dict.marketplace.filters.city}>
-              <input value={city} onChange={(e) => setCity(e.target.value)} className="input-field" placeholder="جدة / مكة المكرمة" />
+            <Field label={dict.newListing.region}>
+              <select
+                value={region}
+                onChange={(e) => {
+                  setRegion(e.target.value);
+                  setCity("");
+                }}
+                className="input-field"
+              >
+                <option value="">{dict.newListing.regionPlaceholder}</option>
+                {SAUDI_REGIONS.map((r) => (
+                  <option key={r.name} value={r.name}>
+                    {r.name}
+                  </option>
+                ))}
+              </select>
             </Field>
-            <Field label="المنطقة / الحي العام">
-              <input value={area} onChange={(e) => setArea(e.target.value)} className="input-field" placeholder="مثال: شمال جدة" />
+            <Field label={dict.newListing.city}>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                disabled={!region}
+                className="input-field disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <option value="">{region ? dict.newListing.cityPlaceholder : dict.newListing.cityPlaceholderNoRegion}</option>
+                {citiesForRegion(region).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </Field>
+            <Field label={dict.newListing.district}>
+              <input
+                value={area}
+                onChange={(e) => setArea(e.target.value)}
+                className="input-field"
+                placeholder={dict.newListing.districtPlaceholder}
+              />
             </Field>
           </div>
         )}
@@ -370,7 +407,8 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
           <div>
             <div className="mb-5 rounded-card border border-sand-200 bg-white p-5 text-sm shadow-subtle">
               <SummaryRow label={dict.marketplace.filters.kind} value={kind ? dict.marketplace.kinds[kind] : "—"} />
-              <SummaryRow label={dict.listing.specs.city} value={`${city} — ${area}`} />
+              <SummaryRow label={dict.newListing.region} value={region || "—"} />
+              <SummaryRow label={dict.listing.specs.city} value={area ? `${city} — ${area}` : city} />
               <SummaryRow label={dict.listing.specs.activityType} value={activityType} />
               <SummaryRow label={dict.listing.specs.price} value={priceSAR || dict.common.priceOnRequest} />
               <SummaryRow label={dict.listing.specs.size} value={sizeSqm ? `${sizeSqm} m²` : "—"} />
