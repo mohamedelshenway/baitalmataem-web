@@ -32,6 +32,11 @@ export default async function ListingsPage({
     .select("id, title, city, activity_type, status, asking_price, created_at")
     .order("created_at", { ascending: false });
 
+  const { count: newSubmissionsCount } = await supabase
+    .from("listing_submissions")
+    .select("*", { count: "exact", head: true })
+    .eq("status", "new");
+
   return (
     <div className="min-h-screen bg-[#f8f5ef]" dir="rtl">
       <header className="bg-white border-b border-black/5">
@@ -45,12 +50,25 @@ export default async function ListingsPage({
             </Link>
             <h1 className="font-bold text-[#151515] mt-1">إدارة الفرص</h1>
           </div>
-          <Link
-            href={`/${locale}/dashboard/listings/new`}
-            className="bg-[#8b1e24] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#6f1720] transition"
-          >
-            + إضافة فرصة جديدة
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href={`/${locale}/dashboard/listings/submissions`}
+              className="relative bg-[#c8a45d]/10 text-[#8b1e24] rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#c8a45d]/20 transition"
+            >
+              طلبات &quot;اعرض فرصتك&quot;
+              {Boolean(newSubmissionsCount) && (
+                <span className="absolute -top-2 -right-2 bg-[#8b1e24] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {newSubmissionsCount}
+                </span>
+              )}
+            </Link>
+            <Link
+              href={`/${locale}/dashboard/listings/new`}
+              className="bg-[#8b1e24] text-white rounded-lg px-4 py-2 text-sm font-medium hover:bg-[#6f1720] transition"
+            >
+              + إضافة فرصة جديدة
+            </Link>
+          </div>
         </div>
       </header>
 
