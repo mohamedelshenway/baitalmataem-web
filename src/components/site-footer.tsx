@@ -68,6 +68,7 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
           <FooterCol title={dict.nav.contact}>
             <FooterLink href={`/${locale}/contact`}>{dict.nav.contact}</FooterLink>
             <FooterLink href={`/${locale}/about`}>{dict.nav.about}</FooterLink>
+            <FooterLink href={`/${locale}/join-us`}>{dict.joinUs.pageTitle}</FooterLink>
             <a href={contactHref} target="_blank" rel="noopener noreferrer" className="block text-sm text-white/60 hover:text-gold-500">
               {SOCIALS.email}
             </a>
