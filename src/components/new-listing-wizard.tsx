@@ -127,7 +127,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
       case 4:
         return true; // السعر قد يكون "عند التواصل"
       case 5:
-        return Boolean(sizeSqm);
+        return true; // المساحة وعدد المقاعد اختياريان — كثير من مقدمي الفرص ما يعرفوش الرقم الدقيق وقت التقديم
       case 6:
         return Boolean(description);
       case 7:
@@ -267,8 +267,13 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
         )}
 
         {step === 3 && (
-          <Field label="نوع النشاط">
-            <input value={activityType} onChange={(e) => setActivityType(e.target.value)} className="input-field" placeholder="مأكولات بحرية، مشويات، مقاهي..." />
+          <Field label={dict.listing.specs.activityType}>
+            <input
+              value={activityType}
+              onChange={(e) => setActivityType(e.target.value)}
+              className="input-field"
+              placeholder={dict.home.search.activityPlaceholder}
+            />
           </Field>
         )}
 
@@ -285,10 +290,10 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
 
         {step === 5 && (
           <div className="grid gap-5 sm:grid-cols-2">
-            <Field label={dict.listing.specs.size}>
+            <Field label={`${dict.listing.specs.size} (${dict.common.optional})`}>
               <input type="number" value={sizeSqm} onChange={(e) => setSizeSqm(e.target.value)} className="input-field" />
             </Field>
-            <Field label={dict.listing.specs.seating}>
+            <Field label={`${dict.listing.specs.seating} (${dict.common.optional})`}>
               <input type="number" value={seatingCapacity} onChange={(e) => setSeatingCapacity(e.target.value)} className="input-field" />
             </Field>
           </div>
@@ -296,10 +301,10 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
 
         {step === 6 && (
           <div className="space-y-5">
-            <Field label={dict.listing.descriptionTitle}>
+            <Field label={`${dict.listing.descriptionTitle} *`}>
               <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={5} className="input-field" />
             </Field>
-            <Field label={dict.listing.specs.equipment}>
+            <Field label={`${dict.listing.specs.equipment} (${dict.common.optional})`}>
               <textarea value={equipmentSummary} onChange={(e) => setEquipmentSummary(e.target.value)} rows={3} className="input-field" />
             </Field>
           </div>
@@ -311,7 +316,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
             <label className="focus-ring group mb-5 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed border-sand-300 p-10 text-center transition-colors hover:border-ember-400 hover:bg-sand-50">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sand-100 text-lg text-ember-600 group-hover:bg-ember-600/10">📷</span>
               <span className="text-sm font-semibold text-ink-800">
-                {photos.length >= MAX_PHOTOS ? dict.newListing.maxPhotosReached : "اختر الصور أو اسحبها هنا"}
+                {photos.length >= MAX_PHOTOS ? dict.newListing.maxPhotosReached : dict.newListing.choosePhotosPrompt}
               </span>
               <input
                 type="file"
@@ -362,7 +367,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
             <label className="focus-ring group mb-5 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-card border-2 border-dashed border-sand-300 p-10 text-center transition-colors hover:border-ember-400 hover:bg-sand-50">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sand-100 text-lg text-ember-600 group-hover:bg-ember-600/10">🎬</span>
               <span className="text-sm font-semibold text-ink-800">
-                {videos.length >= MAX_VIDEOS ? dict.newListing.maxVideosReached : "اختر مقطع فيديو (30 ثانية كحد أقصى)"}
+                {videos.length >= MAX_VIDEOS ? dict.newListing.maxVideosReached : dict.newListing.chooseVideoPrompt}
               </span>
               <input
                 type="file"
@@ -391,13 +396,13 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
 
         {step === 9 && (
           <div className="space-y-5">
-            <Field label={dict.newListing.contactName}>
+            <Field label={`${dict.newListing.contactName} *`}>
               <input value={contactName} onChange={(e) => setContactName(e.target.value)} className="input-field" />
             </Field>
-            <Field label={dict.newListing.contactPhone}>
+            <Field label={`${dict.newListing.contactPhone} *`}>
               <input value={contactPhone} onChange={(e) => setContactPhone(e.target.value)} className="input-field" placeholder="05xxxxxxxx" />
             </Field>
-            <Field label={dict.newListing.contactCity}>
+            <Field label={`${dict.newListing.contactCity} *`}>
               <input value={contactCity} onChange={(e) => setContactCity(e.target.value)} className="input-field" />
             </Field>
           </div>
@@ -412,8 +417,8 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
               <SummaryRow label={dict.listing.specs.activityType} value={activityType} />
               <SummaryRow label={dict.listing.specs.price} value={priceSAR || dict.common.priceOnRequest} />
               <SummaryRow label={dict.listing.specs.size} value={sizeSqm ? `${sizeSqm} m²` : "—"} />
-              <SummaryRow label="الصور" value={`${photos.length}`} />
-              <SummaryRow label="الفيديو" value={`${videos.length}`} />
+              <SummaryRow label={dict.listing.gallery.photos} value={`${photos.length}`} />
+              <SummaryRow label={dict.listing.gallery.videos} value={`${videos.length}`} />
               <SummaryRow label={dict.newListing.contactName} value={contactName} last />
             </div>
             <div className="rounded-card border border-gold-500/30 bg-gold-300/25 p-4 text-sm leading-7 text-ink-800">
