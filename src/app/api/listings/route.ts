@@ -1,42 +1,68 @@
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 /**
- * Route Handler مبدئي لاستقبال نموذج "اعرض فرصتك".
- *
- * حالة هذا الـ Endpoint في المرحلة الحالية (MVP): يستقبل البيانات ويتحقق من الحقول الأساسية،
- * لكنه لا يحفظها في قاعدة بيانات فعلية بعد — لا توجد قاعدة بيانات موصولة حتى الآن (راجع docs/SUPABASE_SETUP.md).
- * الخطوة التالية: ربطه بجدول listings في Supabase بحيث يُنشأ السجل بحالة moderation = "pending"
- * تلقائيًا، مطابقةً لقاعدة عدم النشر المباشر المعتمدة في بيت المطاعم.
- *
- * لهذا السبب لا يعتمد عليه أي رقم أو إحصائية حقيقية حاليًا، وأي بيانات تُرسل عبره لا تُخزَّن.
- */
+* Route Handler لاستقبال نموذج "اعرض فرصتك".
+*
+* يستقبل البيانات، يتحقق من الحقول الأساسية، ثم يُدرج سجلًا في جدول listing_submissions
+* بحالة "new" — لا يُنشئ فرصة منشورة مباشرة أبدًا (قاعدة عدم النشر المباشر المعتمدة في بيت المطاعم).
+* يظهر السجل بعدها في لوحة التحكم (رسائل/فرص بانتظار المراجعة) ليقرر الفريق تحويله لسجل listings فعلي.
+*
+* ملاحظة: رفع الصور/الفيديو الفعلي لـ Supabase Storage ليس ضمن هذا الإصلاح — لا يزال معاينة محلية في
+* المتصفح فقط كما هو حاليًا؛ هذا الـ Endpoint يسجّل عدد الملفات المرفقة فقط ضمن raw_data.
+*/
 export async function POST(request: Request) {
-  try {
-    const form = await request.formData();
+try {
+const form = await request.formData();
 
-    const kind = form.get("kind");
-    const city = form.get("city");
-    const area = form.get("area");
-    const contactName = form.get("contactName");
-    const contactPhone = form.get("contactPhone");
+const kind = form.get("kind");
+const city = form.get("city");
+const area = form.get("area");
+const contactName = form.get("contactName");
+const contactPhone = form.get("contactPhone");
 
-    if (!kind || !city || !area || !contactName || !contactPhone) {
-      return NextResponse.json({ ok: false, error: "missing_required_fields" }, { status: 400 });
-    }
+if (!kind || !city || !area || !contactName || !contactPhone) {
+return NextResponse.json({ ok: false, error: "missing_required_fields" }, { status: 400 });
+}
 
-    const photoCount = form.getAll("photos").length;
-    const videoCount = form.getAll("videos").length;
+const photoCount = form.getAll("photos").length;
+const videoCount = form.getAll("videos").length;
 
-    // TODO(المرحلة القادمة): رفع الصور/الفيديو إلى Supabase Storage، وإدراج سجل في جدول listings
-    // بحالة moderation_status = 'pending'، ثم إشعار لوحة الإدارة بوجود فرصة جديدة تنتظر المراجعة.
+const rawData = {
+kind: String(kind),
+city: String(city),
+area: String(area),
+activityType: form.get("activityType") ? String(form.get("activityType")) : null,
+priceSAR: form.get("priceSAR") ? String(form.get("priceSAR")) : null,
+rentSAR: form.get("rentSAR") ? String(form.get("rentSAR")) : null,
+sizeSqm: form.get("sizeSqm") ? String(form.get("sizeSqm")) : null,
+seatingCapacity: form.get("seatingCapacity") ? String(form.get("seatingCapacity")) : null,
+description: form.get("description") ? String(form.get("description")) : null,
+equipmentSummary: form.get("equipmentSummary") ? String(form.get("equipmentSummary")) : null,
+contactName: String(contactName),
+contactPhone: String(contactPhone),
+contactCity: form.get("contactCity") ? String(form.get("contactCity")) : null,
+photoCount,
+videoCount,
+};
 
-    return NextResponse.json({
-      ok: true,
-      status: "pending_review",
-      note: "تم الاستلام في بيئة المعاينة الحالية (لا يوجد تخزين فعلي بعد). سيتم حفظ الفرصة فعليًا بعد ربط قاعدة البيانات.",
-      received: { kind, city, area, photoCount, videoCount },
-    });
-  } catch {
-    return NextResponse.json({ ok: false, error: "invalid_form_data" }, { status: 400 });
-  }
+const supabase = await createClient();
+const { error } = await supabase.from("listing_submissions").insert({
+raw_data: rawData,
+status: "new",
+});
+
+if (error) {
+console.error("[api/listings] فشل حفظ الطلب في listing_submissions:", error.message);
+return NextResponse.json({ ok: false, error: "storage_failed" }, { status: 500 });
+}
+
+return NextResponse.json({
+ok: true,
+status: "pending_review",
+received: { kind, city, area, photoCount, videoCount },
+});
+} catch {
+return NextResponse.json({ ok: false, error: "invalid_form_data" }, { status: 400 });
+}
 }
