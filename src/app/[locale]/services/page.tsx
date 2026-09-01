@@ -7,7 +7,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
-import { Card, SectionHeading, GoldDivider } from "@/components/ui";
+import { Card, SectionHeading, GoldDivider, Button } from "@/components/ui";
 import { Reveal } from "@/components/reveal";
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
@@ -68,6 +68,16 @@ export default async function ServicesPage({ params }: { params: { locale: strin
               </Reveal>
             );
           })}
+        </div>
+
+        <div className="mt-14 flex flex-col items-start justify-between gap-5 rounded-cardLg border border-sand-200 bg-white p-6 shadow-subtle sm:flex-row sm:items-center sm:p-8">
+          <div>
+            <h2 className="text-lg font-bold text-ink-900">{dict.joinUs.pageTitle}</h2>
+            <p className="mt-1 text-sm leading-7 text-ink-600">{dict.joinUs.pageSubtitle}</p>
+          </div>
+          <Button href={`/${locale}/join-us`} variant="outline" arrow className="shrink-0">
+            {dict.common.learnMore}
+          </Button>
         </div>
       </div>
     </section>
