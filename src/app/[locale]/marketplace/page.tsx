@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
-import { LISTINGS } from "@/lib/data/listings";
+import { getPublishedListings, getSampleApprovedListings } from "@/lib/data/live-listings";
 import type { ListingKind } from "@/lib/types";
 import { Button, SampleDataNotice, SectionHeading } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
@@ -31,7 +31,11 @@ export default async function MarketplacePage({
   const locale = params.locale as Locale;
   const dict = await getDictionary(locale);
 
-  const approved = LISTINGS.filter((l) => l.moderation === "approved");
+  // نعرض الفرص الحقيقية المنشورة فعليًا لما توجد؛ ولو لسه معندناش فرص حقيقية، نرجع للبيانات
+  // التجريبية مؤقتًا (مع تنبيه واضح) بدل ما تظهر الصفحة فاضية تمامًا.
+  const liveListings = await getPublishedListings();
+  const showSampleNotice = liveListings.length === 0;
+  const approved = liveListings.length > 0 ? liveListings : getSampleApprovedListings();
   const cities = Array.from(new Set(approved.map((l) => l.city.ar)));
   const kinds = Object.keys(dict.marketplace.kinds) as ListingKind[];
 
@@ -54,7 +58,7 @@ export default async function MarketplacePage({
     <section className="py-12 sm:py-14">
       <div className="container-page">
         <SectionHeading title={dict.marketplace.pageTitle} subtitle={dict.marketplace.pageSubtitle} />
-        <SampleDataNotice text={dict.common.sampleDataNotice} />
+        {showSampleNotice && <SampleDataNotice text={dict.common.sampleDataNotice} />}
 
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm font-semibold text-ink-600">
