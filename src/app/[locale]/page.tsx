@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
-import { LISTINGS } from "@/lib/data/listings";
+import { getPublishedListings, getSampleApprovedListings } from "@/lib/data/live-listings";
 import { POSTS } from "@/lib/data/posts";
 import { notFound } from "next/navigation";
 import {
@@ -34,7 +34,9 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const locale = params.locale as Locale;
   const dict = await getDictionary(locale);
 
-  const approvedListings = LISTINGS.filter((l) => l.moderation === "approved");
+  const liveListings = await getPublishedListings();
+  const showSampleNotice = liveListings.length === 0;
+  const approvedListings = liveListings.length > 0 ? liveListings : getSampleApprovedListings();
   const previewListings = approvedListings.slice(0, 6);
   const cities = Array.from(new Set(approvedListings.map((l) => l.city.ar)));
 
@@ -49,7 +51,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
       <Hero dict={dict} locale={locale} cities={cities} />
       <TrustStrip dict={dict} />
       <HowWeHelp dict={dict} locale={locale} />
-      <MarketplacePreview dict={dict} locale={locale} listings={previewListings} />
+      <MarketplacePreview dict={dict} locale={locale} listings={previewListings} showSampleNotice={showSampleNotice} />
       <WhySection dict={dict} />
       <TeamSection dict={dict} />
       <ServicesSection dict={dict} locale={locale} />
