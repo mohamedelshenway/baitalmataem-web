@@ -4,7 +4,8 @@ import { locales, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd, listingJsonLd } from "@/lib/seo";
 import { SITE, whatsappLink, mailtoLink, HAS_WHATSAPP } from "@/lib/constants";
-import { LISTINGS, getListingBySlug, getSimilarListings } from "@/lib/data/listings";
+import { LISTINGS, getSimilarListings } from "@/lib/data/listings";
+import { resolveListing, getPublishedListings } from "@/lib/data/live-listings";
 import { Badge, Button, Card, SampleDataNotice, SectionHeading } from "@/components/ui";
 import { ListingGallery } from "@/components/listing-gallery";
 import { ListingCard } from "@/components/listing-card";
@@ -22,8 +23,9 @@ export async function generateMetadata({
   params: { locale: string; slug: string };
 }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
-  const listing = getListingBySlug(params.slug);
-  if (!listing || listing.moderation !== "approved") return {};
+  const resolved = await resolveListing(params.slug);
+  if (!resolved || resolved.listing.moderation !== "approved") return {};
+  const listing = resolved.listing;
   const dict = await getDictionary(params.locale);
   return buildMetadata({
     title: listing.title[params.locale],
@@ -37,10 +39,12 @@ export async function generateMetadata({
 export default async function ListingDetailPage({ params }: { params: { locale: string; slug: string } }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-  const listing = getListingBySlug(params.slug);
-  if (!listing || listing.moderation !== "approved") notFound();
+  const resolved = await resolveListing(params.slug);
+  if (!resolved || resolved.listing.moderation !== "approved") notFound();
+  const { listing, source } = resolved;
   const dict = await getDictionary(locale);
-  const similar = getSimilarListings(listing);
+  const similarPool = source === "live" ? await getPublishedListings() : LISTINGS;
+  const similar = getSimilarListings(listing, similarPool);
 
   const viewingMessage = `مرحبًا، أرغب في طلب معاينة للفرصة: ${listing.title.ar} (${listing.slug})`;
   const evaluateMessage = `مرحبًا، أرغب في طلب تقييم للفرصة: ${listing.title.ar} (${listing.slug})`;
@@ -62,7 +66,8 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
     url: `${SITE.url}/${locale}/marketplace/${listing.slug}`,
     priceSAR: listing.priceSAR,
     city: listing.city[locale],
-    image: cover ? `${SITE.url}${cover.url}` : undefined,
+    // صور الفرص الحقيقية روابطها كاملة أصلًا (Supabase Storage)، أما الصور التجريبية فمسارات محلية
+    image: cover ? (cover.url.startsWith("http") ? cover.url : `${SITE.url}${cover.url}`) : undefined,
   });
 
   const specRows: { label: string; value: string }[] = [
@@ -89,7 +94,7 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }} />
 
-        <SampleDataNotice text={dict.common.sampleDataNotice} />
+        {source === "sample" && <SampleDataNotice text={dict.common.sampleDataNotice} />}
 
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <Badge tone="dark">{dict.marketplace.kinds[listing.kind]}</Badge>
