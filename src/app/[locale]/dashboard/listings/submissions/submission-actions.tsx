@@ -86,6 +86,7 @@ export default function SubmissionActions({
         title,
         city: rawData.city ?? "",
         district: rawData.area ?? null,
+        kind: rawData.kind ?? null,
         activity_type: activityLabel,
         area_sqm: toNumberOrNull(rawData.sizeSqm),
         monthly_rent: toNumberOrNull(rawData.rentSAR),
