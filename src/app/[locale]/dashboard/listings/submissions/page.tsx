@@ -134,9 +134,40 @@ export default async function SubmissionsPage({
                 </p>
                 <p className="mt-1">
                   {raw.photoCount ?? 0} صورة · {raw.videoCount ?? 0} فيديو مرفقة
-                  (معاينة في المتصفح فقط حاليًا، غير مرفوعة على التخزين بعد)
                 </p>
               </div>
+
+              {(raw.photoUrls?.length || raw.videoUrls?.length) && (
+                <div className="flex flex-wrap gap-2 border-t border-black/5 pt-3">
+                  {raw.photoUrls?.map((url, i) => (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <a
+                      key={url}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="block w-20 h-20 rounded-lg overflow-hidden border border-black/10 bg-black/5"
+                    >
+                      <img
+                        src={url}
+                        alt={`صورة ${i + 1} من الفرصة المرسلة`}
+                        className="w-full h-full object-cover"
+                      />
+                    </a>
+                  ))}
+                  {raw.videoUrls?.map((url, i) => (
+                    <a
+                      key={url}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center justify-center w-20 h-20 rounded-lg border border-black/10 bg-black/5 text-xs text-[#151515]/60"
+                    >
+                      فيديو {i + 1}
+                    </a>
+                  ))}
+                </div>
+              )}
 
               {s.admin_note && s.status === "changes_requested" && (
                 <p className="text-xs text-[#c8a45d] bg-[#c8a45d]/10 rounded-lg px-3 py-2">
