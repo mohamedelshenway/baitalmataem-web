@@ -21,6 +21,8 @@ export type SubmissionRawData = {
   contactCity?: string | null;
   photoCount?: number;
   videoCount?: number;
+  photoUrls?: string[];
+  videoUrls?: string[];
 };
 
 export const KIND_LABELS: Record<string, string> = {
@@ -91,6 +93,7 @@ export default function SubmissionActions({
         description: descriptionParts.length
           ? descriptionParts.join(" — ")
           : null,
+        images: rawData.photoUrls?.length ? rawData.photoUrls : null,
         status: "pending_review",
         is_verified: false,
         submitted_by_name: rawData.contactName ?? null,
