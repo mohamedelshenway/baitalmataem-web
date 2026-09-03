@@ -10,7 +10,17 @@ import { Reveal } from "@/components/reveal";
 
 const TABS: ListingKind[] = ["restaurant_taqbeel", "restaurant_sale", "lease_unit", "investment_opportunity"];
 
-export function MarketplacePreview({ dict, locale, listings }: { dict: Dictionary; locale: Locale; listings: Listing[] }) {
+export function MarketplacePreview({
+  dict,
+  locale,
+  listings,
+  showSampleNotice = true,
+}: {
+  dict: Dictionary;
+  locale: Locale;
+  listings: Listing[];
+  showSampleNotice?: boolean;
+}) {
   const [tab, setTab] = useState<"all" | ListingKind>("all");
   const filtered = (tab === "all" ? listings : listings.filter((l) => l.kind === tab)).slice(0, 3);
 
@@ -18,7 +28,7 @@ export function MarketplacePreview({ dict, locale, listings }: { dict: Dictionar
     <section className="bg-sand-50 py-16 sm:py-20">
       <div className="container-page">
         <SectionHeading eyebrow={dict.home.marketplaceKicker} title={dict.home.listingsTitle} subtitle={dict.home.listingsSubtitle} align="center" />
-        <SampleDataNotice text={dict.common.sampleDataNotice} />
+        {showSampleNotice && <SampleDataNotice text={dict.common.sampleDataNotice} />}
 
         <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
           <button
