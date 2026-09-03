@@ -262,8 +262,8 @@ export function getListingBySlug(slug: string): Listing | undefined {
   return LISTINGS.find((l) => l.slug === slug);
 }
 
-export function getSimilarListings(current: Listing, max = 3): Listing[] {
-  return LISTINGS.filter(
+export function getSimilarListings(current: Listing, pool: Listing[] = LISTINGS, max = 3): Listing[] {
+  return pool.filter(
     (l) => l.slug !== current.slug && (l.kind === current.kind || l.city.ar === current.city.ar)
   ).slice(0, max);
 }
