@@ -49,7 +49,7 @@ export interface Listing {
   parkingAvailable?: boolean;
   features: { ar: string; en: string }[];
   media: ListingMedia[];
-  isSample: true; // كل بيانات المرحلة الحالية تجريبية بوضوح — لا بيانات حقيقية بعد
+  isSample: boolean; // true لبيانات العرض التجريبية فقط — false لأي فرصة حقيقية جاية من قاعدة البيانات
   views: number;
   createdAt: string;
 }
