@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { KIND_LABELS } from "../submissions/submission-actions";
+
+const KIND_OPTIONS = Object.entries(KIND_LABELS) as [string, string][];
 
 const INPUT_CLASS =
   "w-full rounded-lg border border-black/10 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#8b1e24]/30";
@@ -49,6 +52,7 @@ export default function NewListingForm() {
       title: String(form.get("title") ?? "").trim(),
       city: textOrNull("city"),
       district: textOrNull("district"),
+      kind: textOrNull("kind"),
       activity_type: textOrNull("activity_type"),
       area_sqm: numberOrNull("area_sqm"),
       monthly_rent: numberOrNull("monthly_rent"),
@@ -82,6 +86,19 @@ export default function NewListingForm() {
 
         <Field label="عنوان الفرصة *">
           <input name="title" required className={INPUT_CLASS} />
+        </Field>
+
+        <Field label="نوع الفرصة *">
+          <select name="kind" required defaultValue="" className={INPUT_CLASS}>
+            <option value="" disabled>
+              اختر نوع الفرصة
+            </option>
+            {KIND_OPTIONS.map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
         </Field>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
