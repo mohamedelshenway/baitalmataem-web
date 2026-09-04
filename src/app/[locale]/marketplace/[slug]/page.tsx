@@ -10,6 +10,7 @@ import { Badge, Button, Card, SectionHeading } from "@/components/ui";
 import { ListingGallery } from "@/components/listing-gallery";
 import { ListingCard } from "@/components/listing-card";
 import { Reveal } from "@/components/reveal";
+import { pickText } from "@/lib/i18n-text";
 
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
@@ -28,11 +29,11 @@ export async function generateMetadata({
   const listing = resolved.listing;
   const dict = await getDictionary(params.locale);
   return buildMetadata({
-    title: listing.title[params.locale],
-    description: listing.summary[params.locale],
+    title: pickText(listing.title, params.locale),
+    description: pickText(listing.summary, params.locale),
     locale: params.locale,
     path: `/marketplace/${params.slug}`,
-    keywords: [dict.marketplace.kinds[listing.kind], listing.city[params.locale], listing.activityType[params.locale]],
+    keywords: [dict.marketplace.kinds[listing.kind], pickText(listing.city, params.locale), pickText(listing.activityType, params.locale)],
   });
 }
 
@@ -58,31 +59,31 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
   const breadcrumb = breadcrumbJsonLd([
     { name: dict.nav.home, url: `${SITE.url}/${locale}` },
     { name: dict.nav.marketplace, url: `${SITE.url}/${locale}/marketplace` },
-    { name: listing.title[locale], url: `${SITE.url}/${locale}/marketplace/${listing.slug}` },
+    { name: pickText(listing.title, locale), url: `${SITE.url}/${locale}/marketplace/${listing.slug}` },
   ]);
   const productLd = listingJsonLd({
-    name: listing.title[locale],
-    description: listing.summary[locale],
+    name: pickText(listing.title, locale),
+    description: pickText(listing.summary, locale),
     url: `${SITE.url}/${locale}/marketplace/${listing.slug}`,
     priceSAR: listing.priceSAR,
-    city: listing.city[locale],
+    city: pickText(listing.city, locale),
     // صور الفرص الحقيقية روابطها كاملة أصلًا (Supabase Storage)، أما الصور التجريبية فمسارات محلية
     image: cover ? (cover.url.startsWith("http") ? cover.url : `${SITE.url}${cover.url}`) : undefined,
   });
 
   const specRows: { label: string; value: string }[] = [
-    { label: dict.listing.specs.activityType, value: listing.activityType[locale] },
+    { label: dict.listing.specs.activityType, value: pickText(listing.activityType, locale) },
     { label: dict.listing.specs.dealType, value: dict.marketplace.kinds[listing.kind] },
     { label: dict.listing.specs.price, value: listing.priceSAR ? `${listing.priceSAR.toLocaleString()} SAR` : dict.common.priceOnRequest },
     ...(listing.rentSAR ? [{ label: dict.listing.specs.rent, value: `${listing.rentSAR.toLocaleString()} SAR` }] : []),
     { label: dict.listing.specs.size, value: listing.sizeSqm ? `${listing.sizeSqm} m²` : "—" },
-    { label: dict.listing.specs.city, value: listing.city[locale] },
-    { label: dict.listing.specs.area, value: listing.area[locale] },
+    { label: dict.listing.specs.city, value: pickText(listing.city, locale) },
+    { label: dict.listing.specs.area, value: pickText(listing.area, locale) },
     { label: dict.listing.specs.operatingState, value: dict.listing.operatingStates[listing.operatingState] },
     ...(listing.openings ? [{ label: dict.listing.specs.openings, value: String(listing.openings) }] : []),
     ...(listing.seatingCapacity ? [{ label: dict.listing.specs.seating, value: String(listing.seatingCapacity) }] : []),
-    ...(listing.equipmentSummary ? [{ label: dict.listing.specs.equipment, value: listing.equipmentSummary[locale] }] : []),
-    ...(listing.kitchenSummary ? [{ label: dict.listing.specs.kitchen, value: listing.kitchenSummary[locale] }] : []),
+    ...(listing.equipmentSummary ? [{ label: dict.listing.specs.equipment, value: pickText(listing.equipmentSummary, locale) }] : []),
+    ...(listing.kitchenSummary ? [{ label: dict.listing.specs.kitchen, value: pickText(listing.kitchenSummary, locale) }] : []),
     ...(listing.parkingAvailable !== undefined
       ? [{ label: dict.listing.specs.parking, value: listing.parkingAvailable ? dict.listing.specs.parkingYes : dict.listing.specs.parkingNo }]
       : []),
@@ -101,8 +102,8 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
 
         <div className="grid gap-10 lg:grid-cols-[1fr_360px]">
           <div>
-            <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-3xl">{listing.title[locale]}</h1>
-            <ListingGallery media={listing.media} title={listing.title[locale]} />
+            <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-3xl">{pickText(listing.title, locale)}</h1>
+            <ListingGallery media={listing.media} title={pickText(listing.title, locale)} />
 
             <div className="mt-8 rounded-card border border-gold-500/30 bg-gold-300/25 p-4 text-sm leading-7 text-ink-800">
               {dict.listing.locationNotice}
@@ -110,7 +111,7 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
 
             <div className="mt-8">
               <h2 className="mb-3 text-lg font-bold text-ink-900">{dict.listing.descriptionTitle}</h2>
-              <p className="leading-8 text-ink-700">{listing.description[locale]}</p>
+              <p className="leading-8 text-ink-700">{pickText(listing.description, locale)}</p>
             </div>
 
             {listing.features.length > 0 && (
@@ -120,7 +121,7 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
                   {listing.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-ink-700">
                       <span className="mt-1 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-ember-600" />
-                      {f[locale]}
+                      {pickText(f, locale)}
                     </li>
                   ))}
                 </ul>
