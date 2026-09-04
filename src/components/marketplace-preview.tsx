@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import type { Listing, ListingKind } from "@/lib/types";
-import { Button, SectionHeading, SampleDataNotice } from "@/components/ui";
+import { Button, SectionHeading } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
 import { Reveal } from "@/components/reveal";
 
@@ -14,12 +14,10 @@ export function MarketplacePreview({
   dict,
   locale,
   listings,
-  showSampleNotice = true,
 }: {
   dict: Dictionary;
   locale: Locale;
   listings: Listing[];
-  showSampleNotice?: boolean;
 }) {
   const [tab, setTab] = useState<"all" | ListingKind>("all");
   const filtered = (tab === "all" ? listings : listings.filter((l) => l.kind === tab)).slice(0, 3);
@@ -28,7 +26,6 @@ export function MarketplacePreview({
     <section className="bg-sand-50 py-16 sm:py-20">
       <div className="container-page">
         <SectionHeading eyebrow={dict.home.marketplaceKicker} title={dict.home.listingsTitle} subtitle={dict.home.listingsSubtitle} align="center" />
-        {showSampleNotice && <SampleDataNotice text={dict.common.sampleDataNotice} />}
 
         <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
           <button
