@@ -4,6 +4,7 @@ import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
 import { LISTINGS } from "@/lib/data/listings";
+import { pickText } from "@/lib/i18n-text";
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
@@ -61,8 +62,8 @@ export default async function AdminPreviewPage({ params }: { params: { locale: s
             <tbody>
               {pending.map((l) => (
                 <tr key={l.slug} className="border-t border-sand-100">
-                  <td className="p-3 font-semibold text-ink-900">{l.title[locale]}</td>
-                  <td className="p-3 text-ink-600">{l.city[locale]}</td>
+                  <td className="p-3 font-semibold text-ink-900">{pickText(l.title, locale)}</td>
+                  <td className="p-3 text-ink-600">{pickText(l.city, locale)}</td>
                   <td className="p-3 text-ink-600">{dict.marketplace.kinds[l.kind]}</td>
                   <td className="p-3 text-ink-600">{l.createdAt}</td>
                   <td className="p-3">
