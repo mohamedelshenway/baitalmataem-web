@@ -10,7 +10,7 @@ import { POSTS } from "@/lib/data/posts";
 export default function sitemap(): MetadataRoute.Sitemap {
   // ملاحظة: "/marketplace/new" و"/admin" مستثناة عمدًا — كلاهما noIndex في generateMetadata
   // ومحجوبتان في robots.ts، فلا يصح إدراجهما في خريطة الموقع لتفادي إشارات متضاربة لمحركات البحث.
-  const staticPaths = ["", "/services", "/marketplace", "/blog", "/about", "/contact"];
+  const staticPaths = ["", "/services", "/marketplace", "/blog", "/about", "/our-work", "/contact"];
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);
   const listingPaths = LISTINGS.filter((l) => l.moderation === "approved").map((l) => `/marketplace/${l.slug}`);
   const postPaths = POSTS.map((p) => `/blog/${p.slug}`);
