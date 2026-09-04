@@ -9,6 +9,7 @@ import { SiteFooter } from "@/components/site-footer";
 import { LanguageBanner } from "@/components/language-banner";
 import { SITE } from "@/lib/constants";
 import { organizationJsonLd } from "@/lib/seo";
+import { pickText } from "@/lib/i18n-text";
 import "../globals.css";
 
 // هذا هو الـ Root Layout الفعلي للموقع (يحتوي html/body) — لا يوجد app/layout.tsx منفصل
@@ -22,8 +23,10 @@ const plexArabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
   display: "swap",
 });
+// latin-ext يغطي حروف التركية الإضافية (ç ş ğ ı İ ö ü)، وcyrillic يغطي الروسية —
+// أُضيفا هنا مع إضافة لغتي التركية والروسية للموقع.
 const plexLatin = IBM_Plex_Sans({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext", "cyrillic"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-latin",
   display: "swap",
@@ -39,7 +42,7 @@ export async function generateMetadata({ params }: { params: { locale: string } 
   return {
     metadataBase: new URL(SITE.url),
     title: { default: SITE.legalName, template: `%s | ${SITE.name.ar}` },
-    description: SITE.tagline[params.locale],
+    description: pickText(SITE.tagline, params.locale),
     icons: { icon: "/favicon.svg" },
   };
 }
