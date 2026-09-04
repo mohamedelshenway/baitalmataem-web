@@ -1,0 +1,560 @@
+{
+  "common": {
+    "siteName": "Bait Al Mataem",
+    "whatsapp": "WhatsApp üzerinden iletişime geçin",
+    "call": "Ara",
+    "readMore": "Devamını oku",
+    "viewAll": "Tümünü görüntüle",
+    "learnMore": "Daha fazla bilgi",
+    "priceOnRequest": "Fiyat için iletişime geçin",
+    "contactNow": "Şimdi bize ulaşın",
+    "optional": "isteğe bağlı"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "services": "Hizmetler",
+    "marketplace": "Fırsat Pazarı",
+    "blog": "Blog",
+    "about": "Hakkımızda",
+    "ourWork": "Çalışmalarımız",
+    "contact": "İletişim",
+    "addListing": "Fırsatını Yayınla",
+    "consultCta": "Danışmanlık Talep Et"
+  },
+  "languageBanner": {
+    "message": "Tarayıcınızın dili İngilizce görünüyor. Bait Al Mataem'i İngilizce görüntülemek ister misiniz?",
+    "switch": "English",
+    "stay": "Türkçe devam et"
+  },
+  "home": {
+    "heroKicker": "Bait Al Mataem | بيت المطاعم — Suudi Arabistan",
+    "heroTitle": "Restoran projeniz için ihtiyacınız olan her şey tek bir yerde",
+    "heroSubtitle": "Fizibilite etüdünden ve kuruluşundan, işletme ve geliştirmeye, Krallık'ta restoran fırsatlarının alım satımına kadar.",
+    "heroCta1": "Fırsatları Keşfedin",
+    "heroCta2": "Restoranınızı veya Yerinizi Yayınlayın",
+    "heroCta3": "Danışmanlık Talep Edin",
+    "search": {
+      "label": "Ne arıyorsunuz?",
+      "city": "Şehir",
+      "allCities": "Tüm Şehirler",
+      "activity": "Faaliyet",
+      "activityPlaceholder": "Örnek: deniz ürünleri, ızgara...",
+      "button": "Fırsat Ara",
+      "mobileTrigger": "Gelişmiş Fırsat Araması"
+    },
+    "trustStripTitle": "Uzman ekip. Operasyonel bakış açısı. Daha net bir yatırım kararı.",
+    "trustStripSubtitle": "Bait Al Mataem, restoran sahiplerine ve yatırımcılara tek bir yerden hizmet vermek için uzman kadrosunu bir araya getirir.",
+    "how": {
+      "title": "Bait Al Mataem size nasıl yardımcı olabilir?",
+      "subtitle": "Hedefinizi seçin, sizi doğrudan uygun hizmete veya fırsata yönlendirelim.",
+      "opportunityTitle": "Bir yatırım fırsatı arıyorum",
+      "opportunityDesc": "Krallık genelinde seçilmiş restoranlara, yerlere ve yatırım fırsatlarına göz atın.",
+      "opportunityCta": "Fırsat Pazarını Keşfedin",
+      "listTitle": "Bir restoran veya yer yayınlamak istiyorum",
+      "listDesc": "Fotoğrafları, videoyu ve detayları kolayca yükleyin; ilan yayınlanmadan önce incelenecektir.",
+      "listCta": "Fırsatını Yayınla",
+      "feasibility": "Fizibilite etüdüne ihtiyacım var",
+      "develop": "Restoranımı geliştirmek istiyorum",
+      "consult": "Operasyonel danışmanlığa ihtiyacım var"
+    },
+    "marketplaceKicker": "Seçilmiş Fırsatlar",
+    "servicesTitle": "Bait Al Mataem Hizmetleri",
+    "servicesSubtitle": "İlk fikirden mevcut projenin geliştirilmesine kadar.",
+    "servicesFeatured1Title": "Restoran Kuruluşu ve Fizibilite Etüdü",
+    "servicesFeatured1Desc": "Genel varsayımlar değil, gerçek verilere dayalı pazar araştırması, yer seçimi ve eksiksiz operasyonel kuruluş.",
+    "servicesFeatured2Title": "Restoran İşletmesi ve Geliştirmesi",
+    "servicesFeatured2Desc": "Belirli kişilere bağımlı kalmak yerine net işletme sistemleri ve 30-60-90 günlük aşamalarda ölçülebilir geliştirme planları.",
+    "listingsTitle": "Restoran pazarında yeni fırsatlar",
+    "listingsSubtitle": "Krallık genelinde seçilmiş restoranlar, yerler ve yatırım fırsatları.",
+    "listingsCta": "Tüm Fırsatları Görüntüle",
+    "marketplaceTabAll": "Tümü",
+    "blogTitle": "Bait Al Mataem Blogu",
+    "blogHeadline": "Daha iyi karar vermenize yardımcı olacak bilgiler",
+    "blogSubtitle": "Restoran sahipleri ve yatırımcılar için pratik analizler ve rehberler",
+    "blogCta": "Bloga Göz Atın",
+    "why": {
+      "title": "Bizim için restoran bir yatırım projesidir… sadece yemek satan bir dükkân değil",
+      "desc": "Karar vermeden önce işletmeyi rakamlarla, pazarla ve kârlılıkla ilişkilendiriyoruz.",
+      "point1": "Çözümden önce teşhis",
+      "point2": "Rakamlara dayalı kararlar",
+      "point3": "Sahada operasyonel deneyim",
+      "point4": "Projeye hem yatırımcı hem işletmeci gözüyle bakıyoruz"
+    },
+    "imageAlts": {
+      "hero": "Sıcak aydınlatmalı modern bir restoranın iç tasarımı",
+      "investment": "Restoran sektöründe bir yatırım fırsatının veri ve fizibilite analizi",
+      "operationsTeam": "Ticari bir mutfakta çalışan bir operasyon ekibini gösteren temsili görsel",
+      "equipment": "Bir restoran mutfağında profesyonel ekipman ve donanım"
+    },
+    "team": {
+      "title": "Tek bir ekip olarak çalışan uzman kadro",
+      "text": "Bait Al Mataem, restoran sahibine ve yatırımcıya projenin her parçasını ayrı ayrı ele almak yerine bütünsel bir bakış açısı sunmak amacıyla restoran kuruluşu, işletmesi, geliştirmesi ve yatırımı alanlarında uzman bir kadroyu bir araya getirir.",
+      "photoNote": "Lisanslı temsili görsel olup Bait Al Mataem ekibinin fotoğrafı değildir.",
+      "areas": [
+        "Kuruluş ve İşletme",
+        "Fizibilite Etütleri",
+        "Fırsat Değerlendirmesi",
+        "Maliyet Yönetimi",
+        "Operasyon Geliştirme",
+        "Pazarlama",
+        "Müşteri Deneyimi",
+        "Yatırım Analizi"
+      ],
+      "execLabel": "Üst Yönetim",
+      "execName": "Mohamed Elshenawy",
+      "execTitle": "Genel Müdür — Bait Al Mataem"
+    },
+    "investor": {
+      "title": "Mevcut bir restorana yatırım yapmayı mı düşünüyorsunuz?",
+      "subtitle": "Sadece ekipman ve dekorasyonu satın almayın… karar vermeden önce projenin gerçek değerini rakamlarla anlayın.",
+      "step1": "Fırsatın İncelenmesi",
+      "step2": "İşletme ve Rakamların Analizi",
+      "step3": "Fiyat ve Risk Değerlendirmesi",
+      "cta": "Fırsat Değerlendirmesi Talep Edin",
+      "secondaryCta": "Mevcut Restoranlara Göz Atın"
+    },
+    "listYours": {
+      "title": "Bir restoranınız veya yeriniz var ve alıcı ya da yatırımcı mı arıyorsunuz?",
+      "subtitle": "Fırsat detaylarını kolayca kendiniz ekleyin, 10 fotoğraf ve 2 videoya kadar yükleyin; platformda görünmeden önce incelenecektir.",
+      "benefit1": "Mobil cihazdan kolay ekleme",
+      "benefit2": "Yayınlanmadan önce inceleme",
+      "benefit3": "Bait Al Mataem aracılığıyla iletişim",
+      "cta": "Fırsatını Şimdi Yayınla"
+    },
+    "trustTitle": "Nasıl Çalışıyoruz",
+    "trustSubtitle": "Bait Al Mataem izlenimlere değil — her karar rakamların doğrulanmasına dayanır",
+    "trustStep1Title": "Görüşten önce doğrulama",
+    "trustStep1Desc": "Satıcının veya sahibinin verdiği rakamlara, doğrulamaya çalışmadan güvenmiyoruz.",
+    "trustStep2Title": "Gerçek ile tahmin arasında net ayrım",
+    "trustStep2Desc": "Her rapor veya etüt, doğrulanmış bilgi ile varsayımı ve profesyonel görüşü birbirinden ayırır.",
+    "trustStep3Title": "Anlaşmadan önce güvenilirlik",
+    "trustStep3Desc": "Bir anlaşmaya mal olsa bile önemli riskleri gizlemez, garanti edilmiş kâr vaat etmeyiz."
+  },
+  "services": {
+    "pageTitle": "Bait Al Mataem Hizmetleri",
+    "pageSubtitle": "Suudi Arabistan'da restoran sahipleri ve yatırımcılar için kuruluştan geliştirme, değerleme ve aracılığa kadar entegre hizmetler",
+    "ctaGeneric": "Bu Hizmeti Talep Et",
+    "relatedTitle": "İlginizi çekebilecek diğer hizmetler",
+    "list": {
+      "restaurant-setup": {
+        "title": "Restoran Kuruluşu",
+        "short": "Fikirden açılışa: pazar araştırması, yer seçimi ve eksiksiz operasyonel kuruluş.",
+        "body": [
+          "Bir restoran kurmak, herhangi bir kira sözleşmesi imzalamadan önce başlayan büyük bir karardır. Bait Al Mataem; herhangi bir riyal harcamadan önce fikri, pazarı, rakipleri incelemenize, faaliyeti, konumu ve uygun alanı belirlemenize yardımcı olur.",
+          "Ayrıca kuruluş maliyetlerinin, ekipmanın, operasyonel ihtiyaçların ve işgücünün tahminini, açılış öncesi ve açılış-işletme planının hazırlanmasını da kapsıyoruz; böylece projenize sadece heyecanla değil, sağlam bir temelle başlarsınız."
+        ],
+        "keywords": [
+          "restoran kuruluşu",
+          "yeni restoran açılışı",
+          "restoran projesi etüdü"
+        ]
+      },
+      "restaurant-operations": {
+        "title": "Restoran İşletmesi ve Yönetimi",
+        "short": "Belirli kişilere bağımlı kalmak yerine net işletme sistemleri.",
+        "body": [
+          "İyi işletme bir sistemdir, tek bir müdür veya şefe bağımlılık değil. Teslim alma, depolama, hazırlık, üretim, servis, temizlik ve gıda güvenliği dahil her aşama için organizasyon yapısı, görev tanımları ve standart işletme prosedürlerinin (SOP) oluşturulmasında size yardımcı oluyoruz.",
+          "Ayrıca envanter, israf, satın alma, tedarikçiler ve performans değerlendirmesini de kapsıyoruz; her an orada olmasanız bile projenizi takip etmenize yardımcı olacak düzenli raporlarla."
+        ],
+        "keywords": [
+          "restoran işletmesi",
+          "restoran yönetimi",
+          "restoran SOP"
+        ]
+      },
+      "restaurant-development": {
+        "title": "Restoran Geliştirme",
+        "short": "Satışlar mı zayıf? Herhangi bir çözüm önermeden önce gerçek nedeni belirliyoruz.",
+        "body": [
+          "Bir restoranın performansı zayıfladığında, hemen sorunun pazarda olduğunu varsaymıyoruz. Herhangi bir çözüm önermeden önce gerçek nedeni belirlemek için konumu, ürünü, fiyatları, kaliteyi, hizmeti, menüyü, gıda maliyetini, işgücünü, israfı, envanteri ve müşteri deneyimini analiz ediyoruz.",
+          "Ardından, her aşama için net performans göstergeleriyle 30-60-90 günlük ölçülebilir bir geliştirme planı oluşturuyoruz."
+        ],
+        "keywords": [
+          "restoran geliştirme",
+          "zayıf performanslı restoran",
+          "restoran satışlarını artırma"
+        ]
+      },
+      "feasibility-study": {
+        "title": "Fizibilite Etütleri",
+        "short": "Sermayenizi yatırmadan önce, fikrin buna değip değmediğini rakamlarla öğrenin.",
+        "body": [
+          "Suudi Arabistan'da bir restoran fizibilite etüdümüz en az şunları içerir: faaliyet tanımı, pazar-bölge-rakip analizi, hedef kitle, başlangıç yatırımı ve kuruluş maliyetleri, sabit ve değişken maliyetler, beklenen satışlar, Food Cost ve Labor Cost, başabaş noktası, nakit akışı, yatırım getirisi ve senaryo analizi (temkinli, beklenen, iyimser).",
+          "Rakam uydurmuyoruz. Yeterli veri yoksa mantıklı tahminler kullanır ve bunların doğrulama gerektiren varsayımlar olduğunu açıkça belirtiriz; her zaman net bir tavsiyeyle sonuçlandırırız."
+        ],
+        "keywords": [
+          "restoran fizibilite etüdü",
+          "Suudi Arabistan'da restoran fizibilite etüdü",
+          "Mekke'de restoran fizibilite etüdü",
+          "Cidde'de restoran fizibilite etüdü"
+        ]
+      },
+      "restaurant-valuation": {
+        "title": "Satın Almadan Önce Restoran Değerlemesi",
+        "short": "Bir fırsatı sadece satıcının verdiği rakamlara dayanarak satın almayın.",
+        "body": [
+          "Mevcut bir restoranı satın almadan veya devralmadan önce, sadece satıcının sözlerine güvenmek yerine gerçek satışları, giderleri, işgücünü, kirayı, yükümlülükleri, ruhsat durumunu ve ekipmanı doğrulamanıza yardımcı oluyoruz.",
+          "Fırsatın sadece satıcının istediği tutarı değil, gerçek ekonomik değerini hesaplıyor ve şu net kararlardan birini vermenize yardımcı oluyoruz: satın al, pazarlıktan sonra satın al, ek etüt yap veya fırsatı reddet."
+        ],
+        "keywords": [
+          "satın almadan önce restoran değerlemesi",
+          "mevcut restoran satın alma",
+          "devralma fırsatı değerlendirmesi"
+        ]
+      },
+      "restaurant-brokerage": {
+        "title": "Restoran Alım, Satım ve Devri",
+        "short": "Gerçekten ciddi alıcı ve yatırımcılara ulaşan aracılık hizmeti.",
+        "body": [
+          "İster restoranınızı satmak veya devretmek isteyin, ister satın almak için mevcut bir proje arıyor olun, Bait Al Mataem süreci profesyonelce yönetir: karşı tarafın niteliğini değerlendirme, görüşmeleri düzenleme, müzakereyi yönetme ve anlaşma kapanana kadar takip etme.",
+          "Proje bilgilerinizi ciddi olmayanlardan koruyoruz ve yatırımcının kararını etkileyecek hiçbir önemli bilgiyi gizlemiyoruz."
+        ],
+        "keywords": [
+          "devir için restoran",
+          "satılık restoran",
+          "restoran satın alma",
+          "Mekke'de restoran devri",
+          "Cidde'de restoran devri"
+        ]
+      },
+      "restaurant-consulting": {
+        "title": "Restoran Danışmanlığı",
+        "short": "Duymak istemeseniz bile doğrudan profesyonel görüş.",
+        "body": [
+          "Yer seçiminden menü fiyatlandırmasına, genişleme fırsatı değerlendirmesine kadar herhangi bir operasyonel veya yatırım kararı hakkında restoran sahipleri ve yatırımcılar için esnek danışmanlık.",
+          "Sadece sizin fikriniz olduğu için hiçbir fikri onaylamıyoruz. Karar zayıfsa veya risk yüksekse, bunu açıkça söylüyor ve alternatifler sunuyoruz."
+        ],
+        "keywords": [
+          "restoran danışmanı",
+          "Suudi Arabistan'da restoran danışmanı",
+          "Mekke'de restoran danışmanı",
+          "Cidde'de restoran danışmanı"
+        ]
+      },
+      "cost-profitability": {
+        "title": "Kârlılık ve Maliyet Analizi",
+        "short": "Yüksek satışlar tek başına başarılı bir proje anlamına gelmez.",
+        "body": [
+          "Yüksek satışların tek başına restoranın başarısının kanıtı olmadığından, satışlar ile Food Cost, Labor Cost, kira, işletme giderleri, brüt ve net kâr ile nakit akışı arasındaki ilişkinin tamamını analiz ediyoruz.",
+          "Amaç, sadece kağıt üzerinde cazip bir satış rakamı değil, sağlıklı satışlar, gerçek kârlılık ve sürdürülebilir nakit akışıdır."
+        ],
+        "keywords": [
+          "Food Cost",
+          "Labor Cost",
+          "restoran kârlılığı",
+          "restoran maliyet analizi"
+        ]
+      },
+      "waste-management": {
+        "title": "İsraf Yönetimi",
+        "short": "Kaybolan kârın büyük bir kısmı satışlarda değil, israfta kayboluyor.",
+        "body": [
+          "Gerçek israf kaynaklarını belirlemek için teslim alma, depolama, hazırlık ve envanter döngüsünü inceliyoruz: kötü depolama, tarife göre porsiyon farklılıkları, zayıf envanter takibi veya yanlış fiyatlandırma.",
+          "Uygulanabilir genel tavsiyeler yerine, israfı ölçülebilir şekilde azaltmak için net işletme prosedürleri belirliyoruz."
+        ],
+        "keywords": [
+          "restoranlarda israf",
+          "restoranlarda israfı azaltma"
+        ]
+      },
+      "menu-development": {
+        "title": "Menü Geliştirme",
+        "short": "Sadece kişisel zevke değil, rakamlara dayalı bir menü.",
+        "body": [
+          "Her ürünün satış, kârlılık ve gıda maliyeti açısından performansını inceliyor, en kârlı ve en az hareket eden ürünleri belirliyor, işletme karmaşıklığını azaltıp kâr marjını artıracak değişiklikler öneriyoruz.",
+          "Amaç, sadece daha çeşitli değil, işletme açısından daha basit ve daha kârlı bir menüdür."
+        ],
+        "keywords": [
+          "restoran menü geliştirme",
+          "Menu Engineering"
+        ]
+      },
+      "restaurant-marketing": {
+        "title": "Restoran Pazarlaması",
+        "short": "Sadece görüntülenme değil, sipariş ve kârlılık artışını hedefleyen pazarlama.",
+        "body": [
+          "Net bir ticari hedefe bağlı bir pazarlama planı oluşturuyoruz: daha fazla sipariş, daha yüksek ortalama fatura tutarı, daha fazla tekrar ziyaret ve Google Haritalar, uygulamalar ve sosyal medyada daha iyi görünürlük.",
+          "Önerdiğimiz her pazarlama faaliyeti, sadece popüler olduğu için değil, ölçülebilir bir göstergeye bağlıdır.",
+          "Hizmetlerimiz ayrıca restoranınız için profesyonel bir web sitesi tasarımı ve geliştirmesini, sosyal medya hesaplarınızın (Instagram, Snapchat, TikTok, X) içerik, reklam kampanyaları ve düzenli paylaşımlarla yönetilmesini de kapsar; böylece dijital varlığınız gerçek deneyiminizin kalitesini yansıtır."
+        ],
+        "keywords": [
+          "restoran pazarlaması",
+          "Suudi Arabistan'da restoran pazarlaması",
+          "restoran web sitesi tasarımı",
+          "restoran sosyal medya yönetimi",
+          "restoran dijital pazarlaması"
+        ]
+      },
+      "staff-recruitment": {
+        "title": "İşe Alım ve Ekip Seçimi",
+        "short": "İlk elemeden mülakatlara kadar doğru ekibi seçip işe almanıza yardımcı oluyoruz.",
+        "body": [
+          "Bait Al Mataem; restoran, otel, catering şirketi, kafe ve büfe sahiplerine, kendileri büyük zaman ve çaba harcamadan doğru ekibi seçmelerinde yardımcı olmak için uzman bir işe alım hizmeti sunar.",
+          "İş ihtiyacınızı (gerekli pozisyonlar, açık pozisyon sayısı, gereksinimler) sizden alıyor, ardından uygun adayları eleyip onlarla ön görüşmeler yapıyor ve nihai kararı kendiniz verebilmeniz için ihtiyacınıza en yakın adayları öneriyoruz.",
+          "Hizmet; restoran, otel, kafe, büfe, catering ve yemek hizmeti şirketi sahipleri için mevcuttur. Hizmet ücreti detayları, talep edilen pozisyon ve açık pozisyon sayısına göre belirlenir — detaylar için bizimle iletişime geçin."
+        ],
+        "keywords": [
+          "restoran işe alımı",
+          "Suudi Arabistan otel işe alımı",
+          "restoran ekibi seçimi",
+          "restoran işe alım mülakatları",
+          "kafe ve büfe işe alımı"
+        ]
+      }
+    }
+  },
+  "marketplace": {
+    "pageTitle": "Fırsat Pazarı",
+    "pageSubtitle": "Krallık'ın farklı bölgelerinde devir ve satılık restoranlar, kiralık dükkan ve yerler ile yatırım fırsatları",
+    "addListingCta": "Fırsatını Yayınla",
+    "filters": {
+      "title": "Sonuçları Filtrele",
+      "city": "Şehir",
+      "allCities": "Tüm Şehirler",
+      "kind": "Fırsat Türü",
+      "allKinds": "Tüm Türler",
+      "priceRange": "Fiyat Aralığı (Riyal)",
+      "minPrice": "Min",
+      "maxPrice": "Max",
+      "minSize": "Minimum Alan (m²)",
+      "reset": "Sıfırla",
+      "resultsCount": "{count} fırsat"
+    },
+    "kinds": {
+      "restaurant_taqbeel": "Devir İçin Restoran",
+      "restaurant_sale": "Satılık Restoran",
+      "lease_unit": "Kiralık Dükkan / Yer",
+      "investment_opportunity": "Yatırım Fırsatı",
+      "seeking_investor": "Yatırımcı Arayan Restoran",
+      "operating_partner_needed": "İşletme Ortağı Aranıyor",
+      "site_for_restaurant": "Restoran İçin Uygun Yer"
+    },
+    "status": {
+      "available": "Müsait",
+      "negotiating": "Görüşme Aşamasında",
+      "reserved": "Rezerve Edildi",
+      "closed": "Anlaşma Tamamlandı",
+      "unavailable": "Müsait Değil"
+    },
+    "noResults": "Şu anda bu aramayla eşleşen bir fırsat bulunmuyor. Filtreleri değiştirmeyi deneyin veya doğrudan bizimle iletişime geçin."
+  },
+  "listing": {
+    "backToMarketplace": "Fırsat Pazarına Dön",
+    "gallery": {
+      "photos": "Fotoğraflar",
+      "videos": "Video"
+    },
+    "specs": {
+      "title": "Fırsat Bilgileri",
+      "activityType": "Faaliyet Türü",
+      "dealType": "Anlaşma Türü",
+      "price": "Fiyat",
+      "rent": "Aylık Kira",
+      "size": "Alan",
+      "city": "Şehir",
+      "area": "Bölge",
+      "operatingState": "İşletme Durumu",
+      "openings": "Kapı Sayısı",
+      "seating": "Oturma Kapasitesi",
+      "equipment": "Ekipman",
+      "kitchen": "Mutfak",
+      "parking": "Otopark",
+      "parkingYes": "Mevcut",
+      "parkingNo": "Mevcut Değil"
+    },
+    "operatingStates": {
+      "operating": "Şu Anda Faaliyette",
+      "closed_temporarily": "Geçici Olarak Kapalı",
+      "closed_permanently": "Kalıcı Olarak Kapalı",
+      "not_applicable": "Geçerli Değil"
+    },
+    "featuresTitle": "Öne Çıkan Özellikler",
+    "descriptionTitle": "Açıklama",
+    "locationNotice": "Burada sadece genel bölge gösterilmektedir. Kesin konum ve doğrudan iletişim bilgileri, her iki tarafı korumak amacıyla Bait Al Mataem üzerinden koordinasyon sağlandıktan sonra paylaşılır.",
+    "ctaViewDetails": "Detayları Görüntüle",
+    "ctaViewing": "Görüntüleme Talep Et",
+    "ctaContact": "Bait Al Mataem ile İletişime Geç",
+    "ctaEvaluate": "Bu Fırsatın Değerlendirmesini Talep Et",
+    "similarTitle": "Benzer Fırsatlar",
+    "views": "{count} görüntülenme"
+  },
+  "newListing": {
+    "title": "Fırsatını Yayınla",
+    "subtitle": "Basit adımlar; gönderilen her fırsat, yayınlanmadan önce Bait Al Mataem incelemesinden geçer — hiçbir ilan doğrudan yayınlanmaz.",
+    "steps": {
+      "1": "Fırsat Türü",
+      "2": "Konum",
+      "3": "Faaliyet",
+      "4": "Fiyat",
+      "5": "Alan",
+      "6": "Detaylar",
+      "7": "Fotoğraflar",
+      "8": "Video",
+      "9": "İletişim Bilgileri",
+      "10": "İnceleme ve Gönderim"
+    },
+    "next": "İleri",
+    "back": "Geri",
+    "submit": "İncelemeye Gönder",
+    "photosHint": "Cihazınızdan sürükleyip bırakarak veya seçerek 10 adede kadar fotoğraf yükleyin. Sıralamayı değiştirmek için sürükleyin; ilk fotoğraf ana fotoğraftır. Devam etmek için en az bir fotoğraf gereklidir.",
+    "setCover": "Ana Fotoğraf Olarak Ayarla",
+    "remove": "Sil",
+    "videosHint": "Video başına en fazla 30 saniye olmak üzere 2 videoya kadar.",
+    "videoTooLong": "Bu video 30 saniyeden uzun olduğu için kabul edilmedi. Lütfen daha kısa bir video yükleyin.",
+    "maxPhotosReached": "Maksimum sınıra ulaştınız (10 fotoğraf).",
+    "maxVideosReached": "Maksimum sınıra ulaştınız (2 video).",
+    "choosePhotosPrompt": "Fotoğrafları seçin veya buraya sürükleyin",
+    "chooseVideoPrompt": "Bir video seçin (en fazla 30 saniye)",
+    "region": "Bölge",
+    "regionPlaceholder": "Bölge seçin",
+    "city": "Şehir",
+    "cityPlaceholder": "Şehir seçin",
+    "cityPlaceholderNoRegion": "Önce bölgeyi seçin",
+    "district": "Mahalle (isteğe bağlı)",
+    "districtPlaceholder": "Örnek: Al Rawdah Mahallesi",
+    "contactName": "Ad",
+    "contactPhone": "İletişim Numarası",
+    "contactCity": "Şehriniz (ikamet ettiğiniz şehir)",
+    "reviewNotice": "Gönderildikten sonra fırsatınız \"inceleniyor\" durumuna girer ve Bait Al Mataem ekibinin onayı olmadan yayınlanmaz. Yayınlanmadan önce açıklama veya bilgi düzeltmesi istemek için sizinle iletişime geçebiliriz.",
+    "successTitle": "Fırsatınız Alındı",
+    "successBody": "Teşekkür ederiz. Fırsatınız şu anda Bait Al Mataem ekibi tarafından inceleniyor ve yakında sizinle iletişime geçeceğiz.",
+    "mvpStorageNotice": "Fırsatınız sistemimize kaydedildi ve incelenmesi için Bait Al Mataem ekibine hemen görünecek. Doğrudan takip etmek veya emin olmak isterseniz WhatsApp veya e-posta yoluyla bizimle iletişime geçebilirsiniz.",
+    "submitting": "Gönderiliyor...",
+    "errorGeneric": "Gönderim sırasında bir hata oluştu. Tekrar deneyin veya doğrudan WhatsApp üzerinden bizimle iletişime geçin."
+  },
+  "blog": {
+    "pageTitle": "Blog",
+    "pageSubtitle": "Restoran işletmesi, geliştirmesi, değerlemesi ve yatırımı konusunda uzman içerik",
+    "minutesRead": "{count} dakikalık okuma",
+    "relatedServiceCta": "İlgili Hizmet",
+    "relatedListingsTitle": "Şu Anda Mevcut Fırsatlar"
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "body": [
+      "Bait Al Mataem, restoran kuruluşu, işletmesi, geliştirmesi ve yatırımı konusunda uzman bir platform olup, operasyonel bilgiyi, yatırım analizini ve pazarlamayı tek bir sistemde birleştirerek restoran sahibinin ve yatırımcının daha net ve daha az riskli kararlar almasına yardımcı olur.",
+      "Fikir ve konum etüdü ile yatırım fizibilitesinden başlayıp, kuruluş, işletme ve maliyet kontrolünden geçerek, geliştirme, pazarlama ve alım-satım fırsatı değerlendirmesine kadar restoran sektörünün farklı alanlarında uzman bir kadro ve bütünleşik bir ekiple çalışıyoruz.",
+      "Cidde ve Mekke'den yola çıktık ve platformu, bugün Suudi Arabistan Krallığı'nın farklı bölgelerini kapsayacak şekilde temelden inşa ettik."
+    ]
+  },
+  "ourWork": {
+    "title": "Çalışmalarımız",
+    "kicker": "Bait Al Mataem",
+    "subtitle": "Biz kimiz ve restoran sahiplerine ve yatırımcılara gerçekte ne sunuyoruz",
+    "whoTitle": "Biz Kimiz",
+    "whoBody": [
+      "Bait Al Mataem, operasyonel deneyimi, yatırım analizini ve pazarlamayı tek bir yerde birleştiren, restoran ve gıda işletmeleri sektöründe uzmanlaşmış bir Suudi şirketidir.",
+      "Hem restoran sahipleriyle hem de yatırımcılarla çalışıyoruz: yeni bir restoran açmayı düşünenlerle, mevcut bir restoranı geliştirmek veya satmak isteyenlerle ve sektörde gerçek bir yatırım fırsatı arayanlarla."
+    ],
+    "whatTitle": "Ne Sunuyoruz",
+    "whatSubtitle": "Hizmetlerimiz, ilk fikirden işletme, geliştirme ve satışa kadar restoranın tüm yaşam döngüsünü kapsar",
+    "pillars": [
+      {
+        "title": "Kuruluş ve Yatırım",
+        "text": "Fikir ve konum etüdü, fizibilite etütleri, satın almadan önce restoran değerlemesi ve restoranların alım, satım ve devri.",
+        "services": [
+          "restaurant-setup",
+          "feasibility-study",
+          "restaurant-valuation",
+          "restaurant-brokerage"
+        ]
+      },
+      {
+        "title": "İşletme ve Geliştirme",
+        "text": "Net işletme sistemleri, maliyet ve israf kontrolü, menü geliştirme ve düşük performanslı veya zayıf kârlı restoranların geliştirilmesi.",
+        "services": [
+          "restaurant-operations",
+          "restaurant-development",
+          "cost-profitability",
+          "waste-management",
+          "menu-development",
+          "staff-recruitment"
+        ]
+      },
+      {
+        "title": "Danışmanlık ve Pazarlama",
+        "text": "Herhangi bir operasyonel veya yatırım kararı için doğrudan danışmanlık ve satış ile kârlılığı artırmak için restoran pazarlaması.",
+        "services": [
+          "restaurant-consulting",
+          "restaurant-marketing"
+        ]
+      }
+    ],
+    "ctaTitle": "Projeniz için uygun hizmeti belirlemeniz mi gerekiyor?",
+    "ctaText": "Bizimle iletişime geçin, restoranınızdan veya fikrinizden bahsedin; doğru başlangıç noktasını belirlemenize yardımcı olalım."
+  },
+  "joinUs": {
+    "pageTitle": "Bait Al Mataem ile Çalışın",
+    "pageSubtitle": "Bait Al Mataem ile iş birliği yapabileceğiniz iki yol: yarı zamanlı katılın veya komisyon karşılığında gerçek fırsatlar getiren bir pazarlamacı olun.",
+    "partTime": {
+      "title": "Yarı Zamanlı Çalışma",
+      "body": [
+        "Bait Al Mataem ekibine pazarlama, operasyon veya idari görevlerde yarı zamanlı katılmak isterseniz, iletişim formu aracılığıyla bilgilerinizi ve deneyiminizi bize gönderin; deneyiminize uygun bir pozisyon olduğunda size geri dönüş yapacağız."
+      ],
+      "cta": "Bizimle İletişime Geçin"
+    },
+    "referral": {
+      "title": "Komisyonlu Pazarlamacı Olun",
+      "body": [
+        "Restoran sektöründe bir ilişki ağınız varsa ve gerçek bir fırsat biliyorsanız — satılık veya devir için restoran, kiralık uygun bir dükkan veya fırsat arayan bir yatırımcı — bunu \"Fırsatını Yayınla\" formu aracılığıyla bize kaydedebilirsiniz.",
+        "Anlaşma sizin aracılığınızla tamamlanırsa, üzerinden komisyon alırsınız."
+      ],
+      "note": "Komisyon oranı ve şartları, her fırsat için başlamadan önce sizinle Bait Al Mataem arasında doğrudan anlaşmayla belirlenir ve fırsatın türüne ve büyüklüğüne göre değişir — tüm detayları öğrenmek için bizimle iletişime geçin.",
+      "cta": "Fırsatı Şimdi Yayınla"
+    }
+  },
+  "contact": {
+    "title": "İletişim",
+    "subtitle": "Projeniz veya sorunuz hakkında bize bilgi verin, en kısa sürede size dönüş yapalım",
+    "whatsappTitle": "İletişimin En Hızlı Yolu",
+    "emailTitle": "E-posta",
+    "formTitle": "Veya Doğrudan Bir Mesaj Gönderin",
+    "formName": "Ad",
+    "formPhone": "Cep Telefonu / WhatsApp Numarası",
+    "formMessage": "Mesaj",
+    "formSubmit": "Mesajı Gönder",
+    "formSuccess": "Teşekkür ederiz, mesajınız alındı. Bait Al Mataem ekibi yakında sizinle iletişime geçecek.",
+    "formMvpNotice": "Geçici teknik not: Bu, sitenin ilk sürümüdür (MVP) ve bu formu almak için henüz otomatik olarak bağlı bir e-posta bulunmamaktadır. Mesajınızın şu anda %100 ulaştığından emin olmak için doğrudan WhatsApp veya e-posta yoluyla bizimle iletişime geçin.",
+    "formError": "Gönderim sırasında bir hata oluştu. Tekrar deneyin veya doğrudan WhatsApp üzerinden bizimle iletişime geçin."
+  },
+  "admin": {
+    "title": "Bait Al Mataem Yönetim Paneli",
+    "previewNotice": "Bu, hedeflenen kullanıcı deneyimini göstermek amacıyla sadece yönetim arayüzünün bir önizlemesidir. Düğmeler henüz işlevsel değildir — bunları gerçek bir veritabanına ve giriş sistemine bağlamak bir sonraki teknik adımdır.",
+    "pendingTitle": "İncelemedeki Fırsatlar",
+    "columns": {
+      "title": "Başlık",
+      "city": "Şehir",
+      "kind": "Tür",
+      "submitted": "Gönderim Tarihi",
+      "actions": "İşlem"
+    },
+    "approve": "Onayla",
+    "reject": "Reddet",
+    "requestChanges": "Değişiklik Talep Et"
+  },
+  "footer": {
+    "servicesTitle": "Hizmetler",
+    "companyTitle": "Şirket",
+    "socialTitle": "Bizi Takip Edin",
+    "rights": "Tüm hakları saklıdır",
+    "focusNotice": "Suudi Arabistan Krallığı'nın farklı bölgelerinde restoran fırsatları ve hizmetleri",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Şartlar ve Koşullar"
+  },
+  "legal": {
+    "privacyTitle": "Gizlilik Politikası",
+    "privacyIntro": "Bu sayfa, Bait Al Mataem'in site ziyaretçilerinin ve potansiyel müşterilerin verilerini nasıl ele aldığını açıklar. Bu, platform büyüdükçe ve gerçek bir veritabanına bağlandıkça nihai hale getirilecek ve hukuki olarak gözden geçirilecek kısa bir ön sürümdür; o zamana kadar bu sayfa nihai bir hukuki belge değil, ön bir gösterge olarak kalır.",
+    "privacyBody": [
+      "Şu anda toplayabileceğimiz veriler, ziyaretçinin iletişim formları veya \"Fırsatını Yayınla\" formu aracılığıyla kendisinin gönderdiği bilgilerle sınırlıdır (ad, iletişim numarası, şehir ve fırsat detayları gibi); site ilk sürüm (MVP) aşamasında olduğu için bu veriler şu anda kalıcı bir veritabanında saklanmamaktadır.",
+      "Bait Al Mataem, açık izin olmadan müşteri verilerini pazarlama amacıyla herhangi bir üçüncü tarafla paylaşmaz; iletişim bilgileri yalnızca sorguyu yanıtlamak veya sunulan fırsatı incelemek için kullanılır.",
+      "Site gerçek bir veritabanına bağlandığında, bu politika veri saklama, muhafaza ve kullanıcının bunlara erişim veya silme hakları konusunda kesin detaylarla güncellenecektir."
+    ],
+    "termsTitle": "Şartlar ve Koşullar",
+    "termsIntro": "Bu şartlar, Bait Al Mataem web sitesini kullanımınızı düzenler. Bu, platform büyüdükçe nihai hale getirilecek ve hukuki olarak gözden geçirilecek kısa bir ön sürümdür; o zamana kadar bu sayfa nihai bir hukuki belge değil, ön bir gösterge olarak kalır.",
+    "termsBody": [
+      "Fırsat Pazarı'nda görüntülenen içerik (restoranlar, yerler ve yatırım fırsatları) yayınlanmadan önce Bait Al Mataem ekibinin incelemesine tabidir; ancak Bait Al Mataem, fırsat sahibi tarafından sunulan her verinin doğruluğunu garanti etmez ve herhangi bir yatırımcıya satın alma veya yatırım kararı vermeden önce bağımsız doğrulama yapmasını tavsiye eder.",
+      "Fizibilite etütlerinde veya fırsat değerlendirmelerinde sunulan fiyatlar ve mali veriler, aksi açıkça belirtilmedikçe doğası gereği tahmini veya analitiktir ve herhangi bir gelecekteki getiri veya sonucun garantisi olarak kabul edilmez.",
+      "Bir fırsatı sunmak için siteyi kullanmak veya Bait Al Mataem ile iletişime geçmek, taraflar arasında ayrı bir yazılı anlaşma olmadıkça herhangi bir sözleşmesel yükümlülük oluşturmaz."
+    ]
+  }
+}
