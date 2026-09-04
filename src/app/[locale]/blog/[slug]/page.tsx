@@ -10,6 +10,7 @@ import { POSTS, getPostBySlug } from "@/lib/data/posts";
 import { LISTINGS } from "@/lib/data/listings";
 import { getServiceMeta } from "@/lib/data/services";
 import { parseContent } from "@/lib/format-content";
+import { pickText } from "@/lib/i18n-text";
 import { Badge, Button, GoldDivider } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
 
@@ -32,8 +33,8 @@ export async function generateMetadata({
   if (!post) return {};
   const postImage = POST_IMAGES[post.slug];
   return buildMetadata({
-    title: post.title[params.locale],
-    description: post.excerpt[params.locale],
+    title: pickText(post.title, params.locale),
+    description: pickText(post.excerpt, params.locale),
     locale: params.locale,
     path: `/blog/${params.slug}`,
     keywords: post.tags,
@@ -48,7 +49,7 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
   if (!post) notFound();
   const postImage = POST_IMAGES[post.slug];
   const dict = await getDictionary(locale);
-  const blocks = parseContent(post.content[locale]);
+  const blocks = parseContent(pickText(post.content, locale));
 
   const relatedService = post.relatedServiceSlug ? getServiceMeta(post.relatedServiceSlug) : undefined;
   const relatedServiceItem =
@@ -60,11 +61,11 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
   const breadcrumb = breadcrumbJsonLd([
     { name: dict.nav.home, url: `${SITE.url}/${locale}` },
     { name: dict.nav.blog, url: `${SITE.url}/${locale}/blog` },
-    { name: post.title[locale], url: `${SITE.url}/${locale}/blog/${post.slug}` },
+    { name: pickText(post.title, locale), url: `${SITE.url}/${locale}/blog/${post.slug}` },
   ]);
   const articleLd = articleJsonLd({
-    title: post.title[locale],
-    description: post.excerpt[locale],
+    title: pickText(post.title, locale),
+    description: pickText(post.excerpt, locale),
     url: `${SITE.url}/${locale}/blog/${post.slug}`,
     datePublished: post.publishedAt,
     author: post.author,
@@ -82,18 +83,18 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
         </Link>
 
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <Badge tone="dark">{post.category[locale]}</Badge>
+          <Badge tone="dark">{pickText(post.category, locale)}</Badge>
           <span className="text-xs font-semibold text-ink-500">
             {dict.blog.minutesRead.replace("{count}", String(post.readingMinutes))}
           </span>
         </div>
-        <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-4xl">{post.title[locale]}</h1>
-        <p className="mb-8 text-lg leading-8 text-ink-600">{post.excerpt[locale]}</p>
+        <h1 className="mb-4 text-2xl font-bold leading-tight text-ink-900 sm:text-4xl">{pickText(post.title, locale)}</h1>
+        <p className="mb-8 text-lg leading-8 text-ink-600">{pickText(post.excerpt, locale)}</p>
         {postImage && (
           <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-cardLg bg-ink-100 shadow-card">
             <Image
               src={postImage}
-              alt={post.title[locale]}
+              alt={pickText(post.title, locale)}
               fill
               priority
               sizes="(min-width: 768px) 768px, 100vw"
