@@ -6,7 +6,7 @@ import { buildMetadata, breadcrumbJsonLd, listingJsonLd } from "@/lib/seo";
 import { SITE, whatsappLink, mailtoLink, HAS_WHATSAPP } from "@/lib/constants";
 import { LISTINGS, getSimilarListings } from "@/lib/data/listings";
 import { resolveListing, getPublishedListings } from "@/lib/data/live-listings";
-import { Badge, Button, Card, SampleDataNotice, SectionHeading } from "@/components/ui";
+import { Badge, Button, Card, SectionHeading } from "@/components/ui";
 import { ListingGallery } from "@/components/listing-gallery";
 import { ListingCard } from "@/components/listing-card";
 import { Reveal } from "@/components/reveal";
@@ -93,8 +93,6 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
       <div className="container-page">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productLd) }} />
-
-        {source === "sample" && <SampleDataNotice text={dict.common.sampleDataNotice} />}
 
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <Badge tone="dark">{dict.marketplace.kinds[listing.kind]}</Badge>
