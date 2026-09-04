@@ -6,6 +6,8 @@ import { SITE, SOCIALS, HAS_WHATSAPP, whatsappLink, mailtoLink } from "@/lib/con
 import { SERVICES } from "@/lib/data/services";
 import { POSTS } from "@/lib/data/posts";
 import { GoldDivider } from "@/components/ui";
+import { BrandMark } from "@/components/brand-mark";
+import { pickText } from "@/lib/i18n-text";
 
 const SOCIAL_LINKS = [
   { key: "instagram", label: "Instagram" },
@@ -25,12 +27,15 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
       <div className="container-page py-16">
         <div className="grid gap-12 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
           <div>
-            <div className="flex flex-col leading-none">
-              <span className="text-xl font-bold text-white">{dict.common.siteName}</span>
-              <span className="mt-1 text-[10px] font-semibold tracking-[0.22em] text-gold-500">BAIT AL MATAEM</span>
+            <div className="flex items-center gap-3">
+              <BrandMark className="h-10 w-10 shrink-0" tone="inverted" />
+              <div className="flex flex-col leading-none">
+                <span className="text-xl font-bold text-white">{dict.common.siteName}</span>
+                <span className="mt-1 text-[10px] font-semibold tracking-[0.22em] text-gold-500">BAIT AL MATAEM</span>
+              </div>
             </div>
             <GoldDivider className="my-4" />
-            <p className="max-w-xs text-sm leading-7 text-white/60">{SITE.tagline[locale]}</p>
+            <p className="max-w-xs text-sm leading-7 text-white/60">{pickText(SITE.tagline, locale)}</p>
             <p className="mt-4 text-xs font-semibold text-gold-500/90">{dict.footer.focusNotice}</p>
           </div>
 
@@ -57,7 +62,7 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
           <FooterCol title={dict.nav.blog}>
             {POSTS.slice(0, 2).map((p) => (
               <FooterLink key={p.slug} href={`/${locale}/blog/${p.slug}`}>
-                {p.title[locale]}
+                {pickText(p.title, locale)}
               </FooterLink>
             ))}
             <FooterLink href={`/${locale}/blog`} strong>
@@ -68,6 +73,7 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
           <FooterCol title={dict.nav.contact}>
             <FooterLink href={`/${locale}/contact`}>{dict.nav.contact}</FooterLink>
             <FooterLink href={`/${locale}/about`}>{dict.nav.about}</FooterLink>
+            <FooterLink href={`/${locale}/our-work`}>{dict.nav.ourWork}</FooterLink>
             <FooterLink href={`/${locale}/join-us`}>{dict.joinUs.pageTitle}</FooterLink>
             <a href={contactHref} target="_blank" rel="noopener noreferrer" className="block text-sm text-white/60 hover:text-gold-500">
               {SOCIALS.email}
