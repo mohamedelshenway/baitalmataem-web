@@ -6,14 +6,15 @@ import type { Locale } from "@/i18n/config";
 import type { BlogPost } from "@/lib/types";
 import { PostCard } from "@/components/post-card";
 import { Reveal } from "@/components/reveal";
+import { pickText } from "@/lib/i18n-text";
 
 // شبكة المدونة الكاملة: تصنيفات مبنية على بيانات المقالات الفعلية (وليست تصنيفات وهمية بلا محتوى)،
 // مع مقال مميز أكبر ثم باقي المقالات في شبكة أصغر — نفس منطق معاينة المدونة في الرئيسية.
 export function BlogList({ dict, locale, posts, images }: { dict: Dictionary; locale: Locale; posts: BlogPost[]; images: string[] }) {
-  const categories = Array.from(new Set(posts.map((p) => p.category[locale])));
+  const categories = Array.from(new Set(posts.map((p) => pickText(p.category, locale))));
   const [active, setActive] = useState<string | "all">("all");
 
-  const filtered = active === "all" ? posts : posts.filter((p) => p.category[locale] === active);
+  const filtered = active === "all" ? posts : posts.filter((p) => pickText(p.category, locale) === active);
   const [featured, ...rest] = filtered;
 
   return (
