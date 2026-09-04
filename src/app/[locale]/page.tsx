@@ -35,7 +35,6 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const dict = await getDictionary(locale);
 
   const liveListings = await getPublishedListings();
-  const showSampleNotice = liveListings.length === 0;
   const approvedListings = liveListings.length > 0 ? liveListings : getSampleApprovedListings();
   const previewListings = approvedListings.slice(0, 6);
   const cities = Array.from(new Set(approvedListings.map((l) => l.city.ar)));
@@ -51,7 +50,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
       <Hero dict={dict} locale={locale} cities={cities} />
       <TrustStrip dict={dict} />
       <HowWeHelp dict={dict} locale={locale} />
-      <MarketplacePreview dict={dict} locale={locale} listings={previewListings} showSampleNotice={showSampleNotice} />
+      <MarketplacePreview dict={dict} locale={locale} listings={previewListings} />
       <WhySection dict={dict} />
       <TeamSection dict={dict} />
       <ServicesSection dict={dict} locale={locale} />
