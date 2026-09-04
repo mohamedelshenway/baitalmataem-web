@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import { locales, localeMeta, type Locale } from "@/i18n/config";
+import { BrandMark } from "@/components/brand-mark";
 
 export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const pathname = usePathname();
@@ -29,6 +30,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
     { href: "/marketplace", label: dict.nav.marketplace },
     { href: "/blog", label: dict.nav.blog },
     { href: "/about", label: dict.nav.about },
+    { href: "/our-work", label: dict.nav.ourWork },
     { href: "/contact", label: dict.nav.contact },
   ];
 
@@ -39,9 +41,12 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
       }`}
     >
       <div className="container-page flex h-[72px] items-center justify-between gap-4">
-        <Link href={`/${locale}`} className="focus-ring flex flex-col leading-none">
-          <span className="text-[19px] font-bold tracking-tight text-ink-950">{dict.common.siteName}</span>
-          <span className="mt-0.5 text-[10px] font-semibold tracking-[0.22em] text-gold-600">BAIT AL MATAEM</span>
+        <Link href={`/${locale}`} className="focus-ring flex items-center gap-2.5">
+          <BrandMark className="h-9 w-9 shrink-0" />
+          <span className="flex flex-col leading-none">
+            <span className="text-[19px] font-bold tracking-tight text-ink-950">{dict.common.siteName}</span>
+            <span className="mt-0.5 text-[10px] font-semibold tracking-[0.22em] text-gold-600">BAIT AL MATAEM</span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
