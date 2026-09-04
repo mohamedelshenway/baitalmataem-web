@@ -6,13 +6,14 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/constants";
 import { Button, GoldDivider } from "@/components/ui";
+import { pickText } from "@/lib/i18n-text";
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const dict = await getDictionary(params.locale);
   return buildMetadata({
     title: dict.about.title,
-    description: SITE.tagline[params.locale],
+    description: pickText(SITE.tagline, params.locale),
     locale: params.locale,
     path: "/about",
   });
