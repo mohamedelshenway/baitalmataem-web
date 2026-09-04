@@ -1,7 +1,6 @@
 {
   "common": {
     "siteName": "Bait Al Mataem",
-    "sampleDataNotice": "Sample data for preview purposes — not real listings yet",
     "whatsapp": "Contact on WhatsApp",
     "call": "Call",
     "readMore": "Read more",
@@ -17,6 +16,7 @@
     "marketplace": "Opportunities",
     "blog": "Blog",
     "about": "About",
+    "ourWork": "Our Work",
     "contact": "Contact",
     "addListing": "List Your Opportunity",
     "consultCta": "Request a Consultation"
@@ -90,7 +90,16 @@
       "title": "Specialized expertise working as one team",
       "text": "Bait Al Mataem brings together specialized expertise in restaurant setup, operations, development and investment, to give restaurant owners and investors an integrated view instead of handling each part of the project separately.",
       "photoNote": "Licensed illustrative photo; the people shown are not Bait Al Mataem staff.",
-      "areas": ["Setup & Operations", "Feasibility Studies", "Opportunity Valuation", "Cost Management", "Process Development", "Marketing", "Customer Experience", "Investment Analysis"],
+      "areas": [
+        "Setup & Operations",
+        "Feasibility Studies",
+        "Opportunity Valuation",
+        "Cost Management",
+        "Process Development",
+        "Marketing",
+        "Customer Experience",
+        "Investment Analysis"
+      ],
       "execLabel": "Executive Leadership",
       "execName": "Mohamed Elshenawy",
       "execTitle": "Executive Director — Bait Al Mataem"
@@ -134,7 +143,10 @@
           "Opening a restaurant is a major decision that starts well before signing a lease. Bait Al Mataem helps you study the concept, market and competitors, and choose the right activity, location and size before spending a single riyal.",
           "We also cover setup cost estimates, equipment, staffing needs, and a full pre-opening and opening plan — so you start on solid ground, not just enthusiasm."
         ],
-        "keywords": ["restaurant setup Saudi Arabia", "opening a new restaurant"]
+        "keywords": [
+          "restaurant setup Saudi Arabia",
+          "opening a new restaurant"
+        ]
       },
       "restaurant-operations": {
         "title": "Restaurant Operations & Management",
@@ -143,7 +155,11 @@
           "Good operations is a system, not a dependency on one manager or chef. We help build the org structure, job descriptions, and standard operating procedures (SOPs) for every stage: receiving, storage, prep, production, service, cleanliness and food safety.",
           "We also cover inventory, waste, purchasing, suppliers and performance evaluation, with recurring reports so you can track your business without being there every minute."
         ],
-        "keywords": ["restaurant operations", "restaurant management", "restaurant SOPs"]
+        "keywords": [
+          "restaurant operations",
+          "restaurant management",
+          "restaurant SOPs"
+        ]
       },
       "restaurant-development": {
         "title": "Restaurant Development",
@@ -152,7 +168,11 @@
           "When a restaurant underperforms, we don't assume the market is the problem. We analyze location, product, pricing, quality, service, menu, food cost, labor, waste, inventory and customer experience to find the real cause first.",
           "Then we build a measurable development plan across 30, 60 and 90-day phases, with clear KPIs for each stage."
         ],
-        "keywords": ["restaurant development", "struggling restaurant", "increase restaurant sales"]
+        "keywords": [
+          "restaurant development",
+          "struggling restaurant",
+          "increase restaurant sales"
+        ]
       },
       "feasibility-study": {
         "title": "Feasibility Studies",
@@ -161,7 +181,12 @@
           "A restaurant feasibility study in Saudi Arabia, as we build it, covers at minimum: activity description, market/area/competitor analysis, target audience, initial investment and setup costs, fixed and variable costs, projected sales, food cost and labor cost, break-even point, cash flow, ROI, and scenario analysis (conservative, expected, optimistic).",
           "We don't invent numbers. When data is insufficient, we use reasonable estimates and state clearly that they are assumptions needing verification, always ending with a clear recommendation."
         ],
-        "keywords": ["restaurant feasibility study", "feasibility study Saudi Arabia", "feasibility study Makkah", "feasibility study Jeddah"]
+        "keywords": [
+          "restaurant feasibility study",
+          "feasibility study Saudi Arabia",
+          "feasibility study Makkah",
+          "feasibility study Jeddah"
+        ]
       },
       "restaurant-valuation": {
         "title": "Restaurant Valuation Before Purchase",
@@ -170,7 +195,10 @@
           "Before buying or taking over an existing restaurant, we help verify actual sales, expenses, staffing, rent, liabilities, license status and equipment condition — instead of relying on the seller's word.",
           "We calculate the real economic value of the opportunity, not just the asking price, and help you reach a clear decision: buy, buy after negotiation, further study, or decline."
         ],
-        "keywords": ["restaurant valuation before purchase", "buying an existing restaurant"]
+        "keywords": [
+          "restaurant valuation before purchase",
+          "buying an existing restaurant"
+        ]
       },
       "restaurant-brokerage": {
         "title": "Buying, Selling & Taking Over Restaurants",
@@ -179,7 +207,13 @@
           "Whether you want to sell or hand over your restaurant, or you're looking for an existing business to buy, Bait Al Mataem manages the process professionally: qualifying the other party, arranging viewings, managing negotiation, and following the deal through to close.",
           "We protect your project's data from non-serious inquiries, and we never hide material information that affects an investor's decision."
         ],
-        "keywords": ["restaurant for takeover", "restaurant for sale", "buy a restaurant", "restaurant takeover Makkah", "restaurant takeover Jeddah"]
+        "keywords": [
+          "restaurant for takeover",
+          "restaurant for sale",
+          "buy a restaurant",
+          "restaurant takeover Makkah",
+          "restaurant takeover Jeddah"
+        ]
       },
       "restaurant-consulting": {
         "title": "Restaurant Consulting",
@@ -188,7 +222,11 @@
           "Flexible consulting for restaurant owners and investors on any operational or investment decision: from site selection to menu pricing to evaluating an expansion opportunity.",
           "We don't agree with an idea just because it's yours. If a decision is weak or the risk is high, we say so clearly and present alternatives."
         ],
-        "keywords": ["restaurant consultant Saudi Arabia", "restaurant consultant Makkah", "restaurant consultant Jeddah"]
+        "keywords": [
+          "restaurant consultant Saudi Arabia",
+          "restaurant consultant Makkah",
+          "restaurant consultant Jeddah"
+        ]
       },
       "cost-profitability": {
         "title": "Cost & Profitability Analysis",
@@ -197,7 +235,11 @@
           "We analyze the full relationship between sales, food cost, labor cost, rent, operating expenses, gross and net profit, and cash flow — because rising sales alone isn't proof of success.",
           "The goal is healthy sales, real profitability and sustainable cash flow, not just an attractive sales figure on paper."
         ],
-        "keywords": ["food cost", "labor cost", "restaurant profitability"]
+        "keywords": [
+          "food cost",
+          "labor cost",
+          "restaurant profitability"
+        ]
       },
       "waste-management": {
         "title": "Waste Management",
@@ -206,7 +248,9 @@
           "We review the receiving, storage, prep and inventory cycle to identify real sources of waste: poor storage, portion drift from recipes, weak inventory control, or mispricing.",
           "We set clear, measurable operating procedures to reduce waste — not generic advice with no implementation."
         ],
-        "keywords": ["restaurant waste reduction"]
+        "keywords": [
+          "restaurant waste reduction"
+        ]
       },
       "menu-development": {
         "title": "Menu Development",
@@ -215,16 +259,26 @@
           "We review each item's sales, profitability and food cost, identify your highest-margin and weakest-selling items, and propose changes that reduce operational complexity while raising margin.",
           "The goal is a menu that's simpler to run and more profitable — not just more varied."
         ],
-        "keywords": ["restaurant menu development", "menu engineering"]
+        "keywords": [
+          "restaurant menu development",
+          "menu engineering"
+        ]
       },
       "restaurant-marketing": {
         "title": "Restaurant Marketing",
         "short": "Marketing aimed at more orders and profit, not just views.",
         "body": [
           "We build a marketing plan tied to a clear business goal: more orders, a higher average check, more repeat visits, and better visibility on Google Maps, delivery apps and social media.",
-          "Every marketing activity we propose is tied to a measurable indicator, not just because it's trending."
+          "Every marketing activity we propose is tied to a measurable indicator, not just because it's trending.",
+          "Our marketing services also include designing and building a professional website for your restaurant, and managing your social media accounts (Instagram, Snapchat, TikTok, X) — content, ad campaigns, and regular posting — so your online presence reflects the real quality of your restaurant."
         ],
-        "keywords": ["restaurant marketing", "restaurant marketing Saudi Arabia"]
+        "keywords": [
+          "restaurant marketing",
+          "restaurant marketing Saudi Arabia",
+          "restaurant website design",
+          "restaurant social media management",
+          "restaurant digital marketing"
+        ]
       },
       "staff-recruitment": {
         "title": "Staff Recruitment & Hiring",
@@ -234,7 +288,13 @@
           "We take in your hiring needs (roles, number of openings, requirements), screen suitable candidates, conduct initial interviews, and shortlist the closest matches so you can make the final decision yourself.",
           "The service is available to restaurant, hotel, café, buffet, catering and food-service business owners. The service fee depends on the number of roles and openings — contact us for details."
         ],
-        "keywords": ["restaurant staff recruitment", "hotel hiring Saudi Arabia", "restaurant team hiring", "restaurant interview service", "cafe and buffet staffing"]
+        "keywords": [
+          "restaurant staff recruitment",
+          "hotel hiring Saudi Arabia",
+          "restaurant team hiring",
+          "restaurant interview service",
+          "cafe and buffet staffing"
+        ]
       }
     }
   },
@@ -275,7 +335,10 @@
   },
   "listing": {
     "backToMarketplace": "Back to opportunities",
-    "gallery": { "photos": "Photos", "videos": "Video" },
+    "gallery": {
+      "photos": "Photos",
+      "videos": "Video"
+    },
     "specs": {
       "title": "Opportunity details",
       "activityType": "Activity type",
@@ -369,6 +432,52 @@
       "We launched from Jeddah and Makkah, and built the platform from the ground up to now cover regions across Saudi Arabia."
     ]
   },
+  "ourWork": {
+    "title": "Our Work",
+    "kicker": "Bait Al Mataem",
+    "subtitle": "Who we are, and what we actually deliver for restaurant owners and investors",
+    "whoTitle": "Who We Are",
+    "whoBody": [
+      "Bait Al Mataem is a Saudi company specialized in the restaurant and food-business sector, bringing together operational expertise, investment analysis, and marketing in one place.",
+      "We work with both restaurant owners and investors: those planning to open a new restaurant, those who already run one and want to grow or sell it, and those looking for a genuine investment opportunity in the sector."
+    ],
+    "whatTitle": "What We Offer",
+    "whatSubtitle": "Our services cover the full restaurant lifecycle, from the initial idea through operations, development, and sale.",
+    "pillars": [
+      {
+        "title": "Setup & Investment",
+        "text": "Concept and location studies, feasibility studies, pre-purchase restaurant valuation, and buying, selling, or leasing restaurants.",
+        "services": [
+          "restaurant-setup",
+          "feasibility-study",
+          "restaurant-valuation",
+          "restaurant-brokerage"
+        ]
+      },
+      {
+        "title": "Operations & Development",
+        "text": "Clear operating systems, cost and waste control, menu development, and turning around underperforming restaurants.",
+        "services": [
+          "restaurant-operations",
+          "restaurant-development",
+          "cost-profitability",
+          "waste-management",
+          "menu-development",
+          "staff-recruitment"
+        ]
+      },
+      {
+        "title": "Consulting & Marketing",
+        "text": "Direct consulting for any operational or investment decision, plus restaurant marketing to grow sales and profitability.",
+        "services": [
+          "restaurant-consulting",
+          "restaurant-marketing"
+        ]
+      }
+    ],
+    "ctaTitle": "Need help choosing the right service for your project?",
+    "ctaText": "Contact us and tell us about your restaurant or idea, and we'll help you find the right starting point."
+  },
   "joinUs": {
     "pageTitle": "Work With Bait Al Mataem",
     "pageSubtitle": "Two ways to work with Bait Al Mataem: join us part-time, or become a referral partner who brings us real opportunities for a commission.",
@@ -407,7 +516,13 @@
     "title": "Bait Al Mataem Admin",
     "previewNotice": "This is a UI preview only, to illustrate the intended admin experience. Buttons are not yet functional — wiring this to a real database and authentication is the next technical step.",
     "pendingTitle": "Listings pending review",
-    "columns": { "title": "Title", "city": "City", "kind": "Type", "submitted": "Submitted", "actions": "Action" },
+    "columns": {
+      "title": "Title",
+      "city": "City",
+      "kind": "Type",
+      "submitted": "Submitted",
+      "actions": "Action"
+    },
     "approve": "Approve",
     "reject": "Reject",
     "requestChanges": "Request changes"
