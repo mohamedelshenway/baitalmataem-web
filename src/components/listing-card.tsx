@@ -4,6 +4,7 @@ import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
 import type { Listing } from "@/lib/types";
 import { Badge, Card } from "@/components/ui";
+import { pickText } from "@/lib/i18n-text";
 
 // كارت الفرصة الجديد: الصورة هي العنصر المهيمن، والنص أسفلها في حده الأدنى —
 // عنوان، موقع ومساحة، سعر/إيجار، ثم CTA واحد واضح. يطابق منطق منصات العقار والاستثمار
@@ -28,9 +29,9 @@ export function ListingCard({ listing, dict, locale }: { listing: Listing; dict:
           </div>
         </div>
         <div className="p-5">
-          <h3 className="mb-2 line-clamp-2 text-[15px] font-bold leading-6 text-ink-900">{listing.title[locale]}</h3>
+          <h3 className="mb-2 line-clamp-2 text-[15px] font-bold leading-6 text-ink-900">{pickText(listing.title, locale)}</h3>
           <p className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-600">
-            <span>📍 {listing.city[locale]} — {listing.area[locale]}</span>
+            <span>📍 {pickText(listing.city, locale)} — {pickText(listing.area, locale)}</span>
             {listing.sizeSqm && <span>↔ {listing.sizeSqm} {locale === "ar" ? "م²" : "sqm"}</span>}
           </p>
           <div className="flex items-end justify-between gap-2 border-t border-sand-200 pt-3">
