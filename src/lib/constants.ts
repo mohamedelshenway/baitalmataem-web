@@ -24,7 +24,8 @@ export const SOCIALS = {
   email: "baitalmataem@gmail.com",
 };
 
-export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || ""; // يُملأ لاحقًا — لا رقم افتراضي مخترع
+// رقم واتساب بيت المطاعم الرسمي: 966552396676 (ثابت كقيمة افتراضية، ويمكن تجاوزه عبر متغير البيئة NEXT_PUBLIC_WHATSAPP_NUMBER عند الحاجة)
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "966552396676";
 export const HAS_WHATSAPP = Boolean(WHATSAPP_NUMBER);
 
 export function whatsappLink(message: string) {
