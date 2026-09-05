@@ -6,6 +6,9 @@ export const SITE = {
   tagline: {
     ar: "منصة سعودية متخصصة في تأسيس وتشغيل وتطوير وتقييم وبيع وشراء المطاعم",
     en: "A specialized Saudi platform for restaurant setup, operations, feasibility, and brokerage",
+    tr: "Restoran kuruluşu, işletmesi, geliştirilmesi, değerlemesi ile alım satımında uzman bir Suudi platformu",
+    ru: "Саудовская платформа, специализирующаяся на открытии, управлении, развитии, оценке и купле-продаже ресторанов",
+    ur: "ریستوران کے قیام، آپریشن، ترقی، تشخیص اور خرید و فروخت میں مہارت رکھنے والا سعودی پلیٹ فارم",
   },
   // مبني في المرحلة الحالية على جدة ومكة المكرمة، قابل للتوسع لاحقًا
   focusCities: { ar: ["جدة", "مكة المكرمة"], en: ["Jeddah", "Makkah"] },
