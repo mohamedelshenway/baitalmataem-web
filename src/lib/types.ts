@@ -1,3 +1,23 @@
+// نص متعدد اللغات: العربية والإنجليزية إلزاميتان (كل المحتوى الحالي مُعد بهما)،
+// أما التركية والروسية والأردية فاختيارية — إذا لم تُترجم قطعة محتوى معيّنة (مثل فرصة
+// أو مقال بعينه) لهذه اللغات، تُستخدم دالة pickText (في src/lib/i18n-text.ts) لعرض
+// الإنجليزية كبديل ثم العربية، بدل كسر الصفحة أو إجبارنا على اختلاق ترجمات غير موجودة.
+export interface LocalizedText {
+  ar: string;
+  en: string;
+  tr?: string;
+  ru?: string;
+  ur?: string;
+}
+
+export interface LocalizedTextList {
+  ar: string[];
+  en: string[];
+  tr?: string[];
+  ru?: string[];
+  ur?: string[];
+}
+
 export type ListingKind =
   | "restaurant_taqbeel" // مطعم للتقبيل
   | "restaurant_sale" // مطعم للبيع
@@ -32,22 +52,22 @@ export interface Listing {
   kind: ListingKind;
   status: ListingStatus;
   moderation: ModerationStatus;
-  title: { ar: string; en: string };
-  summary: { ar: string; en: string };
-  description: { ar: string; en: string };
-  city: { ar: string; en: string };
-  area: { ar: string; en: string }; // المنطقة/الحي العام فقط، بدون موقع دقيق
-  activityType: { ar: string; en: string };
+  title: LocalizedText;
+  summary: LocalizedText;
+  description: LocalizedText;
+  city: LocalizedText;
+  area: LocalizedText; // المنطقة/الحي العام فقط، بدون موقع دقيق
+  activityType: LocalizedText;
   priceSAR?: number; // سعر البيع/التقبيل التقريبي، اختياري
   rentSAR?: number; // الإيجار الشهري إن وجد
   sizeSqm?: number;
   seatingCapacity?: number;
   openings?: number; // عدد الفتحات
   operatingState: OperatingState;
-  equipmentSummary?: { ar: string; en: string };
-  kitchenSummary?: { ar: string; en: string };
+  equipmentSummary?: LocalizedText;
+  kitchenSummary?: LocalizedText;
   parkingAvailable?: boolean;
-  features: { ar: string; en: string }[];
+  features: LocalizedText[];
   media: ListingMedia[];
   isSample: boolean; // true لبيانات العرض التجريبية فقط — false لأي فرصة حقيقية جاية من قاعدة البيانات
   views: number;
@@ -56,24 +76,24 @@ export interface Listing {
 
 export interface Service {
   slug: string;
-  title: { ar: string; en: string };
-  shortDescription: { ar: string; en: string };
-  body: { ar: string[]; en: string[] }; // فقرات
-  ctaLabel: { ar: string; en: string };
-  metaTitle: { ar: string; en: string };
-  metaDescription: { ar: string; en: string };
+  title: LocalizedText;
+  shortDescription: LocalizedText;
+  body: LocalizedTextList; // فقرات
+  ctaLabel: LocalizedText;
+  metaTitle: LocalizedText;
+  metaDescription: LocalizedText;
   keywords: string[];
 }
 
 export interface BlogPost {
   slug: string;
-  title: { ar: string; en: string };
-  excerpt: { ar: string; en: string };
-  category: { ar: string; en: string };
+  title: LocalizedText;
+  excerpt: LocalizedText;
+  category: LocalizedText;
   tags: string[];
   author: string;
   publishedAt: string;
   readingMinutes: number;
   relatedServiceSlug?: string;
-  content: { ar: string; en: string }; // Markdown-lite: نص عادي مقسم بأسطر فارغة + عناوين تبدأ بـ ##
+  content: LocalizedText; // Markdown-lite: نص عادي مقسم بأسطر فارغة + عناوين تبدأ بـ ##
 }
