@@ -7,7 +7,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd, articleJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/constants";
 import { POSTS, getPostBySlug } from "@/lib/data/posts";
-import { LISTINGS } from "@/lib/data/listings";
+import { getPublishedListings } from "@/lib/data/live-listings";
 import { getServiceMeta } from "@/lib/data/services";
 import { parseContent } from "@/lib/format-content";
 import { pickText } from "@/lib/i18n-text";
@@ -54,9 +54,11 @@ export default async function BlogPostPage({ params }: { params: { locale: strin
   const relatedService = post.relatedServiceSlug ? getServiceMeta(post.relatedServiceSlug) : undefined;
   const relatedServiceItem =
     relatedService && dict.services.list[relatedService.slug as keyof typeof dict.services.list];
-  const relatedListings = LISTINGS.filter(
-    (l) => l.moderation === "approved" && (!relatedService || l.kind === "restaurant_taqbeel" || l.kind === "restaurant_sale")
-  ).slice(0, 2);
+  // فرص حقيقية منشورة فقط — لو لسه معندناش فرص حقيقية، القسم بالأسفل ببساطة لا يظهر.
+  const publishedListings = await getPublishedListings();
+  const relatedListings = publishedListings
+    .filter((l) => !relatedService || l.kind === "restaurant_taqbeel" || l.kind === "restaurant_sale")
+    .slice(0, 2);
 
   const breadcrumb = breadcrumbJsonLd([
     { name: dict.nav.home, url: `${SITE.url}/${locale}` },
