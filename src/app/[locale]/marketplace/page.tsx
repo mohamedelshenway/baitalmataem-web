@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
-import { getPublishedListings, getSampleApprovedListings } from "@/lib/data/live-listings";
+import { getPublishedListings } from "@/lib/data/live-listings";
 import type { ListingKind } from "@/lib/types";
 import { Button, SectionHeading } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
@@ -31,10 +31,9 @@ export default async function MarketplacePage({
   const locale = params.locale as Locale;
   const dict = await getDictionary(locale);
 
-  // نعرض الفرص الحقيقية المنشورة فعليًا لما توجد؛ ولو لسه معندناش فرص حقيقية، نرجع لفرص
-  // معروضة مؤقتًا بدل ما تظهر الصفحة فاضية تمامًا.
-  const liveListings = await getPublishedListings();
-  const approved = liveListings.length > 0 ? liveListings : getSampleApprovedListings();
+  // نعرض الفرص الحقيقية المنشورة فقط — بدون أي رجوع لبيانات تجريبية. لو لسه معندناش
+  // فرص حقيقية منشورة، الصفحة تعرض حالة "لا نتائج" الموجودة أصلًا بدل بيانات وهمية.
+  const approved = await getPublishedListings();
   const cities = Array.from(new Set(approved.map((l) => l.city.ar)));
   const kinds = Object.keys(dict.marketplace.kinds) as ListingKind[];
 
@@ -44,7 +43,7 @@ export default async function MarketplacePage({
     if (searchParams.minPrice && (!l.priceSAR || l.priceSAR < Number(searchParams.minPrice))) return false;
     if (searchParams.maxPrice && (!l.priceSAR || l.priceSAR > Number(searchParams.maxPrice))) return false;
     if (searchParams.minSize && (!l.sizeSqm || l.sizeSqm < Number(searchParams.minSize))) return false;
-    // بحث نصي بسيط عن النشاط (يغذّيه أيضًا البحث السريع في الـHero) — يطابق العربي أو الإنجليزي
+    // بحث نصي بسيط عن النشاط (يعذّيه أيضًا البحث السريع في الـHero) — يطابق العربي أو الإنجليزي
     if (searchParams.activity) {
       const q = searchParams.activity.trim().toLowerCase();
       const hay = `${l.activityType.ar} ${l.activityType.en}`.toLowerCase();
