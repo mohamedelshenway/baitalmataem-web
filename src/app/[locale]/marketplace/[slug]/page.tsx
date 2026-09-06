@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { locales, isLocale, type Locale } from "@/i18n/config";
+import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd, listingJsonLd } from "@/lib/seo";
 import { SITE, whatsappLink, mailtoLink, HAS_WHATSAPP } from "@/lib/constants";
-import { LISTINGS, getSimilarListings } from "@/lib/data/listings";
+import { getSimilarListings } from "@/lib/data/listings";
 import { resolveListing, getPublishedListings } from "@/lib/data/live-listings";
 import { Badge, Button, Card, SectionHeading } from "@/components/ui";
 import { ListingGallery } from "@/components/listing-gallery";
@@ -12,11 +12,8 @@ import { ListingCard } from "@/components/listing-card";
 import { Reveal } from "@/components/reveal";
 import { pickText } from "@/lib/i18n-text";
 
-export function generateStaticParams() {
-  return locales.flatMap((locale) =>
-    LISTINGS.filter((l) => l.moderation === "approved").map((l) => ({ locale, slug: l.slug }))
-  );
-}
+// لا نولّد أي صفحات مسبقًا هنا — الفرص كلها حقيقية وديناميكية من قاعدة البيانات الآن،
+// فتُبنى صفحاتها عند الطلب (on-demand) بدل بنائها وقت الـbuild من بيانات تجريبية ثابتة.
 
 export async function generateMetadata({
   params,
@@ -42,9 +39,9 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
   const locale = params.locale as Locale;
   const resolved = await resolveListing(params.slug);
   if (!resolved || resolved.listing.moderation !== "approved") notFound();
-  const { listing, source } = resolved;
+  const { listing } = resolved;
   const dict = await getDictionary(locale);
-  const similarPool = source === "live" ? await getPublishedListings() : LISTINGS;
+  const similarPool = await getPublishedListings();
   const similar = getSimilarListings(listing, similarPool);
 
   const viewingMessage = `مرحبًا، أرغب في طلب معاينة للفرصة: ${listing.title.ar} (${listing.slug})`;
@@ -158,7 +155,7 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
                 </a>
                 <a href={evaluateHref} target="_blank" rel="noopener noreferrer" className="focus-ring rounded-btn px-5 py-3 text-center text-sm font-semibold text-gold-700 hover:bg-sand-50">
                   {dict.listing.ctaEvaluate}
-                </a>
+              </a>
               </div>
             </Card>
           </aside>
