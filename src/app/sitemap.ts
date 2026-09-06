@@ -2,17 +2,19 @@ import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/config";
 import { SITE } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
-import { LISTINGS } from "@/lib/data/listings";
+import { getPublishedListings } from "@/lib/data/live-listings";
 import { POSTS } from "@/lib/data/posts";
 
 // خريطة موقع واحدة تغطي كل اللغات لكل مسار (alternates.languages) بدل خريطة منفصلة لكل لغة،
 // وهو أسلوب مدعوم بالكامل من جوجل ويكفي في هذه المرحلة (MVP) بدل بناء ملفات sitemap متعددة.
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ملاحظة: "/marketplace/new" و"/admin" مستثناة عمدًا — كلاهما noIndex في generateMetadata
-  // ومحجوبتان في robots.ts، فلا يصح إدراجهما في خريطة الموقع لتفادي إشارات متضاربة لمحركات البحث.
+  // ومحجوبتان في robots.ts، فلا يصح إدراجهما في خريطة الموقع لتفادي إشارات متضاربة لمحركات search.
   const staticPaths = ["", "/services", "/marketplace", "/blog", "/about", "/our-work", "/contact"];
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);
-  const listingPaths = LISTINGS.filter((l) => l.moderation === "approved").map((l) => `/marketplace/${l.slug}`);
+  // فرص حقيقية منشورة فقط — لا بيانات تجريبية في خريطة الموقع أبدًا.
+  const liveListings = await getPublishedListings();
+  const listingPaths = liveListings.map((l) => `/marketplace/${l.slug}`);
   const postPaths = POSTS.map((p) => `/blog/${p.slug}`);
 
   const allPaths = [...staticPaths, ...servicePaths, ...listingPaths, ...postPaths];
