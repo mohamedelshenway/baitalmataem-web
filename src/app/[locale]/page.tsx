@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
-import { getPublishedListings, getSampleApprovedListings } from "@/lib/data/live-listings";
+import { getPublishedListings } from "@/lib/data/live-listings";
 import { POSTS } from "@/lib/data/posts";
 import { notFound } from "next/navigation";
 import {
@@ -34,8 +34,10 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const locale = params.locale as Locale;
   const dict = await getDictionary(locale);
 
-  const liveListings = await getPublishedListings();
-  const approvedListings = liveListings.length > 0 ? liveListings : getSampleApprovedListings();
+  // نعرض الفرص الحقيقية المنشورة فقط — بدون أي رجوع لبيانات تجريبية، حتى لا تظهر فرصة
+  // غير حقيقية للزائر على أنها فرصة فعلية. لو القائمة فاضية، الأقسام أدناه تتعامل مع
+  // الحالة الفارغة بشكل واضح بدل عرض بيانات وهمية.
+  const approvedListings = await getPublishedListings();
   const previewListings = approvedListings.slice(0, 6);
   const cities = Array.from(new Set(approvedListings.map((l) => l.city.ar)));
 
