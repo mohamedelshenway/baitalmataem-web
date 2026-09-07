@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import { HAS_WHATSAPP, whatsappLink, mailtoLink } from "@/lib/constants";
+import { getAttributionSource } from "@/lib/attribution";
 
 export function ContactForm({
   labels,
@@ -23,6 +24,7 @@ export function ContactForm({
     e.preventDefault();
     setStatus("submitting");
     const form = new FormData(e.currentTarget);
+    form.set("source", getAttributionSource());
     try {
       const res = await fetch("/api/contact", { method: "POST", body: form });
       if (!res.ok) throw new Error("failed");
