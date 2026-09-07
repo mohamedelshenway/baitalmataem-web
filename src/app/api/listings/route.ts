@@ -66,6 +66,7 @@ export async function POST(request: Request) {
     const area = form.get("area");
     const contactName = form.get("contactName");
     const contactPhone = form.get("contactPhone");
+    const source = form.get("source");
 
     if (!kind || !region || !city || !contactName || !contactPhone) {
       return NextResponse.json(
@@ -128,6 +129,7 @@ export async function POST(request: Request) {
     const { error } = await supabase.from("listing_submissions").insert({
       id: submissionId,
       raw_data: rawData,
+      source: source ? String(source) : null,
       status: "new",
     });
 
