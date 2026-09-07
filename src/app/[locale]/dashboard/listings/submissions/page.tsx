@@ -32,7 +32,7 @@ export default async function SubmissionsPage({
   const { data: submissions, error } = await supabase
     .from("listing_submissions")
     .select(
-      "id, raw_data, status, admin_note, converted_to_listing_id, created_at",
+      "id, raw_data, source, status, admin_note, converted_to_listing_id, created_at",
     )
     .order("created_at", { ascending: false });
 
@@ -47,7 +47,7 @@ export default async function SubmissionsPage({
             ← رجوع لإدارة الفرص
           </Link>
           <h1 className="font-bold text-[#151515] mt-1">
-            طلبات &quot;اعرض فرصتك&quot;
+            طلبات نضوض اعرض فرصتك&quot;
           </h1>
           <p className="text-sm text-[#151515]/60 mt-1">
             الطلبات المرسلة من الزوار عبر نموذج &quot;اعرض فرصتك&quot; العام —
@@ -134,6 +134,7 @@ export default async function SubmissionsPage({
                 </p>
                 <p className="mt-1">
                   {raw.photoCount ?? 0} صورة · {raw.videoCount ?? 0} فيديو مرفقة
+                  {s.source ? ` · المصدر: ${s.source}` : ""}
                 </p>
               </div>
 
