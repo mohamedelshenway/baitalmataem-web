@@ -59,7 +59,7 @@ export function getAttributionSource(): string {
     window.sessionStorage.setItem(STORAGE_KEY, computed);
     return computed;
   } catch {
-    // sessionStorage ممكن يكون غير متاح (وضع خاص مثلًا) — نرجع �}�}�M�-���]��
-�}�M�]�݋=������
-�������b
-����-���`�&WGW&�6��WFU6�W&6R����Ч�
+    // sessionStorage ممكن يكون غير متاح (وضع خاص مثلًا) — نرجع القيمة المحسوبة بدون تخزين
+    return computeSource();
+  }
+}
