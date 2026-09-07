@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/config";
 import type { ListingKind } from "@/lib/types";
 import { HAS_WHATSAPP, whatsappLink, mailtoLink } from "@/lib/constants";
 import { SAUDI_REGIONS, citiesForRegion } from "@/lib/saudi-regions";
+import { getAttributionSource } from "@/lib/attribution";
 
 type PhotoItem = { id: string; file: File; previewUrl: string };
 type VideoItem = { id: string; file: File; previewUrl: string; durationSeconds: number };
@@ -161,6 +162,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
       form.append("contactPhone", contactPhone);
       form.append("contactCity", contactCity);
       form.append("coverId", coverId || "");
+      form.append("source", getAttributionSource());
       photos.forEach((p) => form.append("photos", p.file, p.file.name));
       videos.forEach((v) => form.append("videos", v.file, v.file.name));
 
