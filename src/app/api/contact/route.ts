@@ -15,6 +15,7 @@ export async function POST(request: Request) {
     const email = form.get("email");
     const serviceInterested =
       form.get("service") ?? form.get("serviceInterested");
+    const source = form.get("source");
 
     if (!name || !phone || !message) {
       return NextResponse.json(
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
       message: String(message),
       email: email ? String(email) : null,
       service_interested: serviceInterested ? String(serviceInterested) : null,
+      source: source ? String(source) : null,
       status: "new",
     });
 
