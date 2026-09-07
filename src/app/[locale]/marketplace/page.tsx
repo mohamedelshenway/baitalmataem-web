@@ -43,7 +43,7 @@ export default async function MarketplacePage({
     if (searchParams.minPrice && (!l.priceSAR || l.priceSAR < Number(searchParams.minPrice))) return false;
     if (searchParams.maxPrice && (!l.priceSAR || l.priceSAR > Number(searchParams.maxPrice))) return false;
     if (searchParams.minSize && (!l.sizeSqm || l.sizeSqm < Number(searchParams.minSize))) return false;
-    // بحث نصي بسيط عن النشاط (يعذّيه أيضًا البحث السريع في الـHero) — يطابق العربي أو الإنجليزي
+    // بحث نصي بسيط عن النشاط (يغذّيه أيضًا البحث السريع في الـHero) — يطابق العربي أو الإنجليزي
     if (searchParams.activity) {
       const q = searchParams.activity.trim().toLowerCase();
       const hay = `${l.activityType.ar} ${l.activityType.en}`.toLowerCase();
