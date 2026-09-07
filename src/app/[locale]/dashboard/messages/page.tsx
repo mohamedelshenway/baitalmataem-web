@@ -30,7 +30,7 @@ export default async function MessagesPage({
 
   const { data: messages, error } = await supabase
     .from("contact_submissions")
-    .select("id, name, phone, email, message, service_interested, status, created_at")
+    .select("id, name, phone, email, message, service_interested, source, status, created_at")
     .order("created_at", { ascending: false });
 
   return (
@@ -82,8 +82,13 @@ export default async function MessagesPage({
                 {msg.message}
               </p>
             )}
-            <p className="text-xs text-[#151515]/40 mt-2">
-              {new Date(msg.created_at).toLocaleString("ar-SA")}
+            <p className="text-xs text-[#151515]/40 mt-2 flex items-center gap-2">
+              <span>{new Date(msg.created_at).toLocaleString("ar-SA")}</span>
+              {msg.source && (
+                <span className="rounded-full bg-[#151515]/5 px-2 py-0.5 text-[#151515]/60">
+                  المصدر: {msg.source}
+                </span>
+              )}
             </p>
           </div>
         ))}
