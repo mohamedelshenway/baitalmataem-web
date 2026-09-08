@@ -17,6 +17,16 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // دمجنا صفحة "أعمالنا" داخل "من نحن" — تحويل دائم (308) للحفاظ على قيمة SEO
+      {
+        source: "/:locale(ar|en|tr|ru|ur)/our-work",
+        destination: "/:locale/about",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
