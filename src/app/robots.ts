@@ -7,7 +7,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/*/admin", "/*/marketplace/new", "/api/"],
+        // "/dashboard" هي لوحة الإدارة الفعلية المحمية بتسجيل دخول (Supabase) — كانت مفقودة من هنا رغم
+        // إضافة "/admin" (صفحة معاينة قديمة مش مستخدمة فعليًا). لازم تُستبعد من الزحف والفهرسة زيها بالظبط.
+        disallow: ["/*/admin", "/*/dashboard", "/*/marketplace/new", "/api/"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,
