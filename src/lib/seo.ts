@@ -135,7 +135,7 @@ export function listingJsonLd({
     url,
     image: image ? [image] : undefined,
     // Brand لازم يكون @type: "Brand" مش "Organization" — ده اللي كانت Google Search Console
-    // بترصده كـ"نوع كانت غير صالح" في حقل brand لبيانات المنتج المنظّمة.
+    // بترصده كـ"نوع كائن غير صالح" في حقل brand لبيانات المنتج المنظّمة.
     brand: { "@type": "Brand", name: SITE.legalName },
     areaServed: city,
     ...(priceSAR
@@ -182,3 +182,4 @@ export function listingJsonLd({
       : {}),
   };
 }
+Page_UpPage_UpPage_Up
