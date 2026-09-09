@@ -10,7 +10,7 @@ import { POSTS } from "@/lib/data/posts";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ملاحظة: "/marketplace/new" و"/admin" مستثناة عمدًا — كلاهما noIndex في generateMetadata
   // ومحجوبتان في robots.ts، فلا يصح إدراجهما في خريطة الموقع لتفادي إشارات متضاربة لمحركات search.
-  const staticPaths = ["", "/services", "/marketplace", "/blog", "/about", "/contact"];
+  const staticPaths = ["", "/services", "/projects", "/marketplace", "/blog", "/about", "/contact"];
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);
   // فرص حقيقية منشورة فقط — لا بيانات تجريبية في خريطة الموقع أبدًا.
   const liveListings = await getPublishedListings();
