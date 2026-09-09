@@ -512,7 +512,10 @@
     "categoryLabel": "Hizmet Kapsamı",
     "scopeTitle": "Bait Al Mataem'in Projedeki Rolü",
     "ctaTitle": "Bu düzeyde bir uygulamaya ihtiyaç duyan bir projeniz mi var?",
-    "ctaText": "Kuruluş veya işletmeyi uçtan uca üstlenecek bir ortağa ihtiyacınız varsa bizimle iletişime geçin."
+    "ctaText": "Kuruluş veya işletmeyi uçtan uca üstlenecek bir ortağa ihtiyacınız varsa bizimle iletişime geçin.",
+    "expertiseTitle": "Uzmanlık Alanlarımız",
+    "expertiseSubtitle": "Bait Al Mataem, Suudi Arabistan'daki restoran sahiplerine ve yatırımcılara, projenin fikir aşamasından işletmeye ve büyümeye kadar tüm aşamalarını kapsayan uçtan uca danışmanlık sunar.",
+    "caseStudiesTitle": "Çalışmalarımızdan Örnekler"
   },
   "contact": {
     "title": "İletişim",
