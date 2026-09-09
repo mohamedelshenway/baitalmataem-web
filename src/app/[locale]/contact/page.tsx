@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { buildMetadata } from "@/lib/seo";
-import { SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP, whatsappLink } from "@/lib/constants";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP, whatsappLink } from "@/lib/constants";
 import { Card, GoldDivider } from "@/components/ui";
 import { ContactForm } from "@/components/contact-form";
 
@@ -23,9 +23,15 @@ export default async function ContactPage({ params }: { params: { locale: string
   const locale = params.locale as Locale;
   const dict = await getDictionary(locale);
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: dict.nav.home, url: `${SITE.url}/${locale}` },
+    { name: dict.nav.contact, url: `${SITE.url}/${locale}/contact` },
+  ]);
+
   return (
     <section className="py-12 sm:py-14">
       <div className="container-page max-w-3xl">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
         <h1 className="mb-2 text-2xl font-bold text-ink-900 sm:text-3xl">{dict.contact.title}</h1>
         <p className="mb-8 text-ink-600">{dict.contact.subtitle}</p>
         <GoldDivider className="mb-8" />
