@@ -27,6 +27,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
 
   const navItems: { href: string; label: string }[] = [
     { href: "/", label: dict.nav.home },
+    { href: "/projects", label: dict.nav.projects },
     { href: "/marketplace", label: dict.nav.marketplace },
     { href: "/blog", label: dict.nav.blog },
     { href: "/about", label: dict.nav.about },
