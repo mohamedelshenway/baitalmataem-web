@@ -19,7 +19,8 @@
     "ourWork": "Our Work",
     "contact": "Contact",
     "addListing": "List Your Opportunity",
-    "consultCta": "Request a Consultation"
+    "consultCta": "Request a Consultation",
+    "projects": "Projects"
   },
   "languageBanner": {
     "message": "It looks like your browser is in English. Would you like to view Bait Al Mataem in English?",
@@ -497,6 +498,16 @@
       "note": "The commission rate and terms are agreed directly between you and Bait Al Mataem before work begins on each opportunity, and vary by the type and size of the opportunity — contact us for full details.",
       "cta": "Submit the opportunity now"
     }
+  },
+  "projects": {
+    "pageTitle": "Bait Al Mataem Projects",
+    "pageSubtitle": "Real setup and operations projects delivered by Bait Al Mataem in partnership with its clients.",
+    "partnerLabel": "Partner",
+    "locationLabel": "Location",
+    "categoryLabel": "Service Scope",
+    "scopeTitle": "Bait Al Mataem's Role in the Project",
+    "ctaTitle": "Have a project that needs this level of execution?",
+    "ctaText": "If you need a partner to handle setup or operations end to end, get in touch."
   },
   "contact": {
     "title": "Contact Us",

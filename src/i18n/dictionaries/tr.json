@@ -19,7 +19,8 @@
     "ourWork": "Çalışmalarımız",
     "contact": "İletişim",
     "addListing": "Fırsatını Yayınla",
-    "consultCta": "Danışmanlık Talep Et"
+    "consultCta": "Danışmanlık Talep Et",
+    "projects": "Projeler"
   },
   "languageBanner": {
     "message": "Tarayıcınızın dili İngilizce görünüyor. Bait Al Mataem'i İngilizce görüntülemek ister misiniz?",
@@ -502,6 +503,16 @@
       "note": "Komisyon oranı ve şartları, her fırsat için başlamadan önce sizinle Bait Al Mataem arasında doğrudan anlaşmayla belirlenir ve fırsatın türüne ve büyüklüğüne göre değişir — tüm detayları öğrenmek için bizimle iletişime geçin.",
       "cta": "Fırsatı Şimdi Yayınla"
     }
+  },
+  "projects": {
+    "pageTitle": "Bait Al Mataem Projeleri",
+    "pageSubtitle": "Bait Al Mataem'in ortaklarıyla birlikte hayata geçirdiği gerçek kuruluş ve işletme projeleri.",
+    "partnerLabel": "Ortak",
+    "locationLabel": "Konum",
+    "categoryLabel": "Hizmet Kapsamı",
+    "scopeTitle": "Bait Al Mataem'in Projedeki Rolü",
+    "ctaTitle": "Bu düzeyde bir uygulamaya ihtiyaç duyan bir projeniz mi var?",
+    "ctaText": "Kuruluş veya işletmeyi uçtan uca üstlenecek bir ortağa ihtiyacınız varsa bizimle iletişime geçin."
   },
   "contact": {
     "title": "İletişim",
