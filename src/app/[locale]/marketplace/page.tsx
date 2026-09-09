@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { SITE } from "@/lib/constants";
 import { getPublishedListings } from "@/lib/data/live-listings";
 import type { ListingKind } from "@/lib/types";
 import { Button, SectionHeading } from "@/components/ui";
@@ -52,9 +53,15 @@ export default async function MarketplacePage({
     return true;
   });
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: dict.nav.home, url: `${SITE.url}/${locale}` },
+    { name: dict.nav.marketplace, url: `${SITE.url}/${locale}/marketplace` },
+  ]);
+
   return (
     <section className="py-12 sm:py-14">
       <div className="container-page">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
         <SectionHeading title={dict.marketplace.pageTitle} subtitle={dict.marketplace.pageSubtitle} />
 
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
