@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
-import { buildMetadata } from "@/lib/seo";
+import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
+import { SITE } from "@/lib/constants";
 import { POSTS } from "@/lib/data/posts";
 import { SectionHeading } from "@/components/ui";
 import { BlogList } from "@/components/blog-list";
@@ -29,9 +30,15 @@ export default async function BlogPage({ params }: { params: { locale: string } 
   const dict = await getDictionary(locale);
   const posts = [...POSTS].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
 
+  const breadcrumb = breadcrumbJsonLd([
+    { name: dict.nav.home, url: `${SITE.url}/${locale}` },
+    { name: dict.nav.blog, url: `${SITE.url}/${locale}/blog` },
+  ]);
+
   return (
     <section className="py-12 sm:py-14">
       <div className="container-page">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
         <SectionHeading eyebrow={dict.home.blogTitle} title={dict.blog.pageTitle} subtitle={dict.blog.pageSubtitle} />
         <BlogList dict={dict} locale={locale} posts={posts} images={IMAGES} />
       </div>
