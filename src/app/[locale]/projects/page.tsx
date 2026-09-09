@@ -5,6 +5,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/constants";
 import { PROJECTS } from "@/lib/data/projects";
+import { EXPERTISE_AREAS } from "@/lib/data/expertise-scope";
 import { Card, Badge, GoldDivider, Button } from "@/components/ui";
 import { Reveal } from "@/components/reveal";
 import { pickText, pickTextList } from "@/lib/i18n-text";
@@ -39,6 +40,22 @@ export default async function ProjectsPage({ params }: { params: { locale: strin
         <h1 className="mb-3 text-2xl font-bold leading-tight text-ink-900 sm:text-3xl">{dict.projects.pageTitle}</h1>
         <p className="mb-10 max-w-2xl leading-7 text-ink-600">{dict.projects.pageSubtitle}</p>
 
+        <div className="mb-14">
+          <h2 className="mb-2 text-xl font-bold leading-tight text-ink-900">{dict.projects.expertiseTitle}</h2>
+          <p className="mb-6 max-w-2xl leading-7 text-ink-600">{dict.projects.expertiseSubtitle}</p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {EXPERTISE_AREAS.map((area, i) => (
+              <Reveal key={area.title.en} delay={i * 60}>
+                <Card className="h-full p-5">
+                  <h3 className="mb-2 text-sm font-bold text-ink-900">{pickText(area.title, locale)}</h3>
+                  <p className="text-sm leading-6 text-ink-600">{pickText(area.description, locale)}</p>
+                </Card>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+
+        <h2 className="mb-6 text-xl font-bold leading-tight text-ink-900">{dict.projects.caseStudiesTitle}</h2>
         <div className="flex flex-col gap-6">
           {PROJECTS.map((project, i) => (
             <Reveal key={project.slug} delay={i * 80}>
