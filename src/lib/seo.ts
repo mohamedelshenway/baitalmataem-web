@@ -134,7 +134,9 @@ export function listingJsonLd({
     description,
     url,
     image: image ? [image] : undefined,
-    brand: { "@type": "Organization", name: SITE.legalName },
+    // Brand لازم يكون @type: "Brand" مش "Organization" — ده اللي كانت Google Search Console
+    // بترصده كـ"نوع كانت غير صالح" في حقل brand لبيانات المنتج المنظّمة.
+    brand: { "@type": "Brand", name: SITE.legalName },
     areaServed: city,
     ...(priceSAR
       ? {
@@ -143,6 +145,38 @@ export function listingJsonLd({
             priceCurrency: "SAR",
             price: priceSAR,
             availability: "https://schema.org/InStock",
+            // فرص السوق عندنا (مطاعم للبيع أو التقبيل) مش منتجات بتتشحن — التسليم استلام محلي
+            // في السعودية فقط، فبنوضّح كده صراحة بدل ما نسيب الحقل فاضي (كان بيتسجّل كتحذير غير ملحّ
+            // في Google Search Console: "shippingDetails" مفقود من "offers").
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: {
+                "@type": "MonetaryAmount",
+                value: "0",
+                currency: "SAR",
+              },
+              shippingDestination: {
+                "@type": "DefinedRegion",
+                addressCountry: "SA",
+              },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: {
+                  "@type": "QuantitativeValue",
+                  minValue: 0,
+                  maxValue: 0,
+                  unitCode: "DAY",
+                },
+              },
+            },
+            // بيع أو تقبيل مطعم عملية نهائية بعد التعاقد — مفيش "استرجاع" بالمعنى التجاري المعتاد،
+            // فبنصرّح بده صراحة بدل ما يفضل الحقل ناقص (تحذير غير ملحّ تاني من Search Console:
+            // "hasMerchantReturnPolicy" مفقود من "offers").
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "SA",
+              returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+            },
           },
         }
       : {}),
