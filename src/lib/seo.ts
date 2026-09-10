@@ -34,7 +34,9 @@ export function buildMetadata({
   languages["x-default"] = `${SITE.url}/${locales[0]}${cleanPath}`;
 
   const canonical = `${SITE.url}/${locale}${cleanPath}`;
-  const fullTitle = path === "/" ? title : `${title} | ${SITE.name.ar} — ${SITE.name.en}`;
+  // كانت الصفحة الرئيسية مستثناة من إضافة اسم الشركة لعنوان الصفحة (title tag)، فكان
+  // الـ <title> بتاعها بيطلع بدون أي ذكر لـ"بيت المطاعم" إطلاقًا — عكس كل صفحات الموقع التانية
+  const fullTitle = `${title} | ${SITE.name.ar} — ${SITE.name.en}`;
 
   return {
     title: fullTitle,
