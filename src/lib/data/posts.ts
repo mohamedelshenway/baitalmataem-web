@@ -183,11 +183,9 @@ Before adjusting purchasing, the menu, or prices, run an accurate count and calc
 
 ## الجهات اللي هتتعامل معاها بالترتيب
 
-**الأمانة أو البلدية (عبر منصة بلدي):** هي الجهة المحورية اللي بتصدر رخصة النشاط التجاري الغذائي، وبتتحقق من مطابقة الموقع لاستخدام الأرض والمخطط المعماري المعتمد.
-
-**الهيئة العامة للغذاء والدواء (SFDA):** بتضع الاشتراطات الصحية لتداول الغذاء وسلامته، وبتراقب طريقة التخزين والتحضير ومنع التلوث.
-
-**الدفاع المدني:** بيصدر شهادة السلامة بعد ما يتأكد من أنظمة الإطفاء والإنذار ومخارج الطوارئ في المكان.
+- الأمانة أو البلدية (عبر منصة بلدي): هي الجهة المحورية اللي بتصدر رخصة النشاط التجاري الغذائي، وبتتحقق من مطابقة الموقع لاستخدام الأرض والمخطط المعماري المعتمد.
+- الهيئة العامة للغذاء والدواء (SFDA): بتضع الاشتراطات الصحية لتداول الغذاء وسلامته، وبتراقب طريقة التخزين والتحضير ومنع التلوث.
+- الدفاع المدني: بيصدر شهادة السلامة بعد ما يتأكد من أنظمة الإطفاء والإنذار ومخارج الطوارئ في المكان.
 
 ## الخطوات الأساسية بالترتيب
 
@@ -224,11 +222,9 @@ Before adjusting purchasing, the menu, or prices, run an accurate count and calc
 
 ## The authorities you'll deal with, in order
 
-**The municipality (via the "Balady" platform):** the central authority that issues the food business license and verifies the site matches the approved land use and architectural plan.
-
-**The Saudi Food and Drug Authority (SFDA):** sets the health requirements for food handling and safety, and oversees storage, preparation, and contamination prevention.
-
-**Civil Defense:** issues the safety certificate after verifying fire suppression, alarm systems, and emergency exits.
+- The municipality (via the "Balady" platform): the central authority that issues the food business license and verifies the site matches the approved land use and architectural plan.
+- The Saudi Food and Drug Authority (SFDA): sets the health requirements for food handling and safety, and oversees storage, preparation, and contamination prevention.
+- Civil Defense: issues the safety certificate after verifying fire suppression, alarm systems, and emergency exits.
 
 ## The basic steps, in order
 
