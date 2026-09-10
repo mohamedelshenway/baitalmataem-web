@@ -510,7 +510,8 @@
     "ctaText": "If you need a partner to handle setup or operations end to end, get in touch.",
     "expertiseTitle": "Our Scope of Expertise",
     "expertiseSubtitle": "Bait Al Mataem provides end-to-end consulting for restaurant owners and investors in Saudi Arabia, covering every stage of the project from concept to operations and growth.",
-    "caseStudiesTitle": "Examples From Our Work"
+    "caseStudiesTitle": "Examples From Our Work",
+    "expertiseSince": "We've been active in this field since 2018 outside Saudi Arabia, and since 2022 inside the Kingdom as well."
   },
   "contact": {
     "title": "Contact Us",
@@ -524,7 +525,8 @@
     "formSubmit": "Send message",
     "formSuccess": "Thank you — your message has been received. Bait Al Mataem will get back to you soon.",
     "formMvpNotice": "Temporary technical note: this is an early MVP version of the site, and no email is automatically connected to receive this form yet. To make sure your message reaches us right now, please contact us directly on WhatsApp or by email.",
-    "formError": "Something went wrong while sending. Please try again or reach us directly on WhatsApp."
+    "formError": "Something went wrong while sending. Please try again or reach us directly on WhatsApp.",
+    "socialTitle": "Follow Us"
   },
   "admin": {
     "title": "Bait Al Mataem Admin",

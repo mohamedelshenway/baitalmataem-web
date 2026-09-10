@@ -515,7 +515,8 @@
     "ctaText": "Kuruluş veya işletmeyi uçtan uca üstlenecek bir ortağa ihtiyacınız varsa bizimle iletişime geçin.",
     "expertiseTitle": "Uzmanlık Alanlarımız",
     "expertiseSubtitle": "Bait Al Mataem, Suudi Arabistan'daki restoran sahiplerine ve yatırımcılara, projenin fikir aşamasından işletmeye ve büyümeye kadar tüm aşamalarını kapsayan uçtan uca danışmanlık sunar.",
-    "caseStudiesTitle": "Çalışmalarımızdan Örnekler"
+    "caseStudiesTitle": "Çalışmalarımızdan Örnekler",
+    "expertiseSince": "2018'den beri bu alanda Suudi Arabistan dışında, 2022'den beri de Suudi Arabistan içinde faaliyet gösteriyoruz."
   },
   "contact": {
     "title": "İletişim",
@@ -529,7 +530,8 @@
     "formSubmit": "Mesajı Gönder",
     "formSuccess": "Teşekkür ederiz, mesajınız alındı. Bait Al Mataem ekibi yakında sizinle iletişime geçecek.",
     "formMvpNotice": "Geçici teknik not: Bu, sitenin ilk sürümüdür (MVP) ve bu formu almak için henüz otomatik olarak bağlı bir e-posta bulunmamaktadır. Mesajınızın şu anda %100 ulaştığından emin olmak için doğrudan WhatsApp veya e-posta yoluyla bizimle iletişime geçin.",
-    "formError": "Gönderim sırasında bir hata oluştu. Tekrar deneyin veya doğrudan WhatsApp üzerinden bizimle iletişime geçin."
+    "formError": "Gönderim sırasında bir hata oluştu. Tekrar deneyin veya doğrudan WhatsApp üzerinden bizimle iletişime geçin.",
+    "socialTitle": "Bizi Takip Edin"
   },
   "admin": {
     "title": "Bait Al Mataem Yönetim Paneli",
