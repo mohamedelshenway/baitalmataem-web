@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { SITE, SOCIALS } from "@/lib/constants";
+import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP } from "@/lib/constants";
 import type { Locale } from "@/i18n/config";
 import { locales } from "@/i18n/config";
 
@@ -13,7 +13,9 @@ export function buildMetadata({
   locale,
   path, // المسار بدون بادئة اللغة، مثال: "/services/feasibility-study" أو "/" للرئيسية
   keywords,
-  ogImagePath = "/placeholders/og-default.svg",
+  // صيغة PNG وليست SVG عمدًا — منصات المشاركة الاجتماعية (X وواتساب ولينكدإن) غالبًا
+  // لا تعرض صور OG بصيغة SVG بشكل صحيح، فكانت معاينة روابط الموقع بتطلع بلا صورة
+  ogImagePath = "/placeholders/og-default.png",
   noIndex = false,
 }: {
   title: string;
@@ -67,8 +69,18 @@ export function organizationJsonLd() {
     "@type": "Organization",
     name: SITE.legalName,
     url: SITE.url,
+    // شعار حقيقي مأخوذ من نفس رمز الهوية البصرية المستخدم في الهيدر (BrandMark)، مُصدَّر PNG
+    // لأن جوجل لا يقبل صيغة SVG في حقل logo ضمن بيانات Organization المنظّمة
+    logo: `${SITE.url}/images/logo-512.png`,
     description: SITE.tagline.ar,
-    areaServed: ["Saudi Arabia"],
+    // رقم واتساب بيت المطاعم الرسمي المعتمد (نفس المصدر في src/lib/constants.ts)
+    ...(HAS_WHATSAPP ? { telephone: `+${WHATSAPP_NUMBER}` } : {}),
+    // مدينتا التركيز الفعليتان حاليًا (نفس مصدر SITE.focusCities)، مع إبقاء السعودية ككل كنطاق أعم
+    // لأن النشاط قابل للتوسع لمدن أخرى لاحقًا
+    areaServed: [
+      ...SITE.focusCities.en.map((city) => ({ "@type": "City", name: city })),
+      { "@type": "Country", name: "Saudi Arabia" },
+    ],
     // مصدر واحد للحقيقة: نفس الروابط المعتمدة في src/lib/constants.ts، بدل تكرارها هنا يدويًا
     sameAs: [SOCIALS.facebook, SOCIALS.instagram, SOCIALS.tiktok, SOCIALS.youtube, SOCIALS.snapchat, SOCIALS.x],
   };
