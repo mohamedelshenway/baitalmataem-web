@@ -9,7 +9,9 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         // "/dashboard" هي لوحة الإدارة الفعلية المحمية بتسجيل دخول (Supabase) — كانت مفقودة من هنا رغم
         // إضافة "/admin" (صفحة معاينة قديمة مش مستخدمة فعليًا). لازم تُستبعد من الزحف والفهرسة زيها بالظبط.
-        disallow: ["/*/admin", "/*/dashboard", "/*/marketplace/new", "/api/"],
+        // "/thank-you" صفحة تحويل مخصصة لتتبع Conversion في Google Ads فقط بعد نجاح نموذج التواصل —
+        // لا يجب فهرستها أو الوصول لها ضمن التصفح الطبيعي.
+        disallow: ["/*/admin", "/*/dashboard", "/*/marketplace/new", "/*/thank-you", "/api/"],
       },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,
