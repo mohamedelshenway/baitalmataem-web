@@ -15,12 +15,14 @@ export const SITE = {
 };
 
 // حسابات بيت المطاعم الرقمية الرسمية المعتمدة — لا تُستبدل إلا بتأكيد صريح من محمد الشناوي
+// facebook / instagram / tiktok / youtube: روابط مؤكَّدة صراحة من محمد الشناوي بتاريخ 2026-09-10
 export const SOCIALS = {
-  facebook: "https://www.facebook.com/baitalmataem", // بحاجة لتأكيد الرابط المباشر
-  instagram: "https://instagram.com/baitalmataem",
-  youtube: "https://youtube.com/@baitalmataem", // بحاجة لتأكيد الرابط المباشر
-  snapchat: "https://www.snapchat.com/add/baitalmataem",
-  x: "https://x.com/baitalmataem",
+  facebook: "https://www.facebook.com/1201724783030437",
+  instagram: "https://www.instagram.com/baitalmataem_sa/",
+  tiktok: "https://www.tiktok.com/@baitalmataem",
+  youtube: "https://www.youtube.com/channel/UCgKu6z8eOVJMrTOHjfEKJjw",
+  snapchat: "https://www.snapchat.com/add/baitalmataem", // بحاجة لتأكيد الرابط المباشر
+  x: "https://x.com/baitalmataem", // بحاجة لتأكيد الرابط المباشر
   email: "baitalmataem@gmail.com",
 };
 
