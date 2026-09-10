@@ -4,6 +4,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/seo";
 import { getPublishedListings } from "@/lib/data/live-listings";
 import { POSTS } from "@/lib/data/posts";
+import { HOME_SEO_AR } from "@/lib/data/seo-overrides";
 import { notFound } from "next/navigation";
 import {
   Hero,
@@ -21,9 +22,13 @@ import { MarketplacePreview } from "@/components/marketplace-preview";
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
   const dict = await getDictionary(params.locale);
+  // عنوان ووصف صفحة البحث (title/meta description) مختلفان عمدًا عن نص الواجهة الظاهر
+  // (heroTitle/heroSubtitle) — نص الواجهة جملة تسويقية للزائر، بينما عنوان ووصف الميتا
+  // مكتوبان للكلمات المفتاحية الفعلية اللي يبحث بيها العميل في جوجل. راجع seo-overrides.ts
+  const seo = params.locale === "ar" ? HOME_SEO_AR : null;
   return buildMetadata({
-    title: dict.home.heroTitle,
-    description: dict.home.heroSubtitle,
+    title: seo?.metaTitle ?? dict.home.heroTitle,
+    description: seo?.metaDescription ?? dict.home.heroSubtitle,
     locale: params.locale,
     path: "/",
   });
