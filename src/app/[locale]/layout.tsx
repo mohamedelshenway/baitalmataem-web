@@ -41,6 +41,9 @@ export async function generateMetadata({ params }: { params: { locale: string } 
   const dict = await getDictionary(params.locale);
   return {
     metadataBase: new URL(SITE.url),
+    // "template" هنا للصفحات النادرة اللي مالهاش generateMetadata خاص بيها فقط (زي صفحة 404).
+    // كل صفحة حقيقية في الموقع بتبني عنوانها عبر buildMetadata في src/lib/seo.ts، واللي بيستخدم
+    // title.absolute عمدًا عشان يمنع الـ template ده من الالتصاق فوق عنوانها تاني.
     title: { default: SITE.legalName, template: `%s | ${SITE.name.ar}` },
     description: pickText(SITE.tagline, params.locale),
     icons: { icon: "/favicon.svg" },
