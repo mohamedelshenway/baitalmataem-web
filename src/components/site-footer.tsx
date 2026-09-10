@@ -11,9 +11,10 @@ import { pickText } from "@/lib/i18n-text";
 
 const SOCIAL_LINKS = [
   { key: "instagram", label: "Instagram" },
-  { key: "x", label: "X" },
   { key: "facebook", label: "Facebook" },
+  { key: "tiktok", label: "TikTok" },
   { key: "youtube", label: "YouTube" },
+  { key: "x", label: "X" },
   { key: "snapchat", label: "Snapchat" },
 ] as const;
 

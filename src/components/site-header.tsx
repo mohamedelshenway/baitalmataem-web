@@ -7,6 +7,7 @@ import type { Dictionary } from "@/i18n/get-dictionary";
 import { locales, localeMeta, type Locale } from "@/i18n/config";
 import { BrandMark } from "@/components/brand-mark";
 import { SERVICES } from "@/lib/data/services";
+import { SocialIconRow } from "@/components/social-icons";
 
 export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const pathname = usePathname();
@@ -81,6 +82,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
         </nav>
 
         <div className="flex items-center gap-2">
+          <SocialIconRow className="me-1 hidden items-center gap-3 xl:flex" />
           <LanguageSwitcher locale={locale} pathWithoutLocale={pathWithoutLocale} />
           <Link
             href={`/${locale}/contact`}
@@ -148,6 +150,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
                 {dict.nav.consultCta}
               </Link>
             </div>
+            <SocialIconRow className="mt-4 flex items-center justify-center gap-5 border-t border-sand-200 pt-4" />
           </nav>
         </div>
       )}
