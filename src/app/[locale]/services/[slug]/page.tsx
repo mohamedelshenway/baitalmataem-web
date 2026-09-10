@@ -7,6 +7,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { SITE, whatsappLink, mailtoLink, HAS_WHATSAPP } from "@/lib/constants";
 import { SERVICES, getServiceMeta } from "@/lib/data/services";
+import { SERVICE_SEO_AR } from "@/lib/data/seo-overrides";
 import { Button, Card, GoldDivider } from "@/components/ui";
 
 export function generateStaticParams() {
@@ -24,9 +25,12 @@ export async function generateMetadata({
   const dict = await getDictionary(params.locale);
   const item = dict.services.list[params.slug as keyof typeof dict.services.list];
   if (!item) return {};
+  // عنوان ووصف الميتا مختلفان عمدًا عن نص الواجهة (item.title/item.short) — راجع التعليق
+  // في seo-overrides.ts. مقصور على العربية حاليًا لأنها لغة البحث المستهدفة أساسًا.
+  const seo = params.locale === "ar" ? SERVICE_SEO_AR[params.slug] : undefined;
   return buildMetadata({
-    title: item.title,
-    description: item.short,
+    title: seo?.metaTitle ?? item.title,
+    description: seo?.metaDescription ?? item.short,
     locale: params.locale,
     path: `/services/${params.slug}`,
     keywords: item.keywords,
