@@ -6,6 +6,7 @@ import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
 import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP, whatsappLink } from "@/lib/constants";
 import { Card, GoldDivider } from "@/components/ui";
 import { ContactForm } from "@/components/contact-form";
+import { SocialIconRow } from "@/components/social-icons";
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
@@ -54,6 +55,11 @@ export default async function ContactPage({ params }: { params: { locale: string
             </a>
           </Card>
         </div>
+
+        <Card className="mb-10 p-6">
+          <h2 className="mb-4 text-sm font-bold text-ink-900">{dict.contact.socialTitle}</h2>
+          <SocialIconRow className="flex items-center gap-5" />
+        </Card>
 
         <Card className="p-6">
           <h2 className="mb-5 text-sm font-bold text-ink-900">{dict.contact.formTitle}</h2>
