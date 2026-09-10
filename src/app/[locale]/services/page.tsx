@@ -35,7 +35,7 @@ export default async function ServicesPage({ params }: { params: { locale: strin
     <section className="py-12 sm:py-14">
       <div className="container-page">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-        <SectionHeading title={dict.services.pageTitle} subtitle={dict.services.pageSubtitle} />
+        <SectionHeading level="h1" title={dict.services.pageTitle} subtitle={dict.services.pageSubtitle} />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s, i) => {
             const item = dict.services.list[s.slug as keyof typeof dict.services.list];
