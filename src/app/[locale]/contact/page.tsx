@@ -64,15 +64,13 @@ export default async function ContactPage({ params }: { params: { locale: string
         <Card className="p-6">
           <h2 className="mb-5 text-sm font-bold text-ink-900">{dict.contact.formTitle}</h2>
           <ContactForm
+            locale={locale}
             labels={{
               name: dict.contact.formName,
               phone: dict.contact.formPhone,
               message: dict.contact.formMessage,
               submit: dict.contact.formSubmit,
-              success: dict.contact.formSuccess,
               error: dict.contact.formError,
-              mvpNotice: dict.contact.formMvpNotice,
-              mvpCta: dict.common.contactNow,
             }}
           />
         </Card>
