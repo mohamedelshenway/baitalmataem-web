@@ -533,6 +533,13 @@
     "formError": "Gönderim sırasında bir hata oluştu. Tekrar deneyin veya doğrudan WhatsApp üzerinden bizimle iletişime geçin.",
     "socialTitle": "Bizi Takip Edin"
   },
+  "thankYou": {
+    "title": "Talebiniz Başarıyla Alındı",
+    "subtitleMain": "Bait Al Mataem ile iletişime geçtiğiniz için teşekkür ederiz",
+    "subtitleSecondary": "Ekibimiz talebinizi inceleyip en kısa sürede sizinle iletişime geçecek",
+    "backHome": "Ana Sayfaya Dön",
+    "whatsappCta": "WhatsApp Üzerinden İletişime Geçin"
+  },
   "admin": {
     "title": "Bait Al Mataem Yönetim Paneli",
     "previewNotice": "Bu, hedeflenen kullanıcı deneyimini göstermek amacıyla sadece yönetim arayüzünün bir önizlemesidir. Düğmeler henüz işlevsel değildir — bunları gerçek bir veritabanına ve giriş sistemine bağlamak bir sonraki teknik adımdır.",

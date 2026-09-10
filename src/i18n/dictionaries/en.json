@@ -528,6 +528,13 @@
     "formError": "Something went wrong while sending. Please try again or reach us directly on WhatsApp.",
     "socialTitle": "Follow Us"
   },
+  "thankYou": {
+    "title": "Your Request Has Been Received",
+    "subtitleMain": "Thank you for contacting Bait Al Mataem",
+    "subtitleSecondary": "Our team will review your request and get back to you as soon as possible",
+    "backHome": "Back to Home",
+    "whatsappCta": "Contact via WhatsApp"
+  },
   "admin": {
     "title": "Bait Al Mataem Admin",
     "previewNotice": "This is a UI preview only, to illustrate the intended admin experience. Buttons are not yet functional — wiring this to a real database and authentication is the next technical step.",
