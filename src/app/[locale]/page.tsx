@@ -47,7 +47,10 @@ export default async function HomePage({ params }: { params: { locale: string } 
   const cities = Array.from(new Set(approvedListings.map((l) => l.city.ar)));
 
   const latestPosts = [...POSTS].sort((a, b) => (a.publishedAt < b.publishedAt ? 1 : -1));
+  // ترتيب الصور هنا لازم يطابق ترتيب latestPosts (الأحدث أولًا) — نفس صورة كل مقال المستخدمة
+  // في صفحته التفصيلية (POST_IMAGES في blog/[slug]/page.tsx) حتى لا تختلف الصورة بين المعاينة والصفحة.
   const postImages = [
+    "/images/editorial/restaurant-interior-lg.webp",
     "/images/editorial/feasibility-analysis-lg.webp",
     "/images/editorial/restaurant-equipment-lg.webp",
   ];
