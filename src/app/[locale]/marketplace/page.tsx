@@ -62,7 +62,7 @@ export default async function MarketplacePage({
     <section className="py-12 sm:py-14">
       <div className="container-page">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-        <SectionHeading title={dict.marketplace.pageTitle} subtitle={dict.marketplace.pageSubtitle} />
+        <SectionHeading level="h1" title={dict.marketplace.pageTitle} subtitle={dict.marketplace.pageSubtitle} />
 
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm font-semibold text-ink-600">
