@@ -162,6 +162,107 @@ This ratio gives a clearer read on overall operational health, not just food spe
 Before adjusting purchasing, the menu, or prices, run an accurate count and calculate real food cost using the COGS formula. Without that number, every decision you make is a guess.`,
     },
   },
+  {
+    slug: "restaurant-licensing-steps-saudi-arabia",
+    title: {
+      ar: "تراخيص فتح مطعم في السعودية: الجهات والخطوات قبل ما توقّع عقد الإيجار",
+      en: "Restaurant Licensing in Saudi Arabia: The Authorities and Steps Before You Sign a Lease",
+    },
+    excerpt: {
+      ar: "كتير من المشاريع بتوقّع عقد الإيجار الأول، وبعدين تكتشف إن التصميم مش مطابق لاشتراطات البلدية. إليك الترتيب الصح للجهات والخطوات.",
+      en: "Many projects sign the lease first, then discover the layout doesn't meet municipal requirements. Here's the right order for authorities and steps.",
+    },
+    category: { ar: "التأسيس والتراخيص", en: "Setup & Licensing" },
+    tags: ["تراخيص مطعم", "فتح مطعم في السعودية", "رخصة بلدية مطعم", "تأسيس مطاعم"],
+    author: "بيت المطاعم",
+    publishedAt: "2026-09-10",
+    readingMinutes: 7,
+    relatedServiceSlug: "restaurant-setup",
+    content: {
+      ar: `أكتر غلطة بنشوفها في مشاريع بتبدأ، إن صاحب المشروع بيوقّع عقد إيجار المكان الأول، وبعدين يبدأ يسأل عن التراخيص. النتيجة غالبًا: تصميم لازم يتعدل، مصاريف ديكور تتعمل مرتين، وشهور بتضيع قبل ما الرخصة توصل. الترتيب الصح هو العكس تمامًا: تعرف الاشتراطات الأول، وبعدين توقّع.
+
+## الجهات اللي هتتعامل معاها بالترتيب
+
+**الأمانة أو البلدية (عبر منصة بلدي):** هي الجهة المحورية اللي بتصدر رخصة النشاط التجاري الغذائي، وبتتحقق من مطابقة الموقع لاستخدام الأرض والمخطط المعماري المعتمد.
+
+**الهيئة العامة للغذاء والدواء (SFDA):** بتضع الاشتراطات الصحية لتداول الغذاء وسلامته، وبتراقب طريقة التخزين والتحضير ومنع التلوث.
+
+**الدفاع المدني:** بيصدر شهادة السلامة بعد ما يتأكد من أنظمة الإطفاء والإنذار ومخارج الطوارئ في المكان.
+
+## الخطوات الأساسية بالترتيب
+
+1. إصدار السجل التجاري للنشاط الغذائي
+2. تقديم طلب الرخصة عبر منصة "بلدي"
+3. إرفاق عقد الإيجار أو الملكية والمخطط المعماري المعتمد
+4. استيفاء الاشتراطات الفنية (التهوية، فصل المطبخ، التخزين)
+5. الحصول على شهادة السلامة من الدفاع المدني
+6. اجتياز الزيارة الميدانية والتفتيش الصحي
+7. سداد الرسوم واستلام الرخصة إلكترونيًا
+
+هنا لازم نوضح نقطة مهمة: الرسوم والمدة الزمنية الفعلية لكل خطوة بتختلف حسب المدينة وحجم المشروع ونوع النشاط، فمينفعش حد يديك رقم ثابت من غير ما يشوف حالتك بالتحديد — أي رقم عام هتقابله في مكان تاني اعتبره تقدير مبدئي مش التزام.
+
+## الاشتراطات الفنية اللي بتوقف مشاريع كتير
+
+المشكلة غالبًا مش في الخطوات نفسها، المشكلة في تفاصيل فنية بتتكشف متأخر:
+
+- فصل المطبخ عن صالة الجمهور ودورات المياه بشكل كامل.
+- نظام تهوية وشفط مناسب للأبخرة والدهون، مش أي شفاط عادي.
+- تخزين منفصل: ثلاجات ترفع الطعام عن الأرض، وفصل واضح بين النيء والمطهي.
+- شهادات صحية سارية لكل العاملين في التعامل مع الطعام.
+- أنظمة إطفاء وإنذار ومخارج طوارئ واضحة ومطابقة للمخطط المعتمد.
+
+لو المكان اتصمم واتنفذ قبل ما الاشتراطات دي تتأكد، الحل غالبًا بيكون إعادة تنفيذ جزء من الديكور — وده أغلى بكتير من تعديل رسمة قبل التنفيذ.
+
+## ليه الترتيب الزمني مهم زي الإجراءات نفسها
+
+مش بس "إيه الخطوات"، لكن "إمتى تعملها". لو وقّعت الإيجار قبل ما تتأكد إن المكان أصلًا يصلح لنشاط غذائي حسب استخدام الأرض، ممكن تكتشف إن المبنى مش مؤهل من الأساس. ولو بدأت التنفيذ قبل اعتماد المخطط من البلدية، بتخاطر إنك تنفذ حاجة تحتاج تتغير بعدين. الترتيب الصح: تأكد من صلاحية الموقع → اعتمد المخطط → بعدين نفّذ.
+
+## هنا بالظبط بيبقى دور دراسة الجدوى والاستشاري
+
+مش كل صاحب مشروع لازم يبقى خبير تراخيص، لكن لازم يكون معاه حد بيعرف الترتيب ده قبل ما يلتزم بأي عقد. دراسة الجدوى الصح بتشمل مراجعة الموقع من ناحية الاشتراطات مش بس من ناحية الجدوى المالية، وده اللي بيفرق بين مشروع بيتأخر شهور بسبب تفصيلة كان ممكن تتلاحظ بدري، ومشروع بيفتح في الميعاد المتوقع.`,
+      en: `The most common mistake we see in new projects: the owner signs the lease first, then starts asking about licensing. The usual result is a layout that needs rework, fit-out costs paid twice, and months lost before the license arrives. The right order is the exact opposite: know the requirements first, then sign.
+
+## The authorities you'll deal with, in order
+
+**The municipality (via the "Balady" platform):** the central authority that issues the food business license and verifies the site matches the approved land use and architectural plan.
+
+**The Saudi Food and Drug Authority (SFDA):** sets the health requirements for food handling and safety, and oversees storage, preparation, and contamination prevention.
+
+**Civil Defense:** issues the safety certificate after verifying fire suppression, alarm systems, and emergency exits.
+
+## The basic steps, in order
+
+1. Issue a commercial registration for the food business activity
+2. Submit the license application through the "Balady" platform
+3. Attach the lease or ownership contract and the approved architectural plan
+4. Meet the technical requirements (ventilation, kitchen separation, storage)
+5. Obtain the safety certificate from Civil Defense
+6. Pass the site visit and health inspection
+7. Pay the fees and receive the license electronically
+
+One important note: actual fees and timelines for each step vary by city, project size, and activity type, so no one can give you a fixed number without reviewing your specific case — treat any general figure you come across as a rough starting estimate, not a commitment.
+
+## The technical requirements that stall many projects
+
+The problem is usually not the steps themselves — it's technical details that surface too late:
+
+- Full separation of the kitchen from the dining area and restrooms.
+- Proper ventilation and extraction for smoke and grease, not just any standard fan.
+- Separate storage: refrigeration raised off the floor, with a clear separation between raw and cooked food.
+- Valid health certificates for everyone handling food.
+- Fire suppression, alarm systems, and clearly marked emergency exits matching the approved plan.
+
+If the space was designed and built before these requirements were confirmed, the fix is usually redoing part of the fit-out — far more expensive than adjusting a drawing before construction.
+
+## Why timing matters as much as the steps themselves
+
+It's not just "what are the steps" — it's "when do you do them." If you sign the lease before confirming the location is even zoned for a food business, you may discover the building isn't eligible at all. If you start construction before the municipality approves the plan, you risk building something that needs to change later. The right order: confirm site eligibility → get the plan approved → then build.
+
+## This is exactly where a feasibility study and an advisor earn their keep
+
+Not every owner needs to become a licensing expert, but every owner needs someone who knows this sequence before committing to any contract. A proper feasibility study reviews the site against these requirements, not just its financial viability — and that's the difference between a project delayed months by something that could have been caught early, and one that opens on schedule.`,
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
