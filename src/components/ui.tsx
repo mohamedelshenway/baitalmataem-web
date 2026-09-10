@@ -61,24 +61,30 @@ export function SectionHeading({
   subtitle,
   align = "start",
   tone = "light",
+  // "h2" افتراضيًا لأن أغلب استخدامات المكوّن ده عنوان قسم فرعي داخل صفحة ليها h1 خاص بيها فعلًا.
+  // لكن بعض الصفحات (الخدمات، سوق الفرص، المدونة) كانت بتستخدمه كعنوان رئيسي للصفحة بدون أي h1
+  // في الصفحة كلها — لازم "h1" تتمرّر صراحة في الحالة دي.
+  level = "h2",
 }: {
   eyebrow?: string;
   title: string;
   subtitle?: string;
   align?: "start" | "center";
   tone?: "light" | "dark";
+  level?: "h1" | "h2";
 }) {
+  const Heading = level;
   return (
     <div className={`mb-10 max-w-2xl ${align === "center" ? "mx-auto text-center" : "text-start"}`}>
       {eyebrow && (
         <p className={`eyebrow mb-3 ${tone === "dark" ? "text-gold-500" : ""}`}>{eyebrow}</p>
       )}
-      <h2
+      <Heading
         className={`text-2xl font-bold sm:text-3xl ${tone === "dark" ? "text-white" : "text-ink-900"}`}
         style={{ textWrap: "balance" }}
       >
         {title}
-      </h2>
+      </Heading>
       {subtitle && (
         <p className={`mt-3 leading-7 ${tone === "dark" ? "text-white/70" : "text-ink-600"}`}>{subtitle}</p>
       )}
