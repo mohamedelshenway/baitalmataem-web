@@ -42,7 +42,8 @@ export default async function ProjectsPage({ params }: { params: { locale: strin
 
         <div className="mb-14">
           <h2 className="mb-2 text-xl font-bold leading-tight text-ink-900">{dict.projects.expertiseTitle}</h2>
-          <p className="mb-6 max-w-2xl leading-7 text-ink-600">{dict.projects.expertiseSubtitle}</p>
+          <p className="mb-2 max-w-2xl leading-7 text-ink-600">{dict.projects.expertiseSubtitle}</p>
+          <p className="mb-6 text-sm font-semibold text-gold-600">{dict.projects.expertiseSince}</p>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {EXPERTISE_AREAS.map((area, i) => (
               <Reveal key={area.title.en} delay={i * 60}>
