@@ -39,7 +39,10 @@ export function buildMetadata({
   const fullTitle = `${title} | ${SITE.name.ar} — ${SITE.name.en}`;
 
   return {
-    title: fullTitle,
+    // "absolute" مش نص عادي — بيمنع Next.js من إضافة الـ title.template بتاع layout.tsx
+    // (بتاع بيت المطاعم) فوق العنوان ده تاني. من غيرها كل صفحات الموقع (غير الرئيسية) كانت
+    // بيطلعلها اسم الشركة مكرر مرتين في الـ <title> tag (مرة من هنا، ومرة تانية من الـ layout)
+    title: { absolute: fullTitle },
     description,
     keywords,
     alternates: {
