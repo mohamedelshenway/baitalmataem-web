@@ -39,7 +39,7 @@ export default async function BlogPage({ params }: { params: { locale: string } 
     <section className="py-12 sm:py-14">
       <div className="container-page">
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
-        <SectionHeading eyebrow={dict.home.blogTitle} title={dict.blog.pageTitle} subtitle={dict.blog.pageSubtitle} />
+        <SectionHeading level="h1" eyebrow={dict.home.blogTitle} title={dict.blog.pageTitle} subtitle={dict.blog.pageSubtitle} />
         <BlogList dict={dict} locale={locale} posts={posts} images={IMAGES} />
       </div>
     </section>
