@@ -259,6 +259,137 @@ It's not just "what are the steps" — it's "when do you do them." If you sign t
 Not every owner needs to become a licensing expert, but every owner needs someone who knows this sequence before committing to any contract. A proper feasibility study reviews the site against these requirements, not just its financial viability — and that's the difference between a project delayed months by something that could have been caught early, and one that opens on schedule.`,
     },
   },
+  {
+    slug: "restaurant-feasibility-study-saudi-arabia",
+    title: {
+      ar: "دراسة جدوى مطعم في السعودية: الأرقام اللي لازم تعرفها قبل ما تستثمر",
+      en: "Restaurant Feasibility Study in Saudi Arabia: The Numbers You Need Before You Invest",
+    },
+    excerpt: {
+      ar: "دراسة الجدوى مش ورقة شكلية للبنك أو الشريك، هي اللي بتفرق بين مشروع بيتفتح على أرقام حقيقية ومشروع بيتفتح على أمل.",
+      en: "A feasibility study isn't a formality for the bank or a partner — it's what separates a project built on real numbers from one built on hope.",
+    },
+    category: { ar: "دراسات الجدوى والتخطيط الاستثماري", en: "Feasibility Studies & Investment Planning" },
+    tags: ["دراسة جدوى مطعم", "تكلفة فتح مطعم في السعودية", "نقطة التعادل مطعم", "دراسة جدوى مشروع مطعم"],
+    author: "بيت المطاعم",
+    publishedAt: "2026-09-11",
+    readingMinutes: 8,
+    relatedServiceSlug: "feasibility-study",
+    content: {
+      ar: `أكتر مشروع بيتعثر مش لأنه فكرة وحشة، لكن لأن صاحبه فتحه على إحساس "المكان هيعجب الناس" من غير ما يشوف الأرقام قبل ما يوقّع أي عقد. دراسة الجدوى مش ورقة شكلية بتتعمل عشان تقدمها للبنك أو الشريك، هي الأداة اللي بتفرق بين مشروع بيتفتح على أساس صلب، ومشروع بيتفتح على أمل.
+
+## إيه اللي المفروض دراسة الجدوى تجاوبك عليه
+
+دراسة جدوى المطعم الصح مش بس "هل الفكرة كويسة؟"، لازم تجاوبك بالتفصيل على:
+
+- هل الموقع ده فعلاً بيجيب العدد الكافي من الزباين للنشاط ده تحديدًا؟
+- إيه حجم الاستثمار المطلوب فعليًا، مش تقدير عام من غير تفاصيل؟
+- إمتى المشروع هيوصل لنقطة التعادل، وإمتى هيبدأ يرجّع رأس المال؟
+- إيه أكبر المخاطر اللي ممكن تأثر على الأرقام دي (منافسة، إيجار، تكلفة تشغيل)؟
+
+لو دراسة الجدوى مجاوبتش على الأسئلة دي بالتحديد، يبقى في الغالب ورقة عامة مش أداة قرار حقيقية.
+
+## عناصر دراسة الجدوى الأساسية
+
+- تحليل السوق والمنافسين: مين اللي بيخدم نفس الشريحة في نفس المنطقة، وإيه نقاط قوته وضعفه.
+- تحليل الموقع: الحركة المارة، سهولة الوصول، التوافق بين طبيعة المنطقة ونوع النشاط.
+- التكلفة الاستثمارية: كل بند من الإيجار والتجهيزات للديكور والتراخيص ورأس المال العامل.
+- توقعات الإيرادات: مبنية على متوسط فاتورة واقعي وعدد زباين متوقع، مش رقم متفائل بدون أساس.
+- التكاليف التشغيلية الشهرية: Food Cost، Labor Cost، إيجار، مرافق، تسويق.
+- نقطة التعادل والتدفق النقدي: إمتى المشروع هيغطي مصاريفه، وإمتى هيبدأ يحقق ربح فعلي.
+- تحليل المخاطر: إيه السيناريوهات اللي ممكن تقلب الأرقام (زيادة إيجار، منافس جديد، تأخر ترخيص).
+
+## تكلفة تأسيس مطعم في السعودية: أرقام تقريبية
+
+الأرقام دي تقديرية وبتختلف بشكل كبير حسب المدينة والحي وحجم المطعم ونوع النشاط، وده لازم يتوضح من الأول عشان محدش يتعامل معاها كسعر ثابت:
+
+- مطعم صغير: استثمار إجمالي يتراوح تقريبًا بين 80,000 و250,000 ريال.
+- مطعم متوسط الحجم: يتراوح تقريبًا بين 250,000 و800,000 ريال.
+- مطعم كبير أو بمفهوم متكامل: ممكن يتخطى 800,000 وحتى 3,000,000 ريال أو أكتر.
+
+جوه الرقم ده بتدخل بنود زي الإيجار السنوي، تجهيزات المطبخ، الديكور والتشطيب، نظام نقاط البيع (POS)، ورأس المال العامل لأول 3-6 شهور تشغيل. أي رقم عام بتشوفه في مقال أو منشور اعتبره نقطة بداية للنقاش، مش ميزانية نهائية لمشروعك.
+
+## نقطة التعادل: الرقم اللي المفروض تعرفه قبل التوقيع
+
+نقطة التعادل هي حجم المبيعات اللي عنده المشروع بيغطي مصاريفه بالظبط، من غير ربح ولا خسارة. المعادلة المبسطة:
+
+نقطة التعادل (بالمبيعات) = المصاريف الثابتة ÷ (1 − نسبة التكلفة المتغيرة من المبيعات)
+
+المصاريف الثابتة بتشمل الإيجار والرواتب الأساسية والالتزامات الشهرية الثابتة، والتكلفة المتغيرة بتشمل Food Cost بشكل أساسي. لو محسوبتش الرقم ده قبل الفتح، هتكتشفه بالتجربة بعد ما تكون وقّعت عقد إيجار وبدأت تصرف.
+
+## العائد على الاستثمار: توقع واقعي مش رقم متفائل
+
+كتير من المستثمرين بيدخلوا المشروع وهما متوقعين استرداد رأس المال في أقل من سنة، وده غالبًا توقع متفائل أكتر من اللازم لقطاع المطاعم. الفترة الواقعية بتختلف بشكل كبير حسب حجم الاستثمار والموقع ونوع النشاط، وأي رقم محدد من غير ما يتبني على دراسة فعلية لمشروعك يفضل تقدير عام مش التزام.
+
+## غلطات شائعة بتشوّه دراسة الجدوى
+
+- تفاؤل زيادة في توقعات المبيعات، من غير ما تتبني على بيانات موقع فعلية أو منافسين حقيقيين.
+- تجاهل موسمية الطلب (رمضان، الصيف، المواسم) وتأثيرها على التدفق النقدي الشهري.
+- عدم احتساب رأس المال العامل الكافي لأول شهور التشغيل، قبل ما المبيعات تستقر.
+- الاعتماد على متوسطات عامة من الإنترنت بدل زيارة الموقع فعليًا وجمع بيانات حقيقية عنه.
+- معاملة الدراسة كخطوة تتعمل مرة واحدة وتتنسى، من غير مراجعة لما تتغير الظروف (إيجار، تضخم، منافسة جديدة).
+
+## هنا بالظبط بيبقى دور دراسة الجدوى الاحترافية
+
+الفرق بين دراسة جدوى حقيقية ومستند شكلي هو مصدر الأرقام: هل مبنية على بيانات موقع فعلية وتحليل سوق حقيقي، ولا مبنية على افتراضات عامة معمّمة على أي مطعم في أي مكان؟ دراسة الجدوى الصح بتوضح كل افتراض لوحده، وبتفرّق بين الرقم المؤكد والرقم التقديري، عشان القرار اللي هتاخده يكون مبني على فهم حقيقي للمخاطر والفرصة، مش على تفاؤل لحظة البداية.`,
+      en: `The most common reason a restaurant project stumbles isn't a bad idea — it's opening on the feeling that "people will love this place" without looking at the numbers before signing anything. A feasibility study isn't a formality you produce for a bank or a partner; it's the tool that separates a project built on solid ground from one built on hope.
+
+## What a feasibility study should actually answer
+
+A proper restaurant feasibility study doesn't just ask "is this a good idea?" It should answer, in detail:
+
+- Does this specific location actually bring enough of the right customers for this specific concept?
+- What's the real investment required — not a vague estimate without a breakdown?
+- When will the project reach break-even, and when does it start paying back the capital?
+- What are the biggest risks that could shift these numbers (competition, rent, operating costs)?
+
+If a feasibility study doesn't answer these specific questions, it's usually a generic document, not a real decision-making tool.
+
+## The core components of a feasibility study
+
+- Market and competitor analysis: who's serving the same segment in the same area, and their strengths and weaknesses.
+- Location analysis: foot traffic, accessibility, and how well the area fits the concept.
+- Investment cost: every line item — rent, fit-out, licensing, and working capital.
+- Revenue projections: built on a realistic average check and expected customer count, not an optimistic number with no basis.
+- Monthly operating costs: food cost, labor cost, rent, utilities, marketing.
+- Break-even point and cash flow: when the project covers its expenses, and when it starts generating real profit.
+- Risk analysis: scenarios that could shift the numbers (rent increases, new competitors, licensing delays).
+
+## The cost of opening a restaurant in Saudi Arabia: rough figures
+
+These figures are estimates and vary significantly by city, district, restaurant size, and concept — that needs to be clear upfront so no one treats them as a fixed price:
+
+- Small restaurant: total investment roughly SAR 80,000-250,000.
+- Medium-sized restaurant: roughly SAR 250,000-800,000.
+- Large restaurant or a full concept: can exceed SAR 800,000, reaching SAR 3,000,000 or more.
+
+Inside that figure sit line items like annual rent, kitchen equipment, fit-out and finishing, a POS system, and working capital for the first 3-6 months of operation. Treat any general figure you come across as a starting point for discussion, not a final budget for your project.
+
+## Break-even: the number you need before you sign
+
+The break-even point is the sales volume at which the business covers its expenses exactly — no profit, no loss. The simplified formula:
+
+Break-even (in sales) = fixed costs ÷ (1 − variable cost ratio of sales)
+
+Fixed costs include rent, base salaries, and fixed monthly obligations; variable cost is mainly food cost. If you don't calculate this before opening, you'll discover it the hard way — after you've signed the lease and started spending.
+
+## Return on investment: a realistic expectation, not an optimistic number
+
+Many investors go in expecting to recover their capital in under a year, which is usually too optimistic for the restaurant sector. The realistic payback period varies significantly by investment size, location, and concept, and any specific number not grounded in an actual study of your project should be treated as a general estimate, not a commitment.
+
+## Common mistakes that distort a feasibility study
+
+- Overly optimistic sales projections not grounded in real location data or actual competitors.
+- Ignoring demand seasonality (Ramadan, summer, holidays) and its effect on monthly cash flow.
+- Not budgeting enough working capital for the first months of operation, before sales stabilize.
+- Relying on generic averages from the internet instead of actually visiting the site and gathering real data.
+- Treating the study as a one-time exercise instead of revisiting it when conditions change (rent, inflation, new competition).
+
+## This is exactly where a professional feasibility study earns its value
+
+The difference between a real feasibility study and a formality document is the source of the numbers: is it built on actual site data and real market analysis, or on generic assumptions applied to any restaurant anywhere? A proper feasibility study states every assumption separately, and distinguishes between confirmed figures and estimates — so the decision you make is grounded in a real understanding of the risk and the opportunity, not the optimism of day one.`,
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
