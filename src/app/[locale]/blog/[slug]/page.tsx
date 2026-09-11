@@ -19,6 +19,11 @@ const POST_IMAGES: Record<string, string> = {
   "food-cost-why-it-creeps-up-without-noticing": "/images/editorial/restaurant-equipment-lg.webp",
   "restaurant-licensing-steps-saudi-arabia": "/images/editorial/restaurant-interior-lg.webp",
   "restaurant-feasibility-study-saudi-arabia": "/images/editorial/management-meeting-lg.webp",
+  "restaurant-taqbeel-vs-purchase-saudi-arabia": "/images/editorial/restaurant-interior-lg.webp",
+  "restaurant-labor-cost-how-to-control-it": "/images/editorial/operations-team-lg.webp",
+  "struggling-restaurant-turnaround-saudi-arabia": "/images/editorial/commercial-kitchen-lg.webp",
+  "restaurant-customer-experience-why-it-matters": "/images/editorial/catering-service-lg.webp",
+  "restaurant-digital-marketing-saudi-arabia": "/images/editorial/restaurant-marketing-lg.webp",
 };
 
 export function generateStaticParams() {
