@@ -18,6 +18,7 @@ const POST_IMAGES: Record<string, string> = {
   "how-to-evaluate-a-restaurant-before-buying": "/images/editorial/feasibility-analysis-lg.webp",
   "food-cost-why-it-creeps-up-without-noticing": "/images/editorial/restaurant-equipment-lg.webp",
   "restaurant-licensing-steps-saudi-arabia": "/images/editorial/restaurant-interior-lg.webp",
+  "restaurant-feasibility-study-saudi-arabia": "/images/editorial/management-meeting-lg.webp",
 };
 
 export function generateStaticParams() {
