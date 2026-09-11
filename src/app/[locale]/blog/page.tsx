@@ -11,6 +11,11 @@ import { BlogList } from "@/components/blog-list";
 // ترتيب الصور لازم يطابق ترتيب المقالات بعد الترتيب حسب الأحدث أولًا (posts أدناه) — نفس صورة
 // كل مقال المستخدمة في صفحته التفصيلية (POST_IMAGES في blog/[slug]/page.tsx)
 const IMAGES = [
+  "/images/editorial/restaurant-marketing-lg.webp",
+  "/images/editorial/catering-service-lg.webp",
+  "/images/editorial/commercial-kitchen-lg.webp",
+  "/images/editorial/operations-team-lg.webp",
+  "/images/editorial/restaurant-interior-lg.webp",
   "/images/editorial/management-meeting-lg.webp",
   "/images/editorial/restaurant-interior-lg.webp",
   "/images/editorial/feasibility-analysis-lg.webp",
