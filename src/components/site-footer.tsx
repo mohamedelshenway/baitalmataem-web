@@ -2,21 +2,13 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
-import { SITE, SOCIALS, HAS_WHATSAPP, whatsappLink, mailtoLink } from "@/lib/constants";
+import { SITE, HAS_WHATSAPP, whatsappLink, mailtoLink, SOCIALS } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
 import { POSTS } from "@/lib/data/posts";
 import { GoldDivider } from "@/components/ui";
 import { BrandMark } from "@/components/brand-mark";
+import { SocialIconRow } from "@/components/social-icons";
 import { pickText } from "@/lib/i18n-text";
-
-const SOCIAL_LINKS = [
-  { key: "instagram", label: "Instagram" },
-  { key: "facebook", label: "Facebook" },
-  { key: "tiktok", label: "TikTok" },
-  { key: "youtube", label: "YouTube" },
-  { key: "x", label: "X" },
-  { key: "snapchat", label: "Snapchat" },
-] as const;
 
 export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const year = "2026"; // ثابت لتفادي استخدام Date.now() وقت البناء
@@ -83,19 +75,10 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-white/10 pt-8">
-          <div className="flex flex-wrap items-center gap-5">
-            {SOCIAL_LINKS.map((s) => (
-              <a
-                key={s.key}
-                href={SOCIALS[s.key]}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="focus-ring text-xs font-semibold text-white/55 hover:text-gold-500"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
+          <SocialIconRow
+            className="flex flex-wrap items-center gap-5"
+            linkClassName="focus-ring text-white/55 transition-colors hover:text-gold-500"
+          />
         </div>
       </div>
 
