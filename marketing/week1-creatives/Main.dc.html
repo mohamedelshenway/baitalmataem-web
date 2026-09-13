@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .frame {
+      width: 1080px; height: 1350px;
+      background: #5c1216;
+      font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 72px 88px 64px;
+      position: relative;
+      overflow: hidden;
+    }
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(200,164,93,0.22);
+    }
+    .top { display: flex; align-items: center; justify-content: flex-start; gap: 16px; }
+    .wordmark { color: #f8f5ef; font-size: 30px; font-weight: 700; }
+    .wordmark span { display: block; color: #c8a45d; font-size: 14px; font-weight: 500; letter-spacing: 2px; margin-top: 2px; font-family: Arial, sans-serif; }
+    .middle { display: flex; flex-direction: column; gap: 28px; }
+    .eyebrow { color: #c8a45d; font-size: 26px; font-weight: 600; }
+    .headline { color: #f8f5ef; font-size: 72px; font-weight: 700; line-height: 1.28; max-width: 840px; }
+    .sub { color: rgba(248,245,239,0.82); font-size: 32px; font-weight: 400; line-height: 1.55; max-width: 760px; }
+    .bottom { display: flex; align-items: center; justify-content: space-between; }
+    .counter { color: rgba(248,245,239,0.65); font-size: 24px; font-weight: 500; }
+    .swipe { display: flex; align-items: center; gap: 10px; color: #c8a45d; font-size: 22px; font-weight: 600; }
+  </style>
+</helmet>
+<div class="frame">
+  <div class="ring" style="width:640px;height:640px;top:-220px;left:-180px;"></div>
+  <div class="ring" style="width:420px;height:420px;bottom:-160px;right:-120px;"></div>
+
+  <div class="top">
+    <svg viewBox="0 0 64 64" width="52" height="52" aria-hidden="true">
+      <polygon points="32,12 14,36 50,36" fill="#c8a45d"></polygon>
+      <rect x="19" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+      <rect x="29" y="40" width="6" height="15" rx="3" fill="#c8a45d"></rect>
+      <rect x="39" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+    </svg>
+    <div class="wordmark">بيت المطاعم<span>BAIT AL MATAEM</span></div>
+  </div>
+
+  <div class="middle">
+    <div class="eyebrow">الأرقام والربحية</div>
+    <div class="headline">مبيعاتك ثابتة…<br>أرباحك تقل؟</div>
+    <div class="sub">3 أسباب ترفع تكلفة الطعام في مطعمك من غير ما تلاحظ</div>
+  </div>
+
+  <div class="bottom">
+    <div class="counter">١ / ٥</div>
+    <div class="swipe">
+      اسحب للمزيد
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#c8a45d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"></path></svg>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
