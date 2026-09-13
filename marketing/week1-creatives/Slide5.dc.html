@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .frame {
+      width: 1080px; height: 1350px;
+      background: #5c1216;
+      font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 88px;
+      position: relative;
+      overflow: hidden;
+      gap: 40px;
+    }
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(200,164,93,0.22);
+    }
+    .headline { color: #f8f5ef; font-size: 62px; font-weight: 700; line-height: 1.35; max-width: 820px; }
+    .divider { width: 120px; height: 6px; border-radius: 3px; background: #c8a45d; }
+    .sub { color: rgba(248,245,239,0.85); font-size: 32px; font-weight: 400; line-height: 1.6; max-width: 760px; }
+    .cta {
+      margin-top: 12px;
+      background: #c8a45d; color: #1e1c1b;
+      font-size: 28px; font-weight: 700;
+      padding: 22px 48px; border-radius: 16px;
+    }
+    .footer { position: absolute; bottom: 64px; display: flex; align-items: center; gap: 14px; }
+    .footer-text { color: rgba(248,245,239,0.7); font-size: 24px; font-weight: 500; }
+  </style>
+</helmet>
+<div class="frame">
+  <div class="ring" style="width:560px;height:560px;top:-200px;right:-160px;"></div>
+  <div class="ring" style="width:420px;height:420px;bottom:-140px;left:-140px;"></div>
+
+  <div class="headline">تقدر تضبط Food Cost بخطوات عملية</div>
+  <div class="divider"></div>
+  <div class="sub">التفاصيل الكاملة في مقال جديد على مدونة بيت المطاعم</div>
+  <div class="cta">الرابط في البايو</div>
+
+  <div class="footer">
+    <svg viewBox="0 0 64 64" width="32" height="32" aria-hidden="true">
+      <polygon points="32,12 14,36 50,36" fill="#c8a45d"></polygon>
+      <rect x="19" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+      <rect x="29" y="40" width="6" height="15" rx="3" fill="#c8a45d"></rect>
+      <rect x="39" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+    </svg>
+    <div class="footer-text">baitalmataem_sa</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
