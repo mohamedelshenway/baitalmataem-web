@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .frame {
+      width: 1080px; height: 1920px;
+      background: #5c1216;
+      font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 120px 96px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(200,164,93,0.2); }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .wordmark { color: #f8f5ef; font-size: 26px; font-weight: 700; }
+    .question {
+      margin-top: 140px;
+      color: #f8f5ef; font-size: 60px; font-weight: 700; line-height: 1.4;
+      text-align: center; max-width: 780px;
+    }
+    .poll-card {
+      margin-top: 96px;
+      width: 100%; max-width: 780px;
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 36px;
+      display: flex; flex-direction: column; gap: 18px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    }
+    .poll-q { color: #1e1c1b; font-size: 30px; font-weight: 600; text-align: center; margin-bottom: 6px; }
+    .poll-opt {
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(30,28,27,0.06);
+      border-radius: 20px; padding: 20px;
+      color: #1e1c1b; font-size: 28px; font-weight: 600;
+    }
+    .note {
+      margin-top: 40px;
+      color: rgba(248,245,239,0.6); font-size: 22px; font-weight: 400;
+      text-align: center; max-width: 640px;
+    }
+  </style>
+</helmet>
+<div class="frame">
+  <div class="ring" style="width:520px;height:520px;top:-200px;left:-160px;"></div>
+  <div class="ring" style="width:380px;height:380px;bottom:120px;right:-140px;"></div>
+
+  <div class="logo-row">
+    <svg viewBox="0 0 64 64" width="36" height="36" aria-hidden="true">
+      <polygon points="32,12 14,36 50,36" fill="#c8a45d"></polygon>
+      <rect x="19" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+      <rect x="29" y="40" width="6" height="15" rx="3" fill="#c8a45d"></rect>
+      <rect x="39" y="40" width="6" height="12" rx="3" fill="#c8a45d"></rect>
+    </svg>
+    <div class="wordmark">بيت المطاعم</div>
+  </div>
+
+  <div class="question">تعرف نسبة Food Cost في مطعمك بالضبط؟</div>
+
+  <div class="poll-card">
+    <div class="poll-q">استفتاء</div>
+    <div class="poll-opt">نعم، أعرفها بالضبط</div>
+    <div class="poll-opt">لأ، محتاج أراجعها</div>
+  </div>
+
+  <div class="note">أضف استفتاء انستقرام التفاعلي فوق هذا الخلفية من أدوات الستوري داخل التطبيق</div>
+</div>
+</x-dc>
+</body>
+</html>
