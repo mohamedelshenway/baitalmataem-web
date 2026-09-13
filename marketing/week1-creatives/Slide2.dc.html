@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .frame {
+      width: 1080px; height: 1350px;
+      background: #f8f5ef;
+      font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      direction: rtl;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 72px 88px 64px;
+      position: relative;
+    }
+    .top { display: flex; align-items: center; justify-content: space-between; }
+    .logo-row { display: flex; align-items: center; gap: 14px; }
+    .wordmark { color: #1e1c1b; font-size: 22px; font-weight: 700; }
+    .num-badge {
+      width: 96px; height: 96px; border-radius: 24px;
+      background: #5c1216; color: #f8f5ef;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; font-weight: 700;
+    }
+    .middle { display: flex; flex-direction: column; gap: 32px; }
+    .icon-wrap {
+      width: 128px; height: 128px; border-radius: 50%;
+      background: #f1ebdf; display: flex; align-items: center; justify-content: center;
+    }
+    .headline { color: #1e1c1b; font-size: 58px; font-weight: 700; line-height: 1.35; max-width: 780px; }
+    .divider { width: 96px; height: 6px; border-radius: 3px; background: #c8a45d; }
+    .body-text { color: #4c4845; font-size: 30px; font-weight: 400; line-height: 1.7; max-width: 760px; }
+    .bottom { display: flex; align-items: center; justify-content: space-between; }
+    .counter { color: #8c877f; font-size: 24px; font-weight: 500; }
+    .brand-chip { color: #8b1e24; font-size: 22px; font-weight: 600; }
+  </style>
+</helmet>
+<div class="frame">
+  <div class="top">
+    <div class="logo-row">
+      <svg viewBox="0 0 64 64" width="40" height="40" aria-hidden="true">
+        <polygon points="32,12 14,36 50,36" fill="#8b1e24"></polygon>
+        <rect x="19" y="40" width="6" height="12" rx="3" fill="#b08a44"></rect>
+        <rect x="29" y="40" width="6" height="15" rx="3" fill="#b08a44"></rect>
+        <rect x="39" y="40" width="6" height="12" rx="3" fill="#b08a44"></rect>
+      </svg>
+      <div class="wordmark">بيت المطاعم</div>
+    </div>
+    <div class="num-badge">١</div>
+  </div>
+
+  <div class="middle">
+    <div class="icon-wrap">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#8b1e24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 7h16"></path>
+        <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+      </svg>
+    </div>
+    <div class="headline">هدر يومي بسيط ما يتم رصده</div>
+    <div class="divider"></div>
+    <div class="body-text">كمية بسيطة تتكرر يوميًا في التحضير أو التخزين، تتراكم بنهاية الشهر لرقم يفاجئك — وأول خطوة لضبطها إنك تقيسها أول.</div>
+  </div>
+
+  <div class="bottom">
+    <div class="counter">٢ / ٥</div>
+    <div class="brand-chip">baitalmataem_sa</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
