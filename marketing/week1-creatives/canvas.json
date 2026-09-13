@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Slide2.dc.html", "x": 1160, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Slide3.dc.html", "x": 2240, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Slide4.dc.html", "x": 3320, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "Slide5.dc.html", "x": 4400, "y": 0, "w": 1080, "h": 1350 },
+    { "file": "FacebookPost.dc.html", "x": 0, "y": 1470, "w": 1200, "h": 630 },
+    { "file": "StoryPoll.dc.html", "x": 1280, "y": 1470, "w": 1080, "h": 1920 },
+    { "file": "ReelStoryboard.dc.html", "x": 2440, "y": 1470, "w": 1080, "h": 2700, "print": "flow" }
+  ],
+  "annotations": [
+    { "id": "row1-note", "x": 0, "y": -100, "w": 1200, "text": "كاروسيل انستقرام — Food Cost (5 سلايدات)" },
+    { "id": "row2-note", "x": 0, "y": 1370, "w": 1200, "text": "فيسبوك + ستوري بول + دليل تصوير الريلز" }
+  ],
+  "launch": { "view": "canvas" }
+}
