@@ -6,3 +6,9 @@ out/
 *.log
 .DS_Store
 tsconfig.tsbuildinfo
+
+# Generated Design Canvas payloads (large, ~2MB+; the design itself is
+# published and kept live at its Artifact URL — only the .dc.html sources
+# and canvas.json layout are tracked as the editable working files).
+marketing/**/*-creatives.html
+marketing/**/week1-food-cost-creatives.html
