@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .frame {
+      width: 1200px; height: 630px;
+      background: #f8f5ef;
+      font-family: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, Arial, sans-serif;
+      direction: rtl;
+      display: flex;
+      align-items: stretch;
+    }
+    .content {
+      flex: 1 1 auto;
+      display: flex; flex-direction: column; justify-content: center; gap: 22px;
+      padding: 0 72px;
+    }
+    .logo-row { display: flex; align-items: center; gap: 12px; }
+    .wordmark { color: #1e1c1b; font-size: 22px; font-weight: 700; }
+    .eyebrow { color: #8b1e24; font-size: 24px; font-weight: 600; }
+    .headline { color: #1e1c1b; font-size: 48px; font-weight: 700; line-height: 1.32; max-width: 600px; }
+    .body-text { color: #4c4845; font-size: 24px; font-weight: 400; line-height: 1.65; max-width: 580px; }
+    .cta-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+    .cta-text { color: #8b1e24; font-size: 23px; font-weight: 700; }
+
+    .side-panel {
+      flex: 0 0 400px;
+      background: #5c1216;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .ring { position: absolute; border-radius: 50%; border: 1.5px solid rgba(200,164,93,0.25); }
+    .icon-wrap {
+      width: 210px; height: 210px; border-radius: 50%;
+      background: rgba(200,164,93,0.14);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+  </style>
+</helmet>
+<div class="frame">
+  <div class="content">
+    <div class="logo-row">
+      <svg viewBox="0 0 64 64" width="34" height="34" aria-hidden="true">
+        <polygon points="32,12 14,36 50,36" fill="#8b1e24"></polygon>
+        <rect x="19" y="40" width="6" height="12" rx="3" fill="#b08a44"></rect>
+        <rect x="29" y="40" width="6" height="15" rx="3" fill="#b08a44"></rect>
+        <rect x="39" y="40" width="6" height="12" rx="3" fill="#b08a44"></rect>
+      </svg>
+      <div class="wordmark">بيت المطاعم</div>
+    </div>
+    <div class="eyebrow">الأرقام والربحية</div>
+    <div class="headline">ليه تكلفة الطعام ترتفع من غير ما تحس؟</div>
+    <div class="body-text">3 أسباب شائعة ترفع Food Cost بهدوء، وطريقة عملية لضبطها بدل الحلول العشوائية.</div>
+    <div class="cta-row">
+      <div class="cta-text">اقرأ المقال كاملًا — الرابط في التعليقات</div>
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b1e24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"></path></svg>
+    </div>
+  </div>
+
+  <div class="side-panel">
+    <div class="ring" style="width:320px;height:320px;top:-70px;left:-90px;"></div>
+    <div class="ring" style="width:240px;height:240px;bottom:-80px;right:-70px;"></div>
+    <div class="icon-wrap">
+      <svg width="92" height="92" viewBox="0 0 24 24" fill="none" stroke="#c8a45d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 7h16"></path>
+        <path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+        <path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"></path>
+        <path d="M10 11v6"></path>
+        <path d="M14 11v6"></path>
+      </svg>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
