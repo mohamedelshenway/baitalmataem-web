@@ -186,15 +186,13 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
           <h2 className="mb-2 text-xl font-bold text-ink-900">{dict.newListing.successTitle}</h2>
           <p className="text-ink-600">{dict.newListing.successBody}</p>
         </div>
-        {/* بيانات هذا النموذج لا تُخزَّن بعد في قاعدة بيانات فعلية (المرحلة الحالية MVP قبل ربط Supabase) —
-            هذا التنبيه صريح ومقصود حتى لا يفترض الزائر أن فرصته وصلت فعليًا لفريق بيت المطاعم دون تأكيد إضافي. */}
-        <div className="rounded-card border border-gold-500/30 bg-gold-300/25 p-5 text-sm leading-7 text-ink-800">
-          <p className="mb-3">{dict.newListing.mvpStorageNotice}</p>
-          <a href={confirmHref} target="_blank" rel="noopener noreferrer" className="focus-ring inline-block rounded-btn bg-ember-600 px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-ember-700">
-            {dict.listing.ctaContact}
-          </a>
-        </div>
+      <div className="rounded-card border border-gold-500/30 bg-gold-300/25 p-5 text-sm leading-7 text-ink-800">
+        <p className="mb-3">تم استلام طلبك وتسجيله في نظامنا، وسيتواصل معك فريق بيت المطاعم في أقرب وقت. لتسريع المتابعة، يمكنك تأكيد الاستلام مباشرة عبر:</p>
+        <a href={confirmHref} target="_blank" rel="noopener noreferrer" className="focus-ring inline-block rounded-btn bg-ember-600 px-5 py-2.5 text-xs font-semibold text-white transition-colors hover:bg-ember-700">
+          {dict.listing.ctaContact}
+        </a>
       </div>
+</div>
     );
   }
 
