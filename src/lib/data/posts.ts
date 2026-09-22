@@ -3,8 +3,103 @@ import type { BlogPost } from "@/lib/types";
 // مقالان تأسيسيان حقيقيان (لا محتوى تجريبي أو مُخترع من ناحية المعلومات المهنية)، لبدء المدونة والـSEO.
 // المزيد يُضاف تباعًا من لوحة الإدارة بعد ربطها بقاعدة البيانات.
 
-export const POSTS: BlogPost[] = [
+export const POSTS: BlogPost[] =  [
   {
+    slug: "restaurant-location-selection-saudi-arabia",
+    title: {
+      ar: "اختيار موقع المطعم في السعودية: المعايير اللي بتحدد نجاح المشروع قبل ما يفتح",
+      en: "Choosing a Restaurant Location in Saudi Arabia: The Criteria That Decide Success Before Opening Day",
+    },
+    excerpt: {
+      ar: "نفس المطعم بالظبط، في موقعين مختلفين، ممكن يبقى قصة نجاح في واحد وخسارة في التاني. اختيار الموقع مش قرار عاطفي.",
+      en: "The exact same restaurant, in two different locations, can be a success story in one and a loss in the other. Choosing a location isn't an emotional decision.",
+    },
+    category: { ar: "اختيار الموقع والعقارات التجارية", en: "Location & Commercial Real Estate" },
+    tags: ["اختيار موقع مطعم", "أفضل موقع لمطعم", "دراسة موقع تجاري", "عقارات تجارية للمطاعم"],
+    author: "بيت المطاعم",
+    publishedAt: "2026-09-22",
+    readingMinutes: 8,
+    relatedServiceSlug: "restaurant-setup",
+    content: {
+      ar: `مطعمين بنفس الفكرة، نفس المنيو، ونفس مستوى الاستثمار تقريبًا، ممكن يبقى واحد منهم قصة نجاح والتاني يقفل خلال سنة. الفرق غالبًا مش في الأكل ولا في الديكور، الفرق في الموقع. اختيار موقع المطعم مش قرار عاطفي بيتاخد لأن "المكان عجبني" أو "قريب من بيتي"، هو قرار لازم يتبني على معايير واضحة وبيانات فعلية عن المنطقة.
+
+## الحركة المارة مش كل الحكاية
+
+كتير من أصحاب المشاريع بيقيسوا قوة الموقع بعدد الناس أو السيارات اللي بتعدي قدامه، وده مؤشر مهم لكن مش كافي لوحده. السؤال الأهم: هل الناس دي هي جمهورك المستهدف أصلًا؟ شارع مزدحم بالسيارات بس مفيهوش أماكن وقوف، أو منطقة كتير المشاة فيها لكن غالبيتهم عمال بدل عائلات، ممكن يبقى موقع ضعيف رغم الحركة العالية الظاهرة.
+
+## التوافق بين النشاط والمنطقة
+
+مطعم مأكولات بحرية فاخر في منطقة صناعية، أو مطعم وجبات سريعة رخيصة في حي راقي، مثالين على عدم توافق بين النشاط وطبيعة المنطقة. لازم تسأل: هل القوة الشرائية للسكان أو المترددين على المنطقة تتماشى مع أسعار المنيو اللي في بالك؟ وهل نوع النشاط نفسه له طلب حقيقي هنا، ولا بتفترض الطلب من غير دليل؟
+
+## المنافسة: قريبة مش يبقى معناها سيئة دايمًا
+
+وجود مطاعم منافسة في نفس المنطقة مش بالضرورة إشارة سلبية، أحيانًا بيبقى دليل إن المنطقة فعلًا فيها طلب على قطاع المطاعم. المهم إنك تحلل: هل السوق مشبّع فعلًا، ولا فيه فجوة معينة (نوع أكل، مستوى سعري، وقت خدمة) مش متغطية؟ زيارة ميدانية للمنافسين في أوقات مختلفة من اليوم بتديك صورة أدق من أي تقرير جاهز.
+
+## الوصول والوقوف: تفصيلة بتقرر نجاح كامل
+
+سهولة الدخول والخروج من الموقع، ووجود مواقف كافية قريبة، بيأثروا على قرار العميل أكتر مما بيتوقع كتير من أصحاب المشاريع. موقع ممتاز من ناحية الظهور لكن صعب الوصول له أو مفيهوش مواقف، ممكن يخسر عملاء بشكل يومي من غير ما حد يلاحظ السبب الحقيقي.
+
+## اشتراطات فنية لازم تتأكد منها قبل التوقيع
+
+- إمكانية تركيب هود ونظام تهوية وشفط مناسب للمطبخ.
+- توفر الكهرباء والغاز بالقدرة المطلوبة لنوع النشاط.
+- توافق استخدام الأرض للنشاط الغذائي أصلًا، قبل حتى التفكير في التصميم.
+- مساحة كافية لفصل المطبخ عن صالة الجمهور حسب اشتراطات البلدية.
+
+لو الموقع ما بيحققش الاشتراطات دي، ممكن تكتشف بعد التوقيع إن التنفيذ مستحيل أو هيكلفك أضعاف الميزانية المخطط لها.
+
+## الإيجار: مش بس الرقم، لكن الرقم بالنسبة للمبيعات المتوقعة
+
+إيجار مرتفع مش مشكلة لو المبيعات المتوقعة من الموقع بتغطيه براحة، وإيجار رخيص ممكن يبقى غالي لو الموقع مش بيجيب المبيعات الكافية. النسبة المفيدة هنا: الإيجار كنسبة من المبيعات الشهرية المتوقعة، مش الرقم المطلق لوحده.
+
+## القرب من مصادر الطلب المتكرر
+
+مكاتب، مجمعات سكنية، جامعات، أو مناطق فيها حركة يومية ثابتة، بتدي المطعم قاعدة طلب متكررة أكثر استقرارًا من الاعتماد الكامل على عملاء عابرين. النوع ده من المواقع خصوصًا مهم لمطاعم الغداء اليومي أو الوجبات السريعة.
+
+## هنا بالظبط بيبقى دور دراسة الموقع الاحترافية
+
+القرار الصح مش "الموقع ده حلو" أو "حسيت إنه هينجح"، القرار الصح مبني على تحليل فعلي: حركة مرور حقيقية، تحليل منافسين ميداني، توافق النشاط مع طبيعة المنطقة، ومراجعة فنية للاشتراطات قبل أي التزام بعقد إيجار. الفرق بين مطعم بيفتح وينجح من أول سنة ومطعم بيتأخر أو بيتعثر غالبًا بيتحدد في اللحظة اللي بيتم فيها اختيار الموقع، مش بعدها.`,
+      en: `Two restaurants with the same concept, the same menu, and roughly the same investment level can end up in completely different places — one a success story, the other closed within a year. The difference usually isn't the food or the decor. It's the location. Choosing a restaurant's location isn't an emotional decision made because "I liked the spot" or "it's close to home" — it needs to be grounded in clear criteria and real data about the area.
+
+## Foot and car traffic isn't the whole story
+
+Many project owners judge a location's strength by how many people or cars pass by it, and while that's an important signal, it's not enough on its own. The real question is: are those people your actual target audience? A street packed with cars but no parking, or an area with heavy foot traffic that's mostly workers rather than families, can be a weak location despite the visibly high traffic.
+
+## Matching the concept to the area
+
+A high-end seafood restaurant in an industrial zone, or a cheap fast-food spot in an upscale neighborhood, are both examples of a concept mismatched with its area. Ask yourself: does the purchasing power of residents or visitors to this area match the menu prices you're planning? And does this specific type of concept have real demand here, or are you assuming demand without evidence?
+
+## Competition nearby isn't always a bad sign
+
+Competing restaurants in the same area aren't necessarily a negative signal — sometimes they're proof the area genuinely has demand for restaurants. What matters is analyzing whether the market is actually saturated, or whether there's a specific gap (a cuisine type, a price tier, a service time) that isn't covered. A field visit to competitors at different times of day gives you a far more accurate picture than any ready-made report.
+
+## Access and parking: a detail that decides everything
+
+How easy it is to enter and exit the location, and whether there's enough nearby parking, affects a customer's decision far more than many project owners expect. A location with excellent visibility but difficult access or no parking can lose customers every single day without anyone noticing the real cause.
+
+## Technical requirements to confirm before signing
+
+- Whether a proper hood and ventilation/extraction system can be installed for the kitchen.
+- Sufficient electricity and gas capacity for the type of concept.
+- Whether the land use even permits a food business, before design is even considered.
+- Enough space to separate the kitchen from the dining area per municipal requirements.
+
+If the location doesn't meet these requirements, you may discover after signing that construction is impossible, or that it will cost far more than your planned budget.
+
+## Rent: not just the number, but the number against expected sales
+
+High rent isn't a problem if the location's expected sales comfortably cover it, and low rent can end up expensive if the location doesn't bring in enough sales. The useful metric here is rent as a percentage of expected monthly sales, not the absolute figure alone.
+
+## Proximity to sources of repeat demand
+
+Offices, residential compounds, universities, or areas with steady daily activity give a restaurant a more stable base of repeat demand than relying entirely on passing customers. This type of location matters especially for daily lunch spots or quick-service concepts.
+
+## This is exactly where a professional location study earns its value
+
+The right decision isn't "I like this spot" or "it feels like it'll work" — it's grounded in actual analysis: real traffic patterns, a field-based competitor analysis, how well the concept fits the area, and a technical review of requirements before committing to any lease. The difference between a restaurant that opens and succeeds from year one, and one that stalls or struggles, is usually decided the moment the location is chosen — not after.`,
+    },
+  },
+{
     slug: "how-to-evaluate-a-restaurant-before-buying",
     title: {
       ar: "كيف تقيّم مطعمًا قبل الشراء أو التقبيل: الأسئلة التي يجب أن تسألها قبل الأرقام",
