@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd, listingJsonLd } from "@/lib/seo";
@@ -38,7 +38,8 @@ export default async function ListingDetailPage({ params }: { params: { locale: 
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const resolved = await resolveListing(params.slug);
-  if (!resolved || resolved.listing.moderation !== "approved") notFound();
+  // فرصة اتشالت أو لسه ما اتنشرتش: نحوّل لسوق الفرص بدل صفحة 404 (أفضل للزائر ولجوجل)
+  if (!resolved || resolved.listing.moderation !== "approved") permanentRedirect(`/${params.locale}/marketplace`);
   const { listing } = resolved;
   const dict = await getDictionary(locale);
   const similarPool = await getPublishedListings();
