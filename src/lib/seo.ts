@@ -17,6 +17,11 @@ export function buildMetadata({
   // لا تعرض صور OG بصيغة SVG بشكل صحيح، فكانت معاينة روابط الموقع بتطلع بلا صورة
   ogImagePath = "/placeholders/og-default.png",
   noIndex = false,
+  // اللغات اللي الصفحة مترجمة لها فعليًا. لو مش متحددة = كل لغات الموقع.
+  // مهم للمقالات: المقال غير المترجم للتركي/الروسي/الأردو كان بيتعرض بالإنجليزي تحت
+  // /tr و/ru و/ur بـ canonical خاص بيه وhreflang بلغة مش لغته — يعني 3 نسخ مكررة من كل مقال
+  // في عين جوجل. دلوقتي النسخة غير المترجمة بتشاور (canonical) على الإنجليزي وبتاخد noindex.
+  availableLocales,
 }: {
   title: string;
   description: string;
@@ -25,15 +30,20 @@ export function buildMetadata({
   keywords?: string[];
   ogImagePath?: string;
   noIndex?: boolean;
+  availableLocales?: readonly Locale[];
 }): Metadata {
   const cleanPath = path === "/" ? "" : path;
+  const available = availableLocales && availableLocales.length ? availableLocales : locales;
+  const isTranslated = available.includes(locale);
   const languages: Record<string, string> = {};
-  for (const l of locales) {
+  for (const l of available) {
     languages[l] = `${SITE.url}/${l}${cleanPath}`;
   }
-  languages["x-default"] = `${SITE.url}/${locales[0]}${cleanPath}`;
+  languages["x-default"] = `${SITE.url}/${available[0]}${cleanPath}`;
 
-  const canonical = `${SITE.url}/${locale}${cleanPath}`;
+  // النسخة غير المترجمة (بتعرض محتوى fallback) بتشاور على النسخة الإنجليزية الأصلية
+  const canonicalLocale = isTranslated ? locale : available.includes("en") ? "en" : available[0];
+  const canonical = `${SITE.url}/${canonicalLocale}${cleanPath}`;
   // كانت الصفحة الرئيسية مستثناة من إضافة اسم الشركة لعنوان الصفحة (title tag)، فكان
   // الـ <title> بتاعها بيطلع بدون أي ذكر لـ"بيت المطاعم" إطلاقًا — عكس كل صفحات الموقع التانية
   const fullTitle = `${title} | ${SITE.name.ar} — ${SITE.name.en}`;
@@ -49,7 +59,11 @@ export function buildMetadata({
       canonical,
       languages,
     },
-    robots: noIndex ? { index: false, follow: false } : { index: true, follow: true },
+    robots: noIndex
+      ? { index: false, follow: false }
+      : !isTranslated
+        ? { index: false, follow: true }
+        : { index: true, follow: true },
     openGraph: {
       title: fullTitle,
       description,
