@@ -7,6 +7,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd, articleJsonLd } from "@/lib/seo";
 import { SITE } from "@/lib/constants";
 import { POSTS, getPostBySlug } from "@/lib/data/posts";
+import { postLocales } from "@/lib/post-locales";
 import { getPublishedListings } from "@/lib/data/live-listings";
 import { getServiceMeta } from "@/lib/data/services";
 import { parseContent } from "@/lib/format-content";
@@ -46,6 +47,7 @@ export async function generateMetadata({
     path: `/blog/${params.slug}`,
     keywords: post.tags,
     ogImagePath: postImage,
+    availableLocales: postLocales(post),
   });
 }
 
