@@ -9,6 +9,7 @@ import type { ListingKind } from "@/lib/types";
 import { Button, SectionHeading } from "@/components/ui";
 import { ListingCard } from "@/components/listing-card";
 import { Reveal } from "@/components/reveal";
+import { MarketplaceEmptyGuide } from "@/components/marketplace-empty-guide";
 
 export async function generateMetadata({ params }: { params: { locale: string } }): Promise<Metadata> {
   if (!isLocale(params.locale)) return {};
@@ -130,7 +131,9 @@ export default async function MarketplacePage({
           </form>
 
           <div>
-            {filtered.length === 0 ? (
+            {approved.length === 0 ? (
+              <MarketplaceEmptyGuide locale={locale} />
+            ) : filtered.length === 0 ? (
               <div className="rounded-card border border-sand-200 bg-white p-10 text-center text-ink-600">
                 {dict.marketplace.noResults}
               </div>
