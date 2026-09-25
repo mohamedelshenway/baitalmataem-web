@@ -143,6 +143,19 @@ export function articleJsonLd({
   };
 }
 
+export function serviceJsonLd({ name, description, url, serviceType }: { name: string; description: string; url: string; serviceType: readonly string[] }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name,
+    description,
+    url,
+    provider: { "@type": "Organization", name: SITE.legalName, url: SITE.url },
+    areaServed: { "@type": "Country", name: "Saudi Arabia" },
+    serviceType,
+  };
+}
+
 export function listingJsonLd({
   name,
   description,

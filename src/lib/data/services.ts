@@ -3,6 +3,7 @@
 
 export interface ServiceMeta {
   slug: string;
+  href?: string;
   icon:
     | "setup"
     | "operations"
@@ -15,6 +16,7 @@ export interface ServiceMeta {
     | "waste"
     | "menu"
     | "marketing"
+    | "staffing"
     | "recruitment";
   featured: boolean; // يظهر في معاينة الصفحة الرئيسية
   image: string;
@@ -33,7 +35,7 @@ export const SERVICES: ServiceMeta[] = [
   { slug: "waste-management", icon: "waste", featured: false, image: "/images/editorial/commercial-kitchen-lg.webp" },
   { slug: "menu-development", icon: "menu", featured: false, image: "/images/editorial/catering-service-lg.webp" },
   { slug: "restaurant-marketing", icon: "marketing", featured: false, image: "/images/editorial/restaurant-marketing-lg.webp" },
-  { slug: "staff-recruitment", icon: "recruitment", featured: false, image: "/images/editorial/operations-team-lg.webp", imagePosition: "center 58%" },
+  { slug: "staff-recruitment", href: "/staffing-training", icon: "recruitment", featured: false, image: "/images/editorial/operations-team-lg.webp", imagePosition: "center 58%" },
 ];
 
 export function getServiceMeta(slug: string): ServiceMeta | undefined {
