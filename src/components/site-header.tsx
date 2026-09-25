@@ -30,7 +30,9 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
     { href: "/", label: dict.nav.home },
     { href: "/projects", label: dict.nav.projects },
     { href: "/marketplace", label: dict.nav.marketplace },
+    { href: "/staffing-training", label: dict.nav.staffing },
     { href: "/blog", label: dict.nav.blog },
+    { href: "/partners", label: dict.nav.partners },
     { href: "/about", label: dict.nav.about },
     { href: "/contact", label: dict.nav.contact },
   ];
@@ -270,7 +272,7 @@ function LanguageSwitcher({ locale, pathWithoutLocale }: { locale: Locale; pathW
         </svg>
       </button>
       {open && (
-        <div className="absolute end-0 top-12 z-50 w-32 overflow-hidden rounded-card border border-sand-200 bg-white py-1 shadow-cardHover">
+        <div className="absolute end-0 top-12 z-50 max-h-80 w-40 overflow-y-auto rounded-card border border-sand-200 bg-white py-1 shadow-cardHover">
           {locales.map((l) => (
             <Link
               key={l}

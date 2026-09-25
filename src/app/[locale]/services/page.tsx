@@ -57,7 +57,7 @@ export default async function ServicesPage({ params }: { params: { locale: strin
                     <p className="mb-5 flex-1 text-sm leading-7 text-ink-600">{item.short}</p>
                     <GoldDivider className="mb-4" />
                     <Link
-                      href={`/${locale}/services/${s.slug}`}
+                      href={`/${locale}${s.href || `/services/${s.slug}`}`}
                       className="cta-arrow focus-ring inline-flex items-center gap-1.5 text-sm font-semibold text-ember-600"
                     >
                       {dict.common.learnMore}

@@ -20,12 +20,28 @@ export function MarketplacePreview({
   listings: Listing[];
 }) {
   const [tab, setTab] = useState<"all" | ListingKind>("all");
-  const filtered = (tab === "all" ? listings : listings.filter((l) => l.kind === tab)).slice(0, 3);
+  const featured = listings.filter((listing) => listing.featured).slice(0, 2);
+  const latest = listings.filter((listing) => !listing.featured);
+  const filtered = (tab === "all" ? latest : latest.filter((l) => l.kind === tab)).slice(0, 3);
 
   return (
     <section className="bg-sand-50 py-16 sm:py-20">
       <div className="container-page">
         <SectionHeading eyebrow={dict.home.marketplaceKicker} title={dict.home.listingsTitle} subtitle={dict.home.listingsSubtitle} align="center" />
+
+        {featured.length > 0 && (
+          <div className="mb-12">
+            <div className="mb-5 flex items-center justify-between gap-3">
+              <h3 className="text-lg font-bold text-ink-950">{locale === "ar" ? "الفرص المميزة" : "Featured opportunities"}</h3>
+              <span className="rounded-full bg-gold-500/15 px-3 py-1 text-xs font-bold text-gold-700">{locale === "ar" ? "مختارة" : "Selected"}</span>
+            </div>
+            <div className="grid gap-5 sm:grid-cols-2">
+              {featured.map((listing, index) => <Reveal key={listing.slug} delay={index * 60}><ListingCard listing={listing} dict={dict} locale={locale} /></Reveal>)}
+            </div>
+          </div>
+        )}
+
+        <h3 className="mb-5 text-center text-lg font-bold text-ink-950">{locale === "ar" ? "أحدث الفرص" : "Latest opportunities"}</h3>
 
         <div className="mb-8 flex flex-wrap items-center justify-center gap-2">
           <button

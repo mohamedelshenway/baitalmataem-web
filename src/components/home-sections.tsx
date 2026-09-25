@@ -2,13 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactElement } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
-import type { Locale } from "@/i18n/config";
+import { localize, type Locale } from "@/i18n/config";
 import type { BlogPost } from "@/lib/types";
 import { SERVICES } from "@/lib/data/services";
 import { Button, Card, SectionHeading, GoldDivider } from "@/components/ui";
 import { Reveal } from "@/components/reveal";
 import { QuickSearch } from "@/components/quick-search";
 import { PostCard } from "@/components/post-card";
+import { SAUDI_CITIES, SOCIALS } from "@/lib/constants";
 
 // ---------------------------------------------------------------------------
 // Hero — صورة خلفية كاملة العرض بتراكب داكن سينمائي، مع بحث سريع مدمج في الأسفل
@@ -475,6 +476,154 @@ export function BlogSection({
           <Button href={`/${locale}/blog`} variant="outline" arrow>
             {dict.home.blogCta}
           </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// التوظيف والتدريب — مدخل رئيسي واحد بخدمتين واضحتين، وتفاصيله في الصفحة المستقلة
+// ---------------------------------------------------------------------------
+export function StaffingTrainingSection({ locale }: { locale: Locale }) {
+  const copy = locale === "ar" ? {
+    kicker: "نساعدك في التوظيف والتدريب",
+    title: "أفضل العمالة لقطاع المطاعم والكافيهات والإعاشة",
+    text: "ترشيح وفرز كفاءات من داخل المملكة وخارجها، مع تدريب عملي للتشغيل. ويمكن للمتخصصين الانضمام إلى فريق بيت المطاعم بدوام جزئي أو حسب المشروع.",
+    staffing: "اطلب موظفين",
+    training: "اطلب تدريب فريقك",
+    parttime: "اعمل معنا بدوام جزئي",
+    alt: "فريق مطعم يتلقى تدريبًا عمليًا داخل المطبخ",
+  } : {
+    kicker: "Staffing and training support",
+    title: "Specialist talent for restaurants, cafés and catering",
+    text: "Source and screen talent from inside and outside Saudi Arabia, train your team, or join Bait Al Mataem part-time or by project.",
+    staffing: "Request staff",
+    training: "Request team training",
+    parttime: "Join us part-time",
+    alt: "Restaurant team receiving practical kitchen training",
+  };
+
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="container-page grid overflow-hidden rounded-cardLg bg-ink-950 text-white shadow-cardHover lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
+        <div className="flex flex-col justify-center p-7 sm:p-12">
+          <p className="eyebrow mb-3 text-gold-500">{copy.kicker}</p>
+          <h2 className="max-w-xl text-2xl font-bold leading-tight sm:text-4xl">{copy.title}</h2>
+          <p className="mt-5 max-w-xl leading-8 text-white/70">{copy.text}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button href={`/${locale}/staffing-training#request-forms`} variant="primary" arrow>{copy.staffing}</Button>
+            <Button href={`/${locale}/staffing-training#request-forms`} variant="ghostDark">{copy.training}</Button>
+            <Button href={`/${locale}/staffing-training#request-forms`} variant="ghostDark">{copy.parttime}</Button>
+          </div>
+        </div>
+        <div className="relative min-h-[320px] lg:min-h-[440px]">
+          <Image src="/images/editorial/operations-team-lg.webp" alt={copy.alt} fill sizes="(min-width: 1024px) 48vw, 100vw" className="object-cover" style={{ objectPosition: "center 58%" }} />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink-950/35 to-transparent lg:bg-gradient-to-r" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// التغطية الوطنية — توضيح النطاق دون اختلاق فرص غير موجودة
+// ---------------------------------------------------------------------------
+export function CoverageSection({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+  return (
+    <section className="relative overflow-hidden bg-ink-950 py-16 text-white sm:py-20">
+      <Image
+        src="/images/editorial/restaurant-interior-lg.webp"
+        alt={dict.home.imageAlts.hero}
+        fill
+        sizes="100vw"
+        className="object-cover opacity-20"
+      />
+      <div className="absolute inset-0 bg-gradient-to-l from-ink-950 via-ink-950/95 to-ember-950/85" />
+      <div className="container-page relative text-center">
+        <p className="eyebrow mb-3 text-gold-500">{dict.home.coverage.kicker}</p>
+        <h2 className="mx-auto max-w-3xl text-2xl font-bold sm:text-3xl">{dict.home.coverage.title}</h2>
+        <p className="mx-auto mt-4 max-w-2xl leading-7 text-white/70">{dict.home.coverage.subtitle}</p>
+        <div className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-2">
+          {SAUDI_CITIES.map((city) => (
+            <span key={city.ar} className="rounded-btn border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/85">
+              {localize(city, locale)}
+            </span>
+          ))}
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-xs leading-6 text-white/55">{dict.home.coverage.note}</p>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// الفيديو — رابط رسمي فقط، بدون اختلاق فيديوهات أو صور مصغرة
+// ---------------------------------------------------------------------------
+export function VideoSection({ dict }: { dict: Dictionary }) {
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="container-page">
+        <Card className="grid overflow-hidden p-0 lg:grid-cols-2 lg:items-stretch">
+          <div className="relative min-h-[300px] bg-ink-950">
+            <Image
+              src="/images/editorial/restaurant-marketing-lg.webp"
+              alt={dict.home.video.imageAlt}
+              fill
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-ink-950/25" />
+            <span className="absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-ember-600 text-2xl text-white shadow-cardHover" aria-hidden>▶</span>
+          </div>
+          <div className="flex flex-col justify-center p-8 sm:p-12">
+            <p className="eyebrow mb-3 text-ember-700">{dict.home.video.kicker}</p>
+            <h2 className="text-2xl font-bold text-ink-900 sm:text-3xl">{dict.home.video.title}</h2>
+            <p className="mt-4 leading-7 text-ink-600">{dict.home.video.subtitle}</p>
+            <div className="mt-7">
+              <a href={SOCIALS.youtube} target="_blank" rel="noopener noreferrer" className="focus-ring inline-flex rounded-btn bg-ember-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-ember-700">
+                {dict.home.video.cta}
+              </a>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// شركاء النجاح — دعوة لشبكة المتخصصين، دون عرض أشخاص غير معتمدين
+// ---------------------------------------------------------------------------
+export function PartnersSection({ dict, locale }: { dict: Dictionary; locale: Locale }) {
+  return (
+    <section className="bg-sand-50 py-16 sm:py-20">
+      <div className="container-page grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-16">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-cardLg bg-ink-100">
+          <Image
+            src="/images/editorial/operations-team-lg.webp"
+            alt={dict.home.imageAlts.operationsTeam}
+            fill
+            sizes="(min-width: 1024px) 45vw, 100vw"
+            className="object-cover"
+            style={{ objectPosition: "center 58%" }}
+          />
+          <p className="absolute inset-x-3 bottom-3 rounded-btn bg-ink-950/75 px-3 py-2 text-[11px] leading-5 text-white/85 backdrop-blur-sm">
+            {dict.home.team.photoNote}
+          </p>
+        </div>
+        <div>
+          <p className="eyebrow mb-3 text-ember-700">{dict.home.partners.kicker}</p>
+          <h2 className="text-2xl font-bold text-ink-900 sm:text-3xl">{dict.home.partners.title}</h2>
+          <p className="mt-4 max-w-xl leading-7 text-ink-600">{dict.home.partners.subtitle}</p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {dict.home.partners.modes.map((mode: string) => (
+              <span key={mode} className="rounded-btn border border-sand-200 bg-white px-3 py-1.5 text-xs font-semibold text-ink-700">{mode}</span>
+            ))}
+          </div>
+          <div className="mt-7">
+            <Button href={`/${locale}/partners`} variant="primary" arrow>{dict.home.partners.cta}</Button>
+          </div>
         </div>
       </div>
     </section>

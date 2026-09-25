@@ -12,6 +12,7 @@ function img(n: number, alt: string): Listing["media"][number] {
 export const LISTINGS: Listing[] = [
   {
     slug: "sample-restaurant-taqbeel-jeddah-01",
+    featured: true,
     kind: "restaurant_taqbeel",
     status: "available",
     moderation: "approved",
@@ -48,6 +49,7 @@ export const LISTINGS: Listing[] = [
   },
   {
     slug: "sample-restaurant-sale-makkah-01",
+    featured: true,
     kind: "restaurant_sale",
     status: "negotiating",
     moderation: "approved",

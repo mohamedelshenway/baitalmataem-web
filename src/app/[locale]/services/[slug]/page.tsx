@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { locales, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
@@ -11,7 +11,7 @@ import { SERVICE_SEO_AR } from "@/lib/data/seo-overrides";
 import { Button, Card, GoldDivider } from "@/components/ui";
 
 export function generateStaticParams() {
-  return locales.flatMap((locale) => SERVICES.map((s) => ({ locale, slug: s.slug })));
+  return locales.flatMap((locale) => SERVICES.filter((s) => !s.href).map((s) => ({ locale, slug: s.slug })));
 }
 
 export async function generateMetadata({
@@ -22,6 +22,7 @@ export async function generateMetadata({
   if (!isLocale(params.locale)) return {};
   const meta = getServiceMeta(params.slug);
   if (!meta) return {};
+  if (meta.href) return { robots: { index: false, follow: true } };
   const dict = await getDictionary(params.locale);
   const item = dict.services.list[params.slug as keyof typeof dict.services.list];
   if (!item) return {};
@@ -43,6 +44,7 @@ export default async function ServiceDetailPage({ params }: { params: { locale: 
   const locale = params.locale as Locale;
   const meta = getServiceMeta(params.slug);
   if (!meta) notFound();
+  if (meta.href) permanentRedirect(`/${locale}${meta.href}`);
   const dict = await getDictionary(locale);
   const item = dict.services.list[params.slug as keyof typeof dict.services.list];
   if (!item) notFound();
@@ -102,7 +104,7 @@ export default async function ServiceDetailPage({ params }: { params: { locale: 
                   return (
                     <li key={s.slug} className="border-b border-sand-100 pb-3 last:border-0 last:pb-0">
                       <Link
-                        href={`/${locale}/services/${s.slug}`}
+                        href={`/${locale}${s.href || `/services/${s.slug}`}`}
                         className="cta-arrow focus-ring inline-flex items-center gap-1.5 text-sm font-semibold text-ink-800 hover:text-ember-600"
                       >
                         {relatedItem.title}

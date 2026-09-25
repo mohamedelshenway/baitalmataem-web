@@ -72,6 +72,12 @@ export interface Listing {
   isSample: boolean; // true لبيانات العرض التجريبية فقط — false لأي فرصة حقيقية جاية من قاعدة البيانات
   views: number;
   createdAt: string;
+  updatedAt?: string;
+  expiresAt?: string;
+  qualityScore?: number; // داخلي — لا يظهر للعامة
+  verified?: boolean;
+  featured?: boolean;
+  contactPhoneVerified?: boolean;
 }
 
 export interface Service {
@@ -96,4 +102,22 @@ export interface BlogPost {
   readingMinutes: number;
   relatedServiceSlug?: string;
   content: LocalizedText; // Markdown-lite: نص عادي مقسم بأسطر فارغة + عناوين تبدأ بـ ##
+}
+
+export type LeadStatus = "New" | "Contacted" | "Qualified" | "Proposal" | "Won" | "Lost";
+export type LeadType = "staffing" | "training" | "parttime" | "service" | "contact" | "listing" | "partner";
+
+export interface Lead {
+  id: string;
+  type: LeadType;
+  source: string;
+  page: string;
+  service?: string;
+  status: LeadStatus;
+  locale: "ar" | "en" | "ru" | "hi" | "ur" | "bn" | "tr";
+  contactPhone: string;
+  data: Record<string, string | number | boolean | string[]>;
+  utm: Record<string, string>;
+  createdAt: string;
+  updatedAt: string;
 }

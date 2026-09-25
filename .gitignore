@@ -4,6 +4,7 @@ out/
 .env
 .env.local
 *.log
+.data/
 .DS_Store
 tsconfig.tsbuildinfo
 
