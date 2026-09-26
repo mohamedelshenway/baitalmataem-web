@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent, type InputHTMLAttributes } from "react";
 import { contentLocale, type Locale } from "@/i18n/config";
-import { SAUDI_REGIONS } from "@/lib/constants";
+import { SAUDI_REGIONS } from "@/lib/saudi-regions";
 
 export function PartnerForm({ locale, modes }: { locale: Locale; modes: string[] }) {
   const ar = locale === "ar";
@@ -25,8 +25,8 @@ export function PartnerForm({ locale, modes }: { locale: Locale; modes: string[]
   return <form onSubmit={submit} className="mt-6 grid gap-4 sm:grid-cols-2">
     <input name="website" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
     <Field name="name" label={ar ? "الاسم" : "Name"} />
-    <label className="text-sm font-semibold text-ink-800">{ar ? "المنطقة" : "Region"}<select name="region" required value={regionIndex} onChange={(e) => setRegionIndex(e.target.value)} className="input-field mt-1.5"><option value="" disabled>{ar ? "اختر" : "Choose"}</option>{SAUDI_REGIONS.map((region, index) => <option key={region.name.en} value={index}>{region.name[language]}</option>)}</select></label>
-    <label className="text-sm font-semibold text-ink-800">{ar ? "المحافظة / المدينة" : "Governorate / city"}<select name="city" required defaultValue="" disabled={regionIndex === ""} className="input-field mt-1.5 disabled:opacity-50"><option value="" disabled>{ar ? "اختر" : "Choose"}</option>{regionIndex !== "" && SAUDI_REGIONS[Number(regionIndex)].places.map((place) => <option key={place.en} value={place[language]}>{place[language]}</option>)}</select></label>
+    <label className="text-sm font-semibold text-ink-800">{ar ? "المنطقة" : "Region"}<select name="region" required value={regionIndex} onChange={(e) => setRegionIndex(e.target.value)} className="input-field mt-1.5"><option value="" disabled>{ar ? "اختر" : "Choose"}</option>{SAUDI_REGIONS.map((region, index) => <option key={region.name} value={index}>{region.name}</option>)}</select></label>
+    <label className="text-sm font-semibold text-ink-800">{ar ? "المحافظة / المدينة" : "Governorate / city"}<select name="city" required defaultValue="" disabled={regionIndex === ""} className="input-field mt-1.5 disabled:opacity-50"><option value="" disabled>{ar ? "اختر" : "Choose"}</option>{regionIndex !== "" && SAUDI_REGIONS[Number(regionIndex)].cities.map((place) => <option key={place} value={place}>{place}</option>)}</select></label>
     <Field name="specialty" label={ar ? "التخصص" : "Specialty"} />
     <Field name="experienceYears" label={ar ? "سنوات الخبرة" : "Years of experience"} type="number" min="0" />
     <Field name="phone" label={ar ? "رقم التواصل" : "Contact number"} type="tel" pattern="[+0-9 ()-]{8,21}" />

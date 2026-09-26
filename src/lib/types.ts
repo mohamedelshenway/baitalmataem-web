@@ -8,6 +8,8 @@ export interface LocalizedText {
   tr?: string;
   ru?: string;
   ur?: string;
+  hi?: string;
+  bn?: string;
 }
 
 export interface LocalizedTextList {
@@ -16,6 +18,8 @@ export interface LocalizedTextList {
   tr?: string[];
   ru?: string[];
   ur?: string[];
+  hi?: string[];
+  bn?: string[];
 }
 
 export type ListingKind =

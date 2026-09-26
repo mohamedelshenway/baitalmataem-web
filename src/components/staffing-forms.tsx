@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent, type InputHTMLAttributes } from "react";
 import { contentLocale, type Locale } from "@/i18n/config";
-import { SAUDI_REGIONS } from "@/lib/constants";
+import { SAUDI_REGIONS } from "@/lib/saudi-regions";
 
 type FormKind = "staffing" | "training" | "parttime";
 const COPY = {
@@ -34,7 +34,7 @@ export function StaffingForms({ locale, initial = "staffing" }: { locale: Locale
   const [kind, setKind] = useState<FormKind>(initial);
   const [regionIndex, setRegionIndex] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle");
-  const places = regionIndex === "" ? [] : SAUDI_REGIONS[Number(regionIndex)].places;
+  const places = regionIndex === "" ? [] : SAUDI_REGIONS[Number(regionIndex)].cities;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setStatus("submitting");
@@ -51,8 +51,8 @@ export function StaffingForms({ locale, initial = "staffing" }: { locale: Locale
   }
 
   const locationFields = <>
-    <label className="block text-sm font-semibold text-ink-800">{copy.region}<select name="region" required value={regionIndex} onChange={(e) => setRegionIndex(e.target.value)} className="input-field mt-1.5"><option value="" disabled>{copy.choose}</option>{SAUDI_REGIONS.map((region, index) => <option key={region.name.en} value={index}>{region.name[language]}</option>)}</select></label>
-    <SelectField name="city" label={copy.place} options={places.map((place) => place[language])} placeholder={copy.choose} disabled={!places.length} />
+    <label className="block text-sm font-semibold text-ink-800">{copy.region}<select name="region" required value={regionIndex} onChange={(e) => setRegionIndex(e.target.value)} className="input-field mt-1.5"><option value="" disabled>{copy.choose}</option>{SAUDI_REGIONS.map((region, index) => <option key={region.name} value={index}>{region.name}</option>)}</select></label>
+    <SelectField name="city" label={copy.place} options={places} placeholder={copy.choose} disabled={!places.length} />
   </>;
 
   return <div id="request-forms" className="rounded-cardLg border border-sand-200 bg-white p-4 shadow-card sm:p-7">

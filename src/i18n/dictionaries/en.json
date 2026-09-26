@@ -14,6 +14,8 @@
     "home": "Home",
     "services": "Services",
     "marketplace": "Opportunities",
+    "staffing": "Staffing & Training",
+    "partners": "Success Partners",
     "blog": "Blog",
     "about": "About",
     "ourWork": "Our Work",
@@ -73,6 +75,9 @@
     "blogHeadline": "Knowledge that helps you decide better",
     "blogSubtitle": "Practical analysis and guides for restaurant owners and investors",
     "blogCta": "Browse the blog",
+    "coverage": { "kicker": "Kingdom-wide", "title": "We accept restaurant opportunities from every Saudi region", "subtitle": "A genuine opportunity can be submitted from any region or city.", "note": "Region choices show service coverage and do not imply a current listing in every city." },
+    "video": { "kicker": "Bait Al Mataem Videos", "title": "Visual content for operations and investment", "subtitle": "Only approved, published videos are displayed.", "cta": "Visit YouTube", "imageAlt": "Restaurant-sector video content" },
+    "partners": { "kicker": "Specialist network", "title": "Success Partners", "subtitle": "Specialists work with Bait Al Mataem according to each project's needs and after review.", "modes": ["Part time", "Commission", "Project based", "Freelance"], "cta": "Join Success Partners" },
     "why": {
       "title": "To us, a restaurant is an investment project… not just a place that sells food",
       "desc": "We connect operations to numbers, market, and profitability before any decision.",
@@ -512,6 +517,13 @@
     "expertiseSubtitle": "Bait Al Mataem provides end-to-end consulting for restaurant owners and investors in Saudi Arabia, covering every stage of the project from concept to operations and growth.",
     "caseStudiesTitle": "Examples From Our Work",
     "expertiseSince": "We've been active in this field since 2018 outside Saudi Arabia, and since 2022 inside the Kingdom as well."
+  },
+  "partners": {
+    "title": "Success Partners", "subtitle": "A network for restaurant-sector specialists across Saudi Arabia.",
+    "howTitle": "How collaboration works", "howText": "Collaboration follows each project's needs; applicants are reviewed before approval.",
+    "modes": ["Part time", "Commission", "Project based", "Freelance"],
+    "rolesTitle": "Specialisms wanted", "roles": ["Restaurant management", "Chefs and menus", "Cost accounting", "Operations", "Marketing", "Feasibility studies", "Fit-out", "Quality and food safety"],
+    "applyTitle": "Apply to collaborate", "applyText": "Send your experience and preferred collaboration model for private review.", "applyCta": "Submit application", "privacyNote": "We do not publish your details or present you as a partner before approval."
   },
   "contact": {
     "title": "Contact Us",

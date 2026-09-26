@@ -2,14 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactElement } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
-import { localize, type Locale } from "@/i18n/config";
+import type { Locale } from "@/i18n/config";
 import type { BlogPost } from "@/lib/types";
 import { SERVICES } from "@/lib/data/services";
 import { Button, Card, SectionHeading, GoldDivider } from "@/components/ui";
 import { Reveal } from "@/components/reveal";
 import { QuickSearch } from "@/components/quick-search";
 import { PostCard } from "@/components/post-card";
-import { SAUDI_CITIES, SOCIALS } from "@/lib/constants";
+import { SOCIALS } from "@/lib/constants";
+import { SAUDI_REGIONS } from "@/lib/saudi-regions";
 
 // ---------------------------------------------------------------------------
 // Hero — صورة خلفية كاملة العرض بتراكب داكن سينمائي، مع بحث سريع مدمج في الأسفل
@@ -545,9 +546,9 @@ export function CoverageSection({ dict, locale }: { dict: Dictionary; locale: Lo
         <h2 className="mx-auto max-w-3xl text-2xl font-bold sm:text-3xl">{dict.home.coverage.title}</h2>
         <p className="mx-auto mt-4 max-w-2xl leading-7 text-white/70">{dict.home.coverage.subtitle}</p>
         <div className="mx-auto mt-8 flex max-w-4xl flex-wrap justify-center gap-2">
-          {SAUDI_CITIES.map((city) => (
-            <span key={city.ar} className="rounded-btn border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/85">
-              {localize(city, locale)}
+          {SAUDI_REGIONS.map((region) => (
+            <span key={region.name} className="rounded-btn border border-white/15 bg-white/[0.06] px-3 py-1.5 text-xs font-semibold text-white/85">
+              {region.name}
             </span>
           ))}
         </div>

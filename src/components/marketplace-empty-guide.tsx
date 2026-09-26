@@ -20,7 +20,7 @@ type Copy = {
   ctaContact: string;
 };
 
-const COPY: Record<Locale, Copy> = {
+const COPY: Partial<Record<Locale, Copy>> = {
   ar: {
     title: "كيف يعمل سوق الفرص في بيت المطاعم؟",
     intro:
@@ -167,7 +167,7 @@ const linkClass =
   "inline-flex items-center rounded-full border border-sand-200 bg-white px-4 py-2.5 text-sm font-semibold text-ink-800 hover:bg-sand-50";
 
 export function MarketplaceEmptyGuide({ locale }: { locale: Locale }) {
-  const c = COPY[locale] ?? COPY.en;
+  const c: Copy = COPY[locale] ?? COPY.en!;
   return (
     <div className="space-y-6">
       <div className="rounded-card border border-sand-200 bg-white p-6 sm:p-8">

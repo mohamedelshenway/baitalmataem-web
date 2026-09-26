@@ -4,9 +4,9 @@ import type { Locale } from "./config";
 const dictionaries = {
   ar: () => import("./dictionaries/ar.json").then((m) => m.default),
   en: () => import("./dictionaries/en.json").then((m) => m.default),
-  tr: () => import("./dictionaries/tr.json").then((m) => m.default),
-  ru: () => import("./dictionaries/ru.json").then((m) => m.default),
-  ur: () => import("./dictionaries/ur.json").then((m) => m.default),
+  tr: () => import("./dictionaries/tr.json").then((m) => mergeDictionary(m.default)),
+  ru: () => import("./dictionaries/ru.json").then((m) => mergeDictionary(m.default)),
+  ur: () => import("./dictionaries/ur.json").then((m) => mergeDictionary(m.default)),
   hi: () => import("./dictionaries/hi.json").then((m) => mergeDictionary(m.default)),
   bn: () => import("./dictionaries/bn.json").then((m) => mergeDictionary(m.default)),
 };
