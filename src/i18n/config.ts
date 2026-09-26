@@ -2,6 +2,12 @@ export const locales = ["ar", "en", "tr", "ru", "ur", "hi", "bn"] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = "ar";
 
+// اللغات اللي الموقع مترجم لها فعليًا وتتعرض لجوجل (sitemap + hreflang + index).
+// الهندي والبنغالي مترجم منهم أجزاء بسيطة بس والباقي بيطلع إنجليزي — لو اتأرشفوا جوجل هيشوف
+// مئات الصفحات المكررة. الصفحات دي شغالة للزوار، لكن بتاخد noindex وcanonical على الإنجليزي
+// لحد ما الترجمة تكمل، ووقتها تتضاف هنا.
+export const indexableLocales: readonly Locale[] = ["ar", "en", "tr", "ru", "ur"];
+
 export const localeMeta: Record<Locale, { dir: "rtl" | "ltr"; label: string; htmlLang: string }> = {
   ar: { dir: "rtl", label: "العربية", htmlLang: "ar" },
   en: { dir: "ltr", label: "English", htmlLang: "en" },

@@ -31,6 +31,8 @@ export default async function DashboardHomePage({
     { count: newMessages },
     { count: newRegistrations },
     { count: publishedPosts },
+    { count: newBrokerApplications },
+    { count: newLeads },
   ] = await Promise.all([
     supabase.from("listings").select("*", { count: "exact", head: true }).eq("status", "published"),
     supabase.from("listings").select("*", { count: "exact", head: true }).eq("status", "pending_review"),
@@ -38,6 +40,8 @@ export default async function DashboardHomePage({
     supabase.from("contact_submissions").select("*", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("customer_registrations").select("*", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("posts").select("*", { count: "exact", head: true }).eq("is_published", true),
+    supabase.from("broker_applications").select("*", { count: "exact", head: true }).eq("status", "new"),
+    supabase.from("leads").select("*", { count: "exact", head: true }).eq("status", "New"),
   ]);
 
   const cards = [
@@ -51,7 +55,7 @@ export default async function DashboardHomePage({
 
   const links = [
     {
-      href: `/${locale}/dashboard/submissions`,
+      href: `/${locale}/dashboard/listings/submissions`,
       title: "طلبات \"اعرض فرصتك\"",
       desc: "مراجعة طلبات العملاء الجديدة اللي وصلت من نموذج عرض الفرصة في الموقع",
       badge: newSubmissions,
@@ -76,6 +80,18 @@ export default async function DashboardHomePage({
       href: `/${locale}/dashboard/brokers`,
       title: "الوسطاء",
       desc: "بيانات داخلية للوسطاء وفرصهم — لا تظهر أبدًا للعامة",
+    },
+    {
+      href: `/${locale}/dashboard/broker-applications`,
+      title: "طلبات انضمام الوسطاء",
+      desc: "الوسطاء اللي سجلوا من صفحة \"انضم كوسيط\" — مراجعة واعتماد",
+      badge: newBrokerApplications,
+    },
+    {
+      href: `/${locale}/dashboard/leads`,
+      title: "طلبات التوظيف والتدريب",
+      desc: "طلبات الموظفين والتدريب والدوام الجزئي وشركاء النجاح وبلاغات الفرص",
+      badge: newLeads,
     },
   ];
 

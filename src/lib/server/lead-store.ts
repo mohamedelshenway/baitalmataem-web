@@ -11,6 +11,18 @@ function hasSupabase() {
   return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
+// الحفظ مش لازم يستنى Service Role: جدول leads عليه سياسة RLS بتسمح للزائر (anon) بالإضافة بس
+// (من غير قراءة أو تعديل). كده الطلبات بتتحفظ في قاعدة البيانات حتى لو SUPABASE_SERVICE_ROLE_KEY
+// مش متضاف في Vercel — بدل ما تقع على ملف محلي، وده على Vercel بيفشل (نظام ملفات للقراءة فقط).
+function canInsertWithAnon() {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+}
+
+function anonHeaders() {
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+  return { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+}
+
 function supabaseHeaders() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
   return {
@@ -54,11 +66,14 @@ export async function createLead(input: {
     updatedAt: now,
   };
 
-  if (hasSupabase()) {
+  if (hasSupabase() || canInsertWithAnon()) {
     const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/leads`;
     const response = await fetch(url, {
       method: "POST",
-      headers: { ...supabaseHeaders(), Prefer: "return=representation" },
+      // مع anon لازم return=minimal لأن الزائر مالوش صلاحية قراءة الجدول
+      headers: hasSupabase()
+        ? { ...supabaseHeaders(), Prefer: "return=representation" }
+        : { ...anonHeaders(), Prefer: "return=minimal" },
       body: JSON.stringify({
         id: lead.id,
         type: lead.type,

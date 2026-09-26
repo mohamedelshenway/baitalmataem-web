@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP } from "@/lib/constants";
 import type { Locale } from "@/i18n/config";
-import { locales } from "@/i18n/config";
+import { indexableLocales } from "@/i18n/config";
 
 /**
  * أداة موحّدة لبناء Metadata لكل صفحة: عنوان، وصف، Canonical، hreflang، وOpen Graph.
@@ -33,7 +33,8 @@ export function buildMetadata({
   availableLocales?: readonly Locale[];
 }): Metadata {
   const cleanPath = path === "/" ? "" : path;
-  const available = availableLocales && availableLocales.length ? availableLocales : locales;
+  const requested = availableLocales && availableLocales.length ? availableLocales : indexableLocales;
+  const available = requested.filter((l) => indexableLocales.includes(l));
   const isTranslated = available.includes(locale);
   const languages: Record<string, string> = {};
   for (const l of available) {

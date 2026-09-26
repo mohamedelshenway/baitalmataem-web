@@ -99,6 +99,9 @@ export default async function JoinUsPage({
             <Button href={`/${locale}/marketplace/new`} variant="primary" arrow>
               {dict.joinUs.referral.cta}
             </Button>
+            <Button href={`/${locale}/join-broker`} variant="outline">
+              سجّل كوسيط متعاون
+            </Button>
             <Button href={contactHref} variant="outline" target="_blank">
               {dict.nav.contact}
             </Button>

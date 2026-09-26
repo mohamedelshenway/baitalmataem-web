@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { locales } from "@/i18n/config";
+import { indexableLocales } from "@/i18n/config";
 import { SITE } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
 import { getPublishedListings } from "@/lib/data/live-listings";
@@ -13,7 +13,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ملاحظة: "/marketplace/new" و"/admin" مستثناة عمدًا — كلاهما noIndex في generateMetadata
   // ومحجوبتان في robots.ts، فلا يصح إدراجهما في خريطة الموقع لتفادي إشارات متضاربة لمحركات search.
   // "/join-us" كانت صفحة حقيقية وقابلة للفهرسة (مفيش noIndex عليها) لكنها كانت ناقصة من هنا سهوًا
-  const staticPaths = ["", "/services", "/projects", "/marketplace", "/blog", "/about", "/contact", "/join-us"];
+  const staticPaths = ["", "/services", "/projects", "/marketplace", "/blog", "/about", "/contact", "/join-us", "/staffing-training", "/partners"];
   const servicePaths = SERVICES.map((s) => `/services/${s.slug}`);
   // فرص حقيقية منشورة فقط — لا بيانات تجريبية في خريطة الموقع أبدًا.
   const liveListings = await getPublishedListings();
@@ -25,9 +25,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: Entry[] = [
     ...[...staticPaths, ...servicePaths, ...listingPaths].map((path) => ({
       path,
-      langs: locales,
+      langs: indexableLocales,
       lastModified: buildDate,
     })),
+    // صفحة تسجيل الوسطاء بالعربي بس
+    { path: "/join-broker", langs: ["ar"] as const, lastModified: buildDate },
     // المقال يدخل الخريطة بس باللغات المترجم لها فعليًا — مش نسخ fallback إنجليزي تحت /tr و/ru و/ur
     ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, langs: postLocales(p), lastModified: p.publishedAt })),
   ];
