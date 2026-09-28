@@ -30,6 +30,8 @@ export async function generateMetadata({
     description: pickText(listing.summary, params.locale),
     locale: params.locale,
     path: `/marketplace/${params.slug}`,
+    // محتوى الفرص بالعربي بس: باقي اللغات noindex وcanonical للنسخة العربية
+    availableLocales: ["ar"],
     keywords: [dict.marketplace.kinds[listing.kind], pickText(listing.city, params.locale), pickText(listing.activityType, params.locale)],
   });
 }
