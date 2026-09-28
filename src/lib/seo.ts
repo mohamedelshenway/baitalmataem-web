@@ -172,58 +172,23 @@ export function listingJsonLd({
   city: string;
   image?: string;
 }) {
+  // فرص السوق (مطاعم للبيع أو التقبيل، ومحلات للإيجار) مش منتجات تجزئة بتتشحن وتترجع،
+  // فبنوصفها كـ Offer مباشرة بدل Product. كده جوجل ما بيطلبش حقول المنتجات
+  // (التقييمات، المراجعات، الشحن، الإرجاع) اللي ما تنطبقش على الفرص دي أصلًا.
   return {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "Offer",
     name,
     description,
     url,
     image: image ? [image] : undefined,
-    // Brand لازم يكون @type: "Brand" مش "Organization" — ده اللي كانت Google Search Console
-    // بترصده كـ"نوع كائن غير صالح" في حقل brand لبيانات المنتج المنظّمة.
-    brand: { "@type": "Brand", name: SITE.legalName },
+    seller: { "@type": "Organization", name: SITE.legalName, url: SITE.url },
+    itemOffered: {
+      "@type": "LocalBusiness",
+      name,
+      address: { "@type": "PostalAddress", addressLocality: city, addressCountry: "SA" },
+    },
     areaServed: city,
-    ...(priceSAR
-      ? {
-          offers: {
-            "@type": "Offer",
-            priceCurrency: "SAR",
-            price: priceSAR,
-            availability: "https://schema.org/InStock",
-            // فرص السوق عندنا (مطاعم للبيع أو التقبيل) مش منتجات بتتشحن — التسليم استلام محلي
-            // في السعودية فقط، فبنوضّح كده صراحة بدل ما نسيب الحقل فاضي (كان بيتسجّل كتحذير غير ملحّ
-            // في Google Search Console: "shippingDetails" مفقود من "offers").
-            shippingDetails: {
-              "@type": "OfferShippingDetails",
-              shippingRate: {
-                "@type": "MonetaryAmount",
-                value: "0",
-                currency: "SAR",
-              },
-              shippingDestination: {
-                "@type": "DefinedRegion",
-                addressCountry: "SA",
-              },
-              deliveryTime: {
-                "@type": "ShippingDeliveryTime",
-                handlingTime: {
-                  "@type": "QuantitativeValue",
-                  minValue: 0,
-                  maxValue: 0,
-                  unitCode: "DAY",
-                },
-              },
-            },
-            // بيع أو تقبيل مطعم عملية نهائية بعد التعاقد — مفيش "استرجاع" بالمعنى التجاري المعتاد،
-            // فبنصرّح بده صراحة بدل ما يفضل الحقل ناقص (تحذير غير ملحّ تاني من Search Console:
-            // "hasMerchantReturnPolicy" مفقود من "offers").
-            hasMerchantReturnPolicy: {
-              "@type": "MerchantReturnPolicy",
-              applicableCountry: "SA",
-              returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-            },
-          },
-        }
-      : {}),
+    ...(priceSAR ? { price: priceSAR, priceCurrency: "SAR" } : {}),
   };
 }
