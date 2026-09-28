@@ -23,13 +23,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // دلوقتي: المقال بتاريخ نشره، وباقي الصفحات بتاريخ آخر build.
   const buildDate = new Date().toISOString().slice(0, 10);
   const entries: Entry[] = [
-    ...[...staticPaths, ...servicePaths, ...listingPaths].map((path) => ({
+    ...[...staticPaths, ...servicePaths].map((path) => ({
       path,
       langs: indexableLocales,
       lastModified: buildDate,
     })),
     // صفحة تسجيل الوسطاء بالعربي بس
     { path: "/join-broker", langs: ["ar"] as const, lastModified: buildDate },
+    // فرص السوق محتواها بالعربي بس، فتدخل الخريطة بالعربي فقط (زي المقالات غير المترجمة)
+    ...listingPaths.map((path) => ({ path, langs: ["ar"] as const, lastModified: buildDate })),
     // المقال يدخل الخريطة بس باللغات المترجم لها فعليًا — مش نسخ fallback إنجليزي تحت /tr و/ru و/ur
     ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, langs: postLocales(p), lastModified: p.publishedAt })),
   ];
