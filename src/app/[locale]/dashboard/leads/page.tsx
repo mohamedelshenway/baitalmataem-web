@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SAUDI_REGIONS } from "@/lib/saudi-regions";
-import LeadStatusSelect, { LEAD_STATUS_LABELS } from "./lead-status-select";
+import LeadStatusSelect from "./lead-status-select";
+import { LEAD_STATUS_LABELS } from "./lead-status-labels";
 
 // طلبات التوظيف والتدريب والدوام الجزئي وشركاء النجاح وبلاغات الفرص (جدول leads)
 const TYPE_LABELS: Record<string, string> = {
