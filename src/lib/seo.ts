@@ -192,3 +192,17 @@ export function listingJsonLd({
     ...(priceSAR ? { price: priceSAR, priceCurrency: "SAR" } : {}),
   };
 }
+
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.legalName,
+    url: SITE.url,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE.url}/ar/marketplace?activity={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
+}
