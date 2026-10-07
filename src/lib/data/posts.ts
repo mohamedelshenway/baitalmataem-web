@@ -898,6 +898,107 @@ Google or social media ads without a properly set-up Google Business Profile or 
 Track where customers are actually coming from — Google, social media, a delivery app, or a personal recommendation — before increasing any channel's budget. The right marketing decision is grounded in a real number, not a feeling that a certain platform is "working better."`,
     },
   },
+  {
+    slug: "restaurant-staff-hiring-right-employee-saudi-arabia",
+    title: {
+      ar: "توظيف الموظف الصح في مطعمك: المعايير والخطوات العملية قبل ما توقّع أي عقد عمل",
+      en: "Hiring the Right Restaurant Employee in Saudi Arabia: The Criteria and Practical Steps Before You Sign Any Contract",
+    },
+    excerpt: {
+      ar: "موظف واحد غلط في مكانه ممكن يكلفك أضعاف راتبه في دوران العمالة وضعف الخدمة. التوظيف في المطاعم قرار استراتيجي، مش مجرد سد شاغر.",
+      en: "One wrong hire can cost you far more than their salary in turnover and weak service. Hiring in restaurants is a strategic decision, not just filling a vacancy.",
+    },
+    category: { ar: "التوظيف وإدارة الفريق", en: "Staffing & Team Management" },
+    tags: ["توظيف موظفين مطاعم", "اختيار الموظف المناسب", "تدريب موظفين المطاعم", "دوران العمالة في المطاعم"],
+    author: "بيت المطاعم",
+    publishedAt: "2026-10-07",
+    readingMinutes: 7,
+    relatedServiceSlug: "staff-recruitment",
+    content: {
+      ar: `التوظيف في المطاعم مش زي أي قطاع تاني. الموظف مش بس بينفذ شغلانة، هو اللي بيقف قدام العميل كل يوم، وهو اللي بيحدد تجربة الزيارة من أول دقيقة. موظف غلط في مكانه الغلط ممكن يكلفك أضعاف راتبه: دوران عمالة مستمر، تدريب يتكرر من الصفر، وخدمة ضعيفة بتأثر على تقييمات المطعم وسمعته. التوظيف في المطاعم قرار استراتيجي، مش مجرد سد شاغر فاضي.
+
+      ## المشكلة الأساسية: التوظيف بالسرعة بدل التوظيف بالدقة
+
+      كتير من أصحاب المطاعم بيوظفوا تحت ضغط التشغيل: شفت فاضي لازم يتملى بسرعة. النتيجة إن القرار بيتاخد على أول شخص متاح، مش على الشخص المناسب. التوظيف بالسرعة بيوفر وقت قصير وبيكلف وقت وفلوس أكتر بكتير بعدين، لما الموظف ده يسيب الشغل بعد أسابيع أو ياخد تدريب ويطلع مش مناسب للدور.
+
+      ## حدد مواصفات الوظيفة قبل ما تنزل الإعلان
+
+      قبل ما تعلن عن وظيفة، لازم تكون عارف بالظبط: المهارات الأساسية المطلوبة، سنوات الخبرة الواقعية (مش المثالية)، ساعات العمل ونظام الورديات، وأي اشتراطات خاصة بطبيعة المطعم (مطبخ ساخن، خدمة توصيل، تعامل مباشر مع عملاء). إعلان وظيفة غامض بيجيب متقدمين كتير بس مش مناسبين، وده بيضيع وقتك في الفرز.
+
+      ## المقابلة الكلامية وحدها مش كافية
+
+      كتير من أصحاب المطاعم بيحكموا على المتقدم من المقابلة بس، وده فخ شائع. شخص بيتكلم كويس في المقابلة ممكن يفشل تمامًا تحت ضغط وردية مزدحمة. الحل: اختبار عملي قصير قبل القرار النهائي، سواء يوم تجربة مدفوع أو شفت قصير تحت إشراف. ده بيكشف حاجات المقابلة مش بتكشفها: سرعة الأداء، التعامل مع الضغط، والالتزام الفعلي بمعايير النظافة والخدمة.
+
+      ## التوافق مع ثقافة المطعم أهم من الخبرة أحيانًا
+
+      موظف عنده خبرة كويسة بس أسلوبه في التعامل مع العملاء مايناسبش طبيعة مطعمك (مثلًا مطعم عائلي هادئ ومطعم أجواء سريعة وصاخبة)، ممكن يبقى اختيار غلط رغم خبرته. التوافق مع ثقافة المطعم وطريقة التعامل مع العملاء لازم يكون معيار أساسي في القرار، مش بند إضافي بعد الخبرة.
+
+      ## فترة تجريبية بمعايير واضحة، مش شفت تجربة بلا تقييم
+
+      فترة التجربة المفروض تكون أداة تقييم حقيقية، مش مجرد إجراء شكلي. حدد معايير تقييم واضحة من اليوم الأول: الالتزام بالمواعيد، سرعة الأداء، جودة التعامل مع العملاء، والالتزام بمعايير السلامة والنظافة. من غير معايير واضحة، فترة التجربة بتتحول لمجرد وقت بيعدي من غير قرار فعلي.
+
+      ## التدريب مش رفاهية، هو جزء من التوظيف نفسه
+
+      التوظيف الصح من غير تأهيل صحيح مش هيكمل. موظف جديد محتاج تدريب منظم من أول يوم: إجراءات التشغيل، معايير الخدمة، والتعامل مع المواقف الصعبة. المطاعم اللي بتستثمر في تدريب منظم بتقلل دوران العمالة بشكل ملحوظ، لأن الموظف بيحس إنه متأهل وواثق من شغله، مش متروك يتعلم من غلطاته قدام العملاء.
+
+      ## دوران العمالة مؤشر لازم تراقبه، مش حاجة تتقبلها كأمر واقع
+
+      لو مطعمك بيعيد التوظيف لنفس الوظيفة كل شهرين تلاتة، ده مش "طبيعة القطاع" زي ما كتير بيقولوا، ده مؤشر على مشكلة حقيقية: إما في طريقة الاختيار، أو في بيئة العمل، أو في التدريب. تتبع نسبة دوران العمالة ومراجعة السبب الحقيقي وراها بيوفر عليك تكلفة التوظيف المتكرر على المدى المتوسط.
+
+      ## نقاط عملية قبل أي تعيين جديد
+
+      - اكتب وصف وظيفي واضح بدل إعلان عام.
+      - اعمل اختبار عملي قصير قبل القرار النهائي.
+      - قيّم التوافق مع ثقافة المطعم، مش الخبرة بس.
+      - حدد معايير تقييم واضحة لفترة التجربة من اليوم الأول.
+      - جهز خطة تدريب مكتوبة، ولو بسيطة، بدل الاعتماد على التعلم العشوائي.
+
+      ## الخلاصة
+
+      التوظيف في المطاعم مش مجرد سد شاغر، هو قرار بيأثر على تجربة العميل وتكلفة التشغيل وسمعة المطعم على المدى الطويل. نظام توظيف وتدريب واضح بيوفر عليك تكلفة دوران العمالة المستمر، وبيرفع مستوى الخدمة بشكل ملحوظ. بيت المطاعم بيساعد أصحاب المطاعم في بناء أنظمة توظيف وتدريب تتناسب مع حجم المطعم وطبيعة تشغيله.`,
+      en: `Hiring in restaurants isn't like hiring in most other industries. The employee doesn't just perform a task — they stand in front of the customer every single day, and they shape the entire visit from the first minute. A wrong hire in the wrong role can cost far more than their salary: constant turnover, retraining from scratch, and weak service that drags down reviews and reputation. Hiring in restaurants is a strategic decision, not just filling an empty slot.
+
+      ## The core problem: hiring fast instead of hiring right
+
+      Many restaurant owners hire under operational pressure — a position is empty and needs filling now. The result is that the decision gets made on whoever's available first, not on who's actually right for the role. Hiring fast saves a little time upfront and costs far more later, when that employee quits within weeks or turns out unsuited for the role after training.
+
+      ## Define the job's requirements before posting it
+
+      Before posting a job, you need to know exactly: the core skills required, realistic (not idealized) years of experience, working hours and shift structure, and any requirements specific to your restaurant's nature (hot kitchen, delivery service, direct customer contact). A vague job post attracts a lot of applicants who simply aren't a fit, wasting your time on filtering.
+
+      ## The interview alone isn't enough
+
+      Many restaurant owners judge a candidate purely on the interview, which is a common trap. Someone who interviews well can completely fail under the pressure of a busy shift. The fix: a short practical test before the final decision — whether a paid trial day or a short supervised shift. This reveals what an interview can't: actual speed of performance, how they handle pressure, and genuine commitment to hygiene and service standards.
+
+      ## Fit with the restaurant's culture matters as much as experience, sometimes more
+
+      A candidate with solid experience whose style of dealing with customers doesn't match your restaurant's nature (a calm family restaurant versus a fast, loud-energy concept, for example) can still be the wrong hire despite their experience. Fit with the restaurant's culture and customer-handling style needs to be a core criterion in the decision, not an afterthought behind experience.
+
+      ## A trial period with clear criteria, not a trial shift with no evaluation
+
+      The trial period should be a real evaluation tool, not a formality. Set clear evaluation criteria from day one: punctuality, speed of performance, quality of customer interaction, and commitment to safety and hygiene standards. Without clear criteria, the trial period just becomes time that passes without an actual decision.
+
+      ## Training isn't a luxury — it's part of hiring itself
+
+      Correct hiring without proper onboarding doesn't hold up. A new employee needs structured training from day one: operating procedures, service standards, and how to handle difficult situations. Restaurants that invest in structured training noticeably reduce turnover, because the employee feels qualified and confident in their work instead of being left to learn from mistakes in front of customers.
+
+      ## Turnover is a metric to track, not a fact of life to accept
+
+      If your restaurant keeps rehiring for the same position every two or three months, that isn't "just how the industry is," as many assume — it's a signal of a real problem: either in how you're selecting candidates, in the work environment, or in training. Tracking your turnover rate and reviewing the real cause behind it saves you the cost of repeated hiring over the medium term.
+
+      ## Practical checklist before any new hire
+
+      - Write a clear job description instead of a generic post.
+      - Run a short practical test before the final decision.
+      - Evaluate cultural fit, not just experience.
+      - Set clear evaluation criteria for the trial period from day one.
+      - Prepare a written training plan, even a simple one, instead of relying on random on-the-job learning.
+
+      ## The bottom line
+
+      Hiring in restaurants isn't just filling a vacancy — it's a decision that affects customer experience, operating costs, and the restaurant's reputation over the long term. A clear hiring and training system saves you the cost of constant turnover and noticeably raises service quality. Bait Al Mataem helps restaurant owners build hiring and training systems suited to their restaurant's size and operations.`,
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
