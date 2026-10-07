@@ -999,6 +999,97 @@ Track where customers are actually coming from — Google, social media, a deliv
       Hiring in restaurants isn't just filling a vacancy — it's a decision that affects customer experience, operating costs, and the restaurant's reputation over the long term. A clear hiring and training system saves you the cost of constant turnover and noticeably raises service quality. Bait Al Mataem helps restaurant owners build hiring and training systems suited to their restaurant's size and operations.`,
     },
   },
+  {
+    slug: "restaurant-waste-control-saudi-arabia",
+    title: {
+      ar: "ضبط الهدر في مطعمك: من أين يتسرّب فعليًا، وكيف تقيسه قبل ما تقلله",
+      en: "Controlling Waste in Your Restaurant: Where It Really Leaks, and How to Measure It Before You Cut It",
+    },
+    excerpt: {
+      ar: "نسبة هدر صغيرة في الظاهر ممكن تاكل جزء كبير من هامش ربحك طول السنة. أغلب أصحاب المطاعم بيحسوا إن فيه هدر بس مش عارفين مصدره بالظبط.",
+      en: "A waste percentage that looks small can quietly eat a large share of your margin over a year. Most restaurant owners sense there's waste but don't know exactly where it's coming from.",
+    },
+    category: { ar: "ضبط التكلفة والهدر", en: "Cost Control & Waste Management" },
+    tags: ["ضبط الهدر في المطاعم", "تقليل هدر الطعام", "تكلفة الطعام في المطاعم", "إدارة المخزون في المطاعم"],
+    author: "بيت المطاعم",
+    publishedAt: "2026-10-07",
+    readingMinutes: 7,
+    relatedServiceSlug: "waste-management",
+    content: {
+      ar: `نسبة هدر صغيرة في الظاهر، زي 4% أو 5% من تكلفة الطعام، ممكن تبان رقم بسيط على الورق، لكن لما تحسبها على مبيعات سنة كاملة بتطلع مبلغ كبير بيتسرب من غير ما حد ياخد قرار واعي بيه. المشكلة إن أغلب أصحاب المطاعم بيحسوا إن فيه هدر، بس مش عارفين مصدره بالظبط، فبيتعاملوا معاه كأمر واقع بدل ما يقيسوه ويعالجوه.
+
+      ## الهدر مش بس الأكل اللي بيترمى في الزبالة
+
+      لما نقول "هدر"، أول حاجة بتيجي في بال الناس هي الأكل اللي بيترمى. لكن الهدر الحقيقي أوسع من كده بكتير: حصص زيادة عن المقاس المحدد بتتقدم للعميل، مكونات بتتجهز زيادة عن الحاجة وبتتلف قبل ما تتستخدم، أخطاء في الطلبات بتتعمل من الأول وتتلغي، وحتى سرقة أو استخدام شخصي غير موثق. كل واحدة من دول بندها في حسابك، مش بس اللي بتشوفه في صندوق القمامة.
+
+      ## قيس الهدر قبل ما تحكم عليه
+
+      مينفعش تحسن حاجة مش قايس نسبتها. الخطوة الأولى هي تحديد نسبة الهدر كنسبة من تكلفة الطعام الكلية، وده بيحتاج تسجيل يومي أو أسبوعي منظم: إيه اللي اتحط في سجل الهدر، كميته، وسببه (تلف، خطأ طلب، تجهيز زيادة، إلخ). من غير الرقم ده، أي قرار بتاخده بيبقى تخمين مش قرار مبني على بيانات.
+
+      ## الاستلام والتخزين: أول نقطة بيضيع فيها جزء كبير من الهدر
+
+      كتير من الهدر بيبدأ قبل ما المكون يوصل للمطبخ أصلًا. استلام بضاعة من غير فحص الجودة أو درجة الحرارة، تخزين غير صحيح (رطوبة، حرارة، ترتيب غلط)، أو عدم تطبيق نظام "الأول يدخل الأول يخرج" (FIFO) بيخلي مكونات قديمة تتلف وهي لسه في المخزن قبل ما تتستخدم أصلًا.
+
+      ## التقدير الزائد في الطلب يحوّل لهدر مباشر
+
+      لو نظام الطلب عندك مبني على تقدير تقريبي بدل أرقام مبيعات فعلية، هتلاقي نفسك بتطلب أكتر من اللي محتاجه باستمرار "علشان ما يخلصش"، وده بيزود احتمال التلف قبل الاستخدام. مراجعة أرقام المبيعات الفعلية بشكل دوري وضبط كميات الطلب بناءً عليها بيقلل الفائض من الأساس.
+
+      ## التجهيز الزائد عن الحاجة الفعلية لليوم
+
+      تجهيز كميات كبيرة من المكونات المقطعة أو المحضّرة مسبقًا بناءً على توقع مبيعات غير دقيق بيخلي جزء كبير منها يتلف في آخر اليوم. ربط كمية التجهيز اليومي بمتوسط مبيعات فعلي لكل يوم في الأسبوع (الجمعة مختلفة عن الثلاثاء مثلًا) بيقلل الفائض ده بشكل ملحوظ.
+
+      ## حجم الحصص غير الموحد بيكلفك من غير ما تاخد بالك
+
+      لو كل طباخ بيقدم حصة بمقاس مختلف شوية عن زميله، الفرق ده بيتجمع على مدار مئات الأطباق في الشهر ويبقى تكلفة حقيقية. استخدام أدوات قياس موحدة (معالق، أكواب قياس، ميزان) وتدريب الفريق عليها بيثبت التكلفة ويقلل التفاوت.
+
+      ## تتبع الهدر يوميًا مش مهمة شهرية
+
+      - سجّل كل عنصر هدر يوميًا بسببه وكميته، مش تقدير شهري عام.
+      - راجع تقرير الهدر أسبوعيًا مع فريق المطبخ، مش بعد ما المشكلة تتراكم.
+      - اربط كل سبب هدر متكرر بإجراء تصحيحي واضح، مش ملاحظة بس.
+      - قارن نسبة الهدر شهر بشهر لتتأكد إن الإجراءات فعلاً شغالة.
+
+      ## الخلاصة
+
+      ضبط الهدر مش قرار واحد بتاخده مرة وخلاص، هو نظام مستمر من القياس والمتابعة والتصحيح. المطاعم اللي بتاخد الموضوع ده بجدية بتشوف فرق حقيقي في هامش الربح خلال شهور قليلة، من غير ما تغيّر المنيو ولا تزود الأسعار. بيت المطاعم بيساعد أصحاب المطاعم على بناء أنظمة ضبط تكلفة وهدر مبنية على أرقام فعلية، مش تخمين.`,
+      en: `A waste percentage that looks small on paper, say 4% or 5% of food cost, can seem like a minor detail. But calculated against a full year of sales, it turns into a significant amount quietly leaking away without anyone making a conscious decision about it. The real problem is that most restaurant owners sense there's waste, but don't know exactly where it's coming from, so they treat it as a fact of life instead of measuring and addressing it.
+
+      ## Waste isn't just the food that ends up in the trash
+
+      When people say "waste," the first thing that comes to mind is food thrown away. But real waste is much broader than that: portions served larger than the standard size, ingredients over-prepped and spoiling before use, order mistakes made and then voided, and even undocumented theft or personal use. Each of these belongs in your accounting, not just what you see in the trash bin.
+
+      ## Measure waste before you judge it
+
+      You can't improve something you haven't measured. The first step is establishing your waste percentage as a share of total food cost, which requires organized daily or weekly logging: what went into the waste log, how much, and why (spoilage, order error, over-prep, etc.). Without that number, any decision you make is a guess, not a data-driven call.
+
+      ## Receiving and storage: where a large share of waste begins
+
+      A lot of waste starts before an ingredient even reaches the kitchen. Receiving stock without checking quality or temperature, improper storage (humidity, heat, poor organization), or not applying First In, First Out (FIFO) lets older ingredients spoil while still sitting in storage, before they're ever used.
+
+      ## Over-ordering turns directly into waste
+
+      If your ordering system is based on rough guesswork instead of actual sales figures, you'll constantly find yourself ordering more than you need "just in case," which increases the odds of spoilage before use. Regularly reviewing actual sales numbers and adjusting order quantities accordingly cuts the surplus at the source.
+
+      ## Over-prepping beyond the day's actual need
+
+      Prepping large quantities of pre-cut or pre-prepared ingredients based on an inaccurate sales forecast means a large share of it spoils by the end of the day. Tying daily prep quantities to the actual average sales for each day of the week (Friday is different from Tuesday, for example) noticeably reduces this surplus.
+
+      ## Inconsistent portion sizes cost you without you noticing
+
+      If every cook plates a slightly different portion size than their colleague, that difference adds up across hundreds of dishes a month into a real cost. Using standardized measuring tools (spoons, measuring cups, a scale) and training the team on them locks in the cost and reduces variance.
+
+      ## Tracking waste is a daily task, not a monthly one
+
+      - Log every waste item daily with its cause and quantity, not a general monthly estimate.
+      - Review the waste report weekly with the kitchen team, not after the problem has piled up.
+      - Tie every recurring cause of waste to a clear corrective action, not just a note.
+      - Compare the waste percentage month over month to confirm the actions are actually working.
+
+      ## The bottom line
+
+      Controlling waste isn't a one-time decision — it's an ongoing system of measurement, follow-up, and correction. Restaurants that take this seriously see a real difference in their profit margin within a few months, without changing the menu or raising prices. Bait Al Mataem helps restaurant owners build cost and waste control systems based on real numbers, not guesswork.`,
+    },
+  },
 ];
 
 export function getPostBySlug(slug: string): BlogPost | undefined {
