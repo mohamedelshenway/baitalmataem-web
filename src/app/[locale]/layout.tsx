@@ -8,7 +8,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { LanguageBanner } from "@/components/language-banner";
 import { SITE } from "@/lib/constants";
-import { organizationJsonLd } from "@/lib/seo";
+import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 import { pickText } from "@/lib/i18n-text";
 import "../globals.css";
 
@@ -65,11 +65,16 @@ export default async function LocaleLayout({
   return (
     <html lang={meta.htmlLang} dir={meta.dir} className={`${plexArabic.variable} ${plexLatin.variable}`}>
       <body>
+<script
+  type="application/ld+json"
+  // eslint-disable-next-line react/no-danger
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
+  />
         <script
           type="application/ld+json"
           // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}
-        />
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd()) }}
+          />
         <LanguageBanner
           locale={locale}
           message={dict.languageBanner.message}
