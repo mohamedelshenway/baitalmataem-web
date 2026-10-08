@@ -80,8 +80,6 @@ const cards = [
   { label: "زيارات آخر 30 يوم", value: monthCount ?? 0, color: "#151515" },
   ];
 
-return (
-
   return (
   <div className="min-h-screen bg-[#f8f5ef]" dir="rtl">
   <header className="bg-white border-b border-black/5">
