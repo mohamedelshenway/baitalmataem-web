@@ -93,6 +93,11 @@ export default async function DashboardHomePage({
       desc: "طلبات الموظفين والتدريب والدوام الجزئي وشركاء النجاح وبلاغات الفرص",
       badge: newLeads,
     },
+    {
+      href: `/${locale}/dashboard/visits`,
+      title: "إحصائيات الزيارات",
+      desc: "عدد الزوار ومصدرهم - جوجل، واتساب، سوشيال ميديا",
+    },
   ];
 
   return (
