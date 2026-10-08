@@ -6,6 +6,7 @@ import { locales, localeMeta, isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageViewTracker } from "@/components/page-view-tracker";
 import { LanguageBanner } from "@/components/language-banner";
 import { SITE } from "@/lib/constants";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
@@ -81,6 +82,7 @@ export default async function LocaleLayout({
           switchLabel={dict.languageBanner.switch}
           stayLabel={dict.languageBanner.stay}
         />
+        <PageViewTracker locale={locale} />
         <SiteHeader dict={dict} locale={locale} />
         <main>{children}</main>
         <SiteFooter dict={dict} locale={locale} />
