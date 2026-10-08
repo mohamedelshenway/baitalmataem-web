@@ -25,6 +25,12 @@ const nextConfig = {
         destination: "/:locale/about",
         permanent: true,
       },
+      // لينك واتساب قصير يستخدمه محمد في الحالة والرسائل بدل اللينك العادي — بيوصل الزائر للرئيسية مع UTM يوضح إنه جاي من واتساب في تقرير الزيارات
+      {
+        source: "/wa",
+        destination: "/ar?utm_source=whatsapp&utm_medium=social&utm_campaign=direct_share",
+        permanent: false,
+      },
     ];
   },
 };
