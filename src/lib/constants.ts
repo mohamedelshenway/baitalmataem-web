@@ -23,6 +23,7 @@ export const SOCIALS = {
   youtube: "https://www.youtube.com/channel/UCgKu6z8eOVJMrTOHjfEKJjw",
   snapchat: "https://www.snapchat.com/add/baitalmataem", // بحاجة لتأكيد الرابط المباشر
   x: "https://x.com/baitalmataem", // بحاجة لتأكيد الرابط المباشر
+  haraj: "https://haraj.com.sa/users/mohamedelshenway", // مؤكَّد من محمد الشناوي بتاريخ 2026-10-09
   email: "baitalmataem@gmail.com",
 };
 
@@ -33,6 +34,13 @@ export const HAS_WHATSAPP = Boolean(WHATSAPP_NUMBER);
 export function whatsappLink(message: string) {
   if (!WHATSAPP_NUMBER) return null;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+// رقم واتساب التوظيف (واتساب أعمال مخصص لاستقبال السير الذاتية) — مؤكَّد من محمد الشناوي بتاريخ 2026-10-09
+export const RECRUITMENT_WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_RECRUITMENT_WHATSAPP_NUMBER || "966596796889";
+
+export function recruitmentWhatsappLink(message = "السلام عليكم، أرغب في التقديم على وظيفة لدى بيت المطاعم") {
+  return `https://wa.me/${RECRUITMENT_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
 export function mailtoLink(subject: string) {

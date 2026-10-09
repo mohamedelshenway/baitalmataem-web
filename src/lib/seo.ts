@@ -102,7 +102,7 @@ export function organizationJsonLd() {
       { "@type": "Country", name: "Saudi Arabia" },
     ],
     // مصدر واحد للحقيقة: نفس الروابط المعتمدة في src/lib/constants.ts، بدل تكرارها هنا يدويًا
-    sameAs: [SOCIALS.facebook, SOCIALS.instagram, SOCIALS.tiktok, SOCIALS.youtube, SOCIALS.snapchat, SOCIALS.x],
+    sameAs: [SOCIALS.facebook, SOCIALS.instagram, SOCIALS.tiktok, SOCIALS.youtube, SOCIALS.snapchat, SOCIALS.x, SOCIALS.haraj],
   };
 }
 
