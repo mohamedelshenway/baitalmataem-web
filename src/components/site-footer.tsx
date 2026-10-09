@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Dictionary } from "@/i18n/get-dictionary";
 import type { Locale } from "@/i18n/config";
-import { SITE, HAS_WHATSAPP, whatsappLink, mailtoLink, SOCIALS } from "@/lib/constants";
+import { SITE, HAS_WHATSAPP, whatsappLink, mailtoLink, SOCIALS, recruitmentWhatsappLink } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
 import { POSTS } from "@/lib/data/posts";
 import { GoldDivider } from "@/components/ui";
@@ -68,6 +68,9 @@ export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale 
             <FooterLink href={`/${locale}/about`}>{dict.nav.about}</FooterLink>
             <FooterLink href={`/${locale}/projects`}>{dict.nav.projects}</FooterLink>
             <FooterLink href={`/${locale}/join-us`}>{dict.joinUs.pageTitle}</FooterLink>
+            <a href={recruitmentWhatsappLink()} target="_blank" rel="noopener noreferrer" className="block text-sm font-semibold text-white/85 hover:text-gold-500">
+              {locale === "ar" ? "التوظيف عبر واتساب" : "Jobs via WhatsApp"}
+            </a>
             <a href={contactHref} target="_blank" rel="noopener noreferrer" className="block text-sm text-white/60 hover:text-gold-500">
               {SOCIALS.email}
             </a>

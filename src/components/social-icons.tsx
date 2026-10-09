@@ -9,6 +9,7 @@ export const SOCIAL_ICON_LINKS = [
   { key: "youtube", label: "YouTube" },
   { key: "snapchat", label: "Snapchat" },
   { key: "x", label: "X" },
+  { key: "haraj", label: "Haraj" },
 ] as const;
 
 export type SocialPlatform = (typeof SOCIAL_ICON_LINKS)[number]["key"];
@@ -45,6 +46,13 @@ export function SocialIcon({ platform }: { platform: SocialPlatform }) {
       return (
         <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
           <path d="M12 2.6c-3.2 0-5.1 2.3-5.1 5.42 0 .55.03 1.23.09 1.8-.5.3-1.28.35-1.62.35a.72.72 0 0 0-.72.71c0 .46.32.75.85 1.03.3.16.62.29.62.29s-.09.56-.32.96c-.33.56-1.02.94-1.02.94a.5.5 0 0 0-.26.55c.05.26.27.43.51.48.44.08.96.09 1.27.29.19.13.22.37.29.66.13.55.31 1.28 1.18 1.52.56.15 1.03-.02 1.46-.19.45-.18.85-.32 1.3-.02.46.31.99.79 2.3.79s1.84-.48 2.3-.79c.45-.3.85-.16 1.3.02.43.17.9.34 1.46.19.87-.24 1.05-.97 1.18-1.52.07-.29.1-.53.29-.66.31-.2.83-.21 1.27-.29.24-.05.46-.22.51-.48a.5.5 0 0 0-.26-.55s-.69-.38-1.02-.94c-.23-.4-.32-.96-.32-.96s.32-.13.62-.29c.53-.28.85-.57.85-1.03a.72.72 0 0 0-.72-.71c-.34 0-1.12-.05-1.62-.35.06-.57.09-1.25.09-1.8 0-3.12-1.9-5.42-5.1-5.42Z" />
+        </svg>
+      );
+    case "haraj":
+      return (
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+          <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z" />
+          <circle cx="7.5" cy="7.5" r="1.4" fill="currentColor" stroke="none" />
         </svg>
       );
     case "x":
