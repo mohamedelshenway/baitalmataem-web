@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
-import { SITE, whatsappLink, mailtoLink, HAS_WHATSAPP } from "@/lib/constants";
+import { SITE, recruitmentWhatsappLink } from "@/lib/constants";
 import { Button, GoldDivider } from "@/components/ui";
 
 export async function generateMetadata({
@@ -36,10 +36,7 @@ export default async function JoinUsPage({
     { name: dict.joinUs.pageTitle, url: `${SITE.url}/${locale}/join-us` },
   ]);
 
-  const contactHref =
-    (HAS_WHATSAPP &&
-      whatsappLink(`مرحبًا، أرغب في الاستفسار عن العمل مع بيت المطاعم`)) ||
-    mailtoLink(dict.joinUs.pageTitle);
+  const contactHref = recruitmentWhatsappLink("مرحبًا، أرغب في الاستفسار عن العمل مع بيت المطاعم");
 
   return (
     <section className="py-12 sm:py-14">
