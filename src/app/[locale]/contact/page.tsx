@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { isLocale, type Locale } from "@/i18n/config";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata, breadcrumbJsonLd } from "@/lib/seo";
-import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP, whatsappLink } from "@/lib/constants";
+import { SITE, SOCIALS, WHATSAPP_NUMBER, HAS_WHATSAPP, whatsappLink, RECRUITMENT_WHATSAPP_NUMBER, recruitmentWhatsappLink } from "@/lib/constants";
 import { Card, GoldDivider } from "@/components/ui";
 import { ContactForm } from "@/components/contact-form";
 import { SocialIconRow } from "@/components/social-icons";
@@ -52,6 +52,12 @@ export default async function ContactPage({ params }: { params: { locale: string
             <h2 className="mb-2 text-sm font-bold text-ink-900">{dict.contact.emailTitle}</h2>
             <a href={`mailto:${SOCIALS.email}`} className="focus-ring font-semibold text-ember-600 hover:underline">
               {SOCIALS.email}
+            </a>
+          </Card>
+          <Card className="p-6 sm:col-span-2">
+            <h2 className="mb-2 text-sm font-bold text-ink-900">{locale === "ar" ? "واتساب التوظيف (لإرسال السير الذاتية)" : "Recruitment WhatsApp (send your CV)"}</h2>
+            <a href={recruitmentWhatsappLink()} target="_blank" rel="noopener noreferrer" className="focus-ring font-semibold text-ember-600 hover:underline" dir="ltr">
+              {RECRUITMENT_WHATSAPP_NUMBER}
             </a>
           </Card>
         </div>
