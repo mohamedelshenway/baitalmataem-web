@@ -46,6 +46,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
   const [contactName, setContactName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactCity, setContactCity] = useState("");
+  const [contactEmail, setContactEmail] = useState("");
 
   const dragIndex = useRef<number | null>(null);
 
@@ -161,6 +162,7 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
       form.append("contactName", contactName);
       form.append("contactPhone", contactPhone);
       form.append("contactCity", contactCity);
+      form.append("contactEmail", contactEmail.trim());
       form.append("coverId", coverId || "");
       form.append("source", getAttributionSource());
       photos.forEach((p) => form.append("photos", p.file, p.file.name));
@@ -404,6 +406,9 @@ export function NewListingWizard({ dict, locale }: { dict: Dictionary; locale: L
             </Field>
             <Field label={`${dict.newListing.contactCity} *`}>
               <input value={contactCity} onChange={(e) => setContactCity(e.target.value)} className="input-field" />
+            </Field>
+            <Field label={locale === "ar" ? "البريد الإلكتروني (اختياري — لإشعارك بنتيجة الطلب)" : "Email (optional — to notify you of the result)"}>
+              <input type="email" inputMode="email" dir="ltr" value={contactEmail} onChange={(e) => setContactEmail(e.target.value)} className="input-field" placeholder="name@example.com" />
             </Field>
           </div>
         )}
