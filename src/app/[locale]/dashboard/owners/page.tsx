@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { toWhatsAppNumber, type SubmissionStatus } from "@/lib/submission-notify";
-import NotifyButton from "./notify-button";
+import NotifyButton, { EmailNotifyButton } from "./notify-button";
 
 const KIND_LABELS: Record<string, string> = {
   restaurant_taqbeel: "مطعم للتقبيل",
@@ -41,6 +41,7 @@ type Raw = {
   contactName?: string;
   contactPhone?: string;
   contactCity?: string | null;
+  contactEmail?: string | null;
 };
 
 export default async function OwnersRegisterPage({
@@ -198,6 +199,11 @@ export default async function OwnersRegisterPage({
                   <p className="text-sm text-[#151515]/70 mt-1" dir="ltr" style={{ textAlign: "right" }}>
                     {phone || "—"}
                   </p>
+                  {raw.contactEmail && (
+                    <p className="text-xs text-[#151515]/60 mt-0.5" dir="ltr" style={{ textAlign: "right" }}>
+                      {raw.contactEmail}
+                    </p>
+                  )}
                   <p className="text-xs text-[#151515]/50 mt-1">
                     {[raw.region, raw.city, raw.area].filter(Boolean).join(" · ") || "—"}
                     {raw.activityType ? ` · ${raw.activityType}` : ""}
@@ -211,6 +217,15 @@ export default async function OwnersRegisterPage({
                     status={r.status as SubmissionStatus}
                     name={raw.contactName}
                     phone={phone}
+                    opportunity={opportunity}
+                    adminNote={r.admin_note}
+                    notifiedAt={r.notified_at}
+                  />
+                  <EmailNotifyButton
+                    submissionId={r.id}
+                    status={r.status as SubmissionStatus}
+                    name={raw.contactName}
+                    email={raw.contactEmail}
                     opportunity={opportunity}
                     adminNote={r.admin_note}
                     notifiedAt={r.notified_at}
