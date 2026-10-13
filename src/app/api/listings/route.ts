@@ -120,6 +120,10 @@ export async function POST(request: Request) {
       contactCity: form.get("contactCity")
         ? String(form.get("contactCity"))
         : null,
+      contactEmail: (() => {
+        const e = String(form.get("contactEmail") ?? "").trim().slice(0, 160);
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) ? e : null;
+      })(),
       photoCount: photoFiles.length,
       videoCount: videoFiles.length,
       photoUrls,
