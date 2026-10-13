@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import NotifyButton from "../../owners/notify-button";
+import NotifyButton, { EmailNotifyButton } from "../../owners/notify-button";
 import type { SubmissionStatus } from "@/lib/submission-notify";
 
 export type SubmissionRawData = {
@@ -21,6 +21,7 @@ export type SubmissionRawData = {
   contactName?: string;
   contactPhone?: string;
   contactCity?: string | null;
+  contactEmail?: string | null;
   photoCount?: number;
   videoCount?: number;
   photoUrls?: string[];
@@ -36,6 +37,16 @@ export const KIND_LABELS: Record<string, string> = {
   operating_partner_needed: "مشروع يحتاج شريك تشغيل",
   site_for_restaurant: "موقع مناسب لنشاط مطاعم",
 };
+
+/** يبعت إيميل النتيجة تلقائيًا لو العارض سجّل إيميل والخدمة مفعّلة (بيتجاهل الفشل بهدوء) */
+function autoEmail(submissionId: string, email?: string | null) {
+  if (!email) return;
+  fetch("/api/notify-submission", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ submissionId }),
+  }).catch(() => {});
+}
 
 function toNumberOrNull(v: string | null | undefined): number | null {
   if (!v) return null;
@@ -62,6 +73,17 @@ export default function SubmissionActions({
   ]
     .filter(Boolean)
     .join(" – ");
+  const emailNotify = (
+    <EmailNotifyButton
+      submissionId={submissionId}
+      status={currentStatus as SubmissionStatus}
+      name={rawData.contactName}
+      email={rawData.contactEmail}
+      opportunity={opportunity}
+      adminNote={adminNote}
+      notifiedAt={notifiedAt}
+    />
+  );
   const notify = (
     <NotifyButton
       submissionId={submissionId}
@@ -147,6 +169,7 @@ export default function SubmissionActions({
       setError(updateError.message);
       return;
     }
+    autoEmail(submissionId, rawData.contactEmail);
     router.refresh();
   }
 
@@ -163,6 +186,7 @@ export default function SubmissionActions({
       setError(updateError.message);
       return;
     }
+    autoEmail(submissionId, rawData.contactEmail);
     router.refresh();
   }
 
@@ -189,6 +213,7 @@ export default function SubmissionActions({
     }
     setNoteOpen(false);
     setNote("");
+    autoEmail(submissionId, rawData.contactEmail);
     router.refresh();
   }
 
@@ -199,6 +224,7 @@ export default function SubmissionActions({
           تم القبول وتحويلها لفرصة
         </span>
         {notify}
+        {emailNotify}
       </div>
     );
   }
@@ -209,6 +235,7 @@ export default function SubmissionActions({
           مرفوضة
         </span>
         {notify}
+        {emailNotify}
       </div>
     );
   }
