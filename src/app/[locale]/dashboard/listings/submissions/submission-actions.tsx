@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import NotifyButton from "../../owners/notify-button";
+import type { SubmissionStatus } from "@/lib/submission-notify";
 
 export type SubmissionRawData = {
   kind?: string;
@@ -45,11 +47,32 @@ export default function SubmissionActions({
   submissionId,
   rawData,
   currentStatus,
+  adminNote,
+  notifiedAt,
 }: {
   submissionId: string;
   rawData: SubmissionRawData;
   currentStatus: string;
+  adminNote?: string | null;
+  notifiedAt?: string | null;
 }) {
+  const opportunity = [
+    rawData.activityType || KIND_LABELS[rawData.kind ?? ""],
+    rawData.city,
+  ]
+    .filter(Boolean)
+    .join(" – ");
+  const notify = (
+    <NotifyButton
+      submissionId={submissionId}
+      status={currentStatus as SubmissionStatus}
+      name={rawData.contactName}
+      phone={rawData.contactPhone}
+      opportunity={opportunity}
+      adminNote={adminNote}
+      notifiedAt={notifiedAt}
+    />
+  );
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -112,7 +135,11 @@ export default function SubmissionActions({
 
     const { error: updateError } = await supabase
       .from("listing_submissions")
-      .update({ status: "approved", converted_to_listing_id: inserted.id })
+      .update({
+        status: "approved",
+        converted_to_listing_id: inserted.id,
+        decided_at: new Date().toISOString(),
+      })
       .eq("id", submissionId);
 
     setBusy(false);
@@ -129,7 +156,7 @@ export default function SubmissionActions({
     const supabase = createClient();
     const { error: updateError } = await supabase
       .from("listing_submissions")
-      .update({ status: "rejected" })
+      .update({ status: "rejected", decided_at: new Date().toISOString() })
       .eq("id", submissionId);
     setBusy(false);
     if (updateError) {
@@ -149,7 +176,11 @@ export default function SubmissionActions({
     const supabase = createClient();
     const { error: updateError } = await supabase
       .from("listing_submissions")
-      .update({ status: "changes_requested", admin_note: note.trim() })
+      .update({
+        status: "changes_requested",
+        admin_note: note.trim(),
+        decided_at: new Date().toISOString(),
+      })
       .eq("id", submissionId);
     setBusy(false);
     if (updateError) {
@@ -163,16 +194,22 @@ export default function SubmissionActions({
 
   if (currentStatus === "approved") {
     return (
-      <span className="text-xs text-green-700 font-medium bg-green-50 rounded-lg px-3 py-1.5">
-        تم القبول وتحويلها لفرصة
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-green-700 font-medium bg-green-50 rounded-lg px-3 py-1.5">
+          تم القبول وتحويلها لفرصة
+        </span>
+        {notify}
+      </div>
     );
   }
   if (currentStatus === "rejected") {
     return (
-      <span className="text-xs text-[#8b1e24] font-medium bg-[#8b1e24]/5 rounded-lg px-3 py-1.5">
-        مرفوضة
-      </span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-[#8b1e24] font-medium bg-[#8b1e24]/5 rounded-lg px-3 py-1.5">
+          مرفوضة
+        </span>
+        {notify}
+      </div>
     );
   }
 
@@ -180,6 +217,7 @@ export default function SubmissionActions({
     <div className="space-y-2">
       {error && <p className="text-xs text-[#8b1e24]">{error}</p>}
       <div className="flex flex-wrap gap-2">
+        {currentStatus === "changes_requested" && notify}
         <button
           type="button"
           onClick={approve}

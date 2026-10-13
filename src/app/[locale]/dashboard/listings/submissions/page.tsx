@@ -32,7 +32,7 @@ export default async function SubmissionsPage({
   const { data: submissions, error } = await supabase
     .from("listing_submissions")
     .select(
-      "id, raw_data, source, status, admin_note, converted_to_listing_id, created_at",
+      "id, raw_data, source, status, admin_note, converted_to_listing_id, created_at, notified_at",
     )
     .order("created_at", { ascending: false });
 
@@ -41,13 +41,13 @@ export default async function SubmissionsPage({
       <header className="bg-white border-b border-black/5">
         <div className="max-w-5xl mx-auto px-6 py-4">
           <Link
-            href={`/${locale}/dashboard/listings`}
+            href={`/${locale}/dashboard`}
             className="text-sm text-[#151515]/60 hover:text-[#8b1e24]"
           >
-            ← رجوع لإدارة الفرص
+            ← رجوع للوحة التحكم
           </Link>
           <h1 className="font-bold text-[#151515] mt-1">
-            طلبات نضوض اعرض فرصتك&quot;
+            طلبات &quot;اعرض فرصتك&quot;
           </h1>
           <p className="text-sm text-[#151515]/60 mt-1">
             الطلبات المرسلة من الزوار عبر نموذج &quot;اعرض فرصتك&quot; العام —
@@ -184,6 +184,8 @@ export default async function SubmissionsPage({
                   submissionId={s.id}
                   rawData={raw}
                   currentStatus={s.status}
+                  adminNote={s.admin_note}
+                  notifiedAt={s.notified_at}
                 />
               </div>
             </div>
