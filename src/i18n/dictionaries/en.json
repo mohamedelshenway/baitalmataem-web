@@ -334,7 +334,7 @@
       "available": "Available",
       "negotiating": "In negotiation",
       "reserved": "Reserved",
-      "closed": "Deal closed",
+      "closed": "Sold",
       "unavailable": "Unavailable"
     },
     "noResults": "No opportunities match this search right now. Try adjusting the filters or contact us directly."
