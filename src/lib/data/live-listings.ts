@@ -98,7 +98,7 @@ export async function getPublishedListings(): Promise<Listing[]> {
     const { data, error } = await supabase
       .from("listings")
       .select(SELECT_COLUMNS)
-      .eq("status", "published")
+      .in("status", ["published", "closed"])
       .order("created_at", { ascending: false });
 
   if (error || !data) {
@@ -108,7 +108,10 @@ export async function getPublishedListings(): Promise<Listing[]> {
         return [];
   }
 
-  return data.map((row) => mapDbListingToListing(row as DbListingRow));
+  // الفرص المتاحة أولًا، والفرص المباعة (closed) تظهر بعدها بشارة "تم البيع"
+  return data
+    .map((row) => mapDbListingToListing(row as DbListingRow))
+    .sort((a, b) => Number(a.status === "closed") - Number(b.status === "closed"));
 }
 
 async function getPublishedListingById(id: string): Promise<Listing | null> {
@@ -117,7 +120,7 @@ async function getPublishedListingById(id: string): Promise<Listing | null> {
       .from("listings")
       .select(SELECT_COLUMNS)
       .eq("id", id)
-      .eq("status", "published")
+      .in("status", ["published", "closed"])
       .maybeSingle();
 
   if (error || !data) return null;
