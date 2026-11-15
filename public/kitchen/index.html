@@ -315,6 +315,8 @@ function yieldHint(i,q){if(!q||!(i.cy||i.ky))return '';const u=i.unit;
   return `<div class="hint">${i.cy?`بعد التنظيف ≈ <b class="num">${n2(q*i.cy)}</b> ${esc(u)}`:''}${i.cy&&i.ky?' · ':''}${i.ky?`بعد التسوية ≈ <b class="num">${n2(q*i.ky)}</b> ${esc(u)}`:''}</div>`}
 
 // ---------- live camera (back) ----------
+function nativePick(facing){return new Promise(res=>{const i=document.createElement('input');i.type='file';i.accept='image/*';i.setAttribute('capture',facing==='user'?'user':'environment');
+  i.onchange=()=>{const f=i.files[0];if(!f)return res(null);const u=URL.createObjectURL(f);const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);im.src=u};i.click()})}
 function snapCam(title,label,facing){return new Promise(async res=>{
   const m=document.createElement('div');m.className='modal';
   m.innerHTML=`<div class="sheet" style="text-align:center"><h2 style="margin:0 0 8px;font-size:17px">${esc(title)}</h2><video playsinline autoplay muted style="width:100%;max-height:58vh;border-radius:14px;background:#000"></video><canvas style="display:none"></canvas>
@@ -322,9 +324,10 @@ function snapCam(title,label,facing){return new Promise(async res=>{
   document.body.appendChild(m);const v=m.querySelector('video'),c=m.querySelector('canvas');let st=null;
   const end=r=>{st&&st.getTracks().forEach(t=>t.stop());m.remove();res(r)};
   m.querySelector('#cx').onclick=()=>end(null);
-  try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing||'environment'},width:{ideal:1280}},audio:false});v.srcObject=st;m.querySelector('#cs').disabled=false}catch(e){toast('اسمح للتطبيق باستخدام الكاميرا',true);return end(null)}
+  try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing||'environment'},width:{ideal:1280}},audio:false});v.srcObject=st;m.querySelector('#cs').disabled=false}catch(e){v.style.display='none';m.querySelector('#cs').textContent='📷 افتح الكاميرا';m.querySelector('#cs').disabled=false;st=null}
   m.querySelector('#cs').onclick=()=>act(m.querySelector('#cs'),async()=>{
-    const w=960,h=Math.round(w*(v.videoHeight||720)/(v.videoWidth||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(v,0,0,w,h);
+    let src=v,sw=v.videoWidth,sh=v.videoHeight;if(!st){src=await nativePick(facing);if(!src)return;sw=src.naturalWidth;sh=src.naturalHeight}
+    const w=960,h=Math.round(w*(sh||720)/(sw||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(src,0,0,w,h);
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
     x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-66,w,66);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
     x.font='600 22px "IBM Plex Sans Arabic", sans-serif';x.fillText(label,w-14,h-38);
@@ -752,13 +755,15 @@ async function checkScreen(kind){
   <button class="btn" id="snap" disabled>📸 صوّر وسجّل ${kind}</button>
   ${kind==='دخول'?`<div class="seg" style="margin-top:12px">${['صباحي','مسائي'].map(s=>`<button class="${shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div><button class="btn sec" onclick="logout()">مش أنا – خروج</button>`:''}</div>`;
   let stream=null,pos=null;
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});$('#v').srcObject=stream}catch(e){$('#st').textContent='لازم تسمح للتطبيق بالكاميرا عشان تسجل حضورك';return}
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});$('#v').srcObject=stream}catch(e){stream=null;$('#v').style.display='none';$('#snap').textContent='📷 افتح الكاميرا وصوّر نفسك'}
   pos=await getPos();$('#st').textContent=pos?`الموقع اتحدد (دقة ${Math.round(pos.acc)} متر)`:'الموقع مش متاح، هيتسجل الحضور بدون موقع وهيظهر للمدير';
   $('#snap').disabled=false;
   const stop=()=>stream&&stream.getTracks().forEach(t=>t.stop());
   window.addEventListener('hashchange',stop,{once:true});
-  $('#snap').onclick=()=>act($('#snap'),async()=>{const v=$('#v'),c=$('#cv');const w=480,h=Math.round(w*(v.videoHeight||640)/(v.videoWidth||480));c.width=w;c.height=h;
-    const x=c.getContext('2d');x.save();x.translate(w,0);x.scale(-1,1);x.drawImage(v,0,0,w,h);x.restore();
+  $('#snap').onclick=()=>act($('#snap'),async()=>{const v=$('#v'),c=$('#cv');let src=v,sw=v.videoWidth,sh=v.videoHeight;
+    if(!stream){src=await nativePick('user');if(!src)return;sw=src.naturalWidth;sh=src.naturalHeight}
+    const w=480,h=Math.round(w*(sh||640)/(sw||480));c.width=w;c.height=h;
+    const x=c.getContext('2d');if(stream){x.save();x.translate(w,0);x.scale(-1,1);x.drawImage(src,0,0,w,h);x.restore()}else x.drawImage(src,0,0,w,h);
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
     x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-62,w,62);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
     x.font='600 17px "IBM Plex Sans Arabic", sans-serif';x.fillText(`${S.b.me.name} · ${kind} · وردية ${S.b.me.shift}`,w-12,h-36);
