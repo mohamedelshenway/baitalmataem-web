@@ -148,7 +148,7 @@ async function route(){
 }
 
 // ---------- home ----------
-function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.use7>0&&i.qty/i.use7<=2))}
+function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.use7>0&&i.qty/i.use7<=1))}
 // ---------- permissions ----------
 const KITCHEN=[['receive','📦','استلام','فاتورة المورد'],['prep','🍲','تحضير','صوص أو تتبيلة'],['issue','🥩','المستخدم اليومي','اللي اشتغلت بيه'],['waste','🗑️','هدر','بالكمية والسبب'],['count','📋','جرد','آخر الوردية'],['req','🛒','نواقص','اطلب اللي ناقص'],['yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد']];
 const CASHIER=[['shift','💵','فتح وتقفيل الوردية','الدرج والمبيعات']];
@@ -167,7 +167,7 @@ function home(){
   $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
-  ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>تنبيه نواقص (${low.length})</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
+  ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>هيخلص خلال يوم (${low.length}) – اطلب دلوقتي</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}${i.use7>0?` · بيخلص في اليوم <span class="num">${n2(i.use7)}</span>`:''}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
@@ -515,7 +515,7 @@ async function decide(id,st){await act(null,async()=>{await T('lc_decide',{p_id:
 function stock(){
   let low=false,q='';
   const draw=()=>{const L=S.b.items.filter(i=>(!q||i.name.includes(q))&&(!low||lowItems().includes(i)));
-    $('#sl').innerHTML=L.map(i=>{const d=i.use7>0?i.qty/i.use7:null;const st=i.qty<=0?['p-bad','خلص']:(i.min!=null&&i.qty<=i.min)||(d!=null&&d<=2)?['p-warn','قرّب يخلص']:null;
+    $('#sl').innerHTML=L.map(i=>{const d=i.use7>0?i.qty/i.use7:null;const st=i.qty<=0?['p-bad','خلص']:(i.min!=null&&i.qty<=i.min)||(d!=null&&d<=1)?['p-warn','هيخلص بكرة']:null;
       return `<div class="li"><div class="t"><b>${esc(i.name)}</b><small>${i.min!=null?`الحد الأدنى ${n2(i.min)} · `:''}${d!=null?`يكفي ${n0(d)} يوم · `:''}${i.cost?`${n2(i.cost)} ريال/${esc(i.unit)}`:'بدون سعر'}</small></div><span class="num"><b>${n2(i.qty)}</b></span> <span class="muted">${esc(i.unit)}</span>${st?`<span class="pill ${st[0]}">${st[1]}</span>`:''}</div>`}).join('')||'<div class="muted">مفيش</div>'};
   const val=S.b.items.reduce((a,i)=>a+(i.qty>0?i.qty*(i.cost||0):0),0);
   $('#app').innerHTML=`${head('المخزون',`قيمة المخزون التقريبية <span class="num">${n0(val)}</span> ريال`)}
@@ -614,9 +614,9 @@ function drawReport(x,e,lab){
   const html=`
   <div class="card"><h2>استهلاك المخزون</h2>
    ${kgOnly.length?`<p class="muted" style="margin-top:0">إجمالي الكيلوهات اللي اتصرفت: <b class="num">${n2(kgOnly.reduce((a,u)=>a+ +u.used,0))}</b> كجم</p>`:''}
-   <div style="overflow-x:auto"><table class="pl" style="min-width:520px"><tr class="muted"><td>الخامة</td><td>اتصرف</td><td>في التحضير</td><td>هدر</td><td>عجز جرد</td><td>التكلفة</td></tr>
-   ${U.map(u=>`<tr><td>${esc(u.name)}</td><td class="num">${n2(u.used)} ${esc(u.unit)}</td><td class="num">${+u.in_recipes?n2(u.in_recipes):'—'}</td><td class="num">${+u.wasted?n2(u.wasted):'—'}</td><td class="num" style="color:${+u.short>0?'var(--bad)':'inherit'}">${+u.short?n2(u.short):'—'}</td><td class="num">${n0(u.cost)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">مفيش صرف في الفترة دي</td></tr>'}
-   ${U.length?`<tr class="tot"><td>الإجمالي</td><td></td><td></td><td></td><td></td><td class="num">${n0(ut('cost'))}</td></tr>`:''}</table></div></div>
+   <div style="overflow-x:auto"><table class="pl" style="min-width:520px"><tr class="muted"><td>الخامة</td><td>سعر الوحدة</td><td>اتصرف</td><td>في التحضير</td><td>هدر</td><td>عجز جرد</td><td>التكلفة</td></tr>
+   ${U.map(u=>{const q=+u.used+ +u.wasted+ +u.short;return `<tr><td>${esc(u.name)}</td><td class="num">${q>0&&+u.cost?n2(u.cost/q):'—'}</td><td class="num">${n2(u.used)} ${esc(u.unit)}</td><td class="num">${+u.in_recipes?n2(u.in_recipes):'—'}</td><td class="num">${+u.wasted?n2(u.wasted):'—'}</td><td class="num" style="color:${+u.short>0?'var(--bad)':'inherit'}">${+u.short?n2(u.short):'—'}</td><td class="num">${n0(u.cost)}</td></tr>`}).join('')||'<tr><td colspan="7" class="muted">مفيش صرف في الفترة دي</td></tr>'}
+   ${U.length?`<tr class="tot"><td>الإجمالي</td><td></td><td></td><td></td><td></td><td></td><td class="num">${n0(ut('cost'))}</td></tr>`:''}</table></div></div>
   <div class="card"><h2>المشتريات (البضاعة اللي دخلت)</h2><table class="pl">
    <tr><td>إجمالي الفواتير</td><td class="num">${n0(e.purchases.total)}</td></tr><tr><td>منها كاش</td><td class="num">${n0(e.purchases.cash)}</td></tr><tr><td>منها آجل</td><td class="num">${n0(e.purchases.credit)}</td></tr></table>
    ${e.purchases.invoices.length?`<div class="list" style="margin-top:8px">${e.purchases.invoices.map(i=>`<div class="li"><div class="t"><b>${esc(i.supplier)}</b><small>فاتورة ${esc(i.invoice||'-')} · ${i.pay} · ${esc(i.by||'')} · ${esc(i.shift)}</small></div><b class="num">${n0(i.total)}</b></div>`).join('')}</div>`:''}</div>
