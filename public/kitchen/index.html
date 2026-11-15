@@ -126,7 +126,8 @@ async function login(){
   app.innerHTML=`<div style="padding-top:8vh">${head('دخول','بيت المطاعم · نظام المطبخ',false)}<div class="card"><label for="nm">الاسم</label><select id="nm"><option value="">جاري التحميل…</option></select>
   <label for="pin">الرقم السري</label><input id="pin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
   <button class="btn" id="lg">دخول</button></div></div>`;
-  try{const ns=await rpc('lc_staff_names');$('#nm').innerHTML='<option value="">اختار اسمك</option>'+ns.map(x=>`<option>${esc(x.name)}</option>`).join('')}catch(e){toast(e.message,true)}
+  try{const ns=await rpc('lc_staff_names');$('#nm').innerHTML='<option value="">اختار اسمك</option>'+ns.map(x=>`<option>${esc(x.name)}</option>`).join('');
+    const u=new URLSearchParams(location.search).get('u');if(u&&ns.some(x=>x.name===u)){$('#nm').value=u;$('#pin').focus()}}catch(e){toast(e.message,true)}
   const doit=()=>act($('#lg'),async()=>{const r=await rpc('lc_login',{p_name:$('#nm').value,p_pin:$('#pin').value});S.token=r.token;try{localStorage.setItem('lc_token',r.token)}catch(e){};await boot();go('');route()});
   $('#lg').onclick=doit;$('#pin').onkeydown=e=>{if(e.key==='Enter')doit()};
 }
