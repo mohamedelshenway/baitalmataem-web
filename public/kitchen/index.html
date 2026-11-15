@@ -559,7 +559,7 @@ function drawReport(x,e,lab){
   <div class="card"><h2>الاشتراكات</h2><table class="pl"><tr><td>اشتراكات جديدة وتجديد</td><td class="num">${e.subs.count}</td></tr><tr><td>فلوس اشتراكات اتدفعت</td><td class="num">${n0(e.subs.collected)}</td></tr><tr><td>وجبات اشتراكات اتسلمت</td><td class="num">${e.subs.meals}</td></tr><tr><td>قيمة الوجبات اللي اتسلمت (داخلة في المبيعات)</td><td class="num">${n0(x.subs_earned)}</td></tr></table></div>
   <div class="card"><h2>المخزون دلوقتي</h2><div class="big num">${n0(e.stock_value)} ريال</div><div class="muted">قيمة الخامات الموجودة بالتكلفة</div></div>
   ${e.preps.length?`<div class="card"><h2>التجهيزات</h2><table class="pl">${e.preps.map(p=>`<tr><td>${esc(p.name)} · <span class="num">${n2(p.qty)}</span> ${esc(p.unit)}</td><td class="num">${n0(p.cost)}</td></tr>`).join('')}</table></div>`:''}
-  ${e.staff.length?`<div class="card"><h2>الحضور</h2><table class="pl">${e.staff.map(a=>`<tr><td>${esc(a.name)}</td><td>دخول ${a.ins} · انصراف ${a.outs}</td></tr>`).join('')}</table></div>`:''}
+  ${e.staff.length?`<div class="card"><h2>الحضور وساعات العمل</h2><table class="pl">${e.staff.map(a=>`<tr><td>${esc(a.name)}</td><td><b class="num">${a.hours!=null?n2(a.hours):'0'}</b> ساعة · دخول ${a.ins} · انصراف ${a.outs}${a.open_shifts?` · <span style="color:var(--bad)">${a.open_shifts} وردية من غير انصراف</span>`:''}</td></tr>`).join('')}</table></div>`:''}
   <div class="row noprint"><button class="btn sec" id="shr">مشاركة واتساب</button><button class="btn sec" id="prt">حفظ PDF / طباعة</button></div>`;
   $('#rp').insertAdjacentHTML('beforeend',html);
   const txt=[`تقرير ${S.b.branch.name} · ${lab} (${x.from}${x.to!==x.from?' → '+x.to:''})`,
