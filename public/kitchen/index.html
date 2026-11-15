@@ -138,6 +138,7 @@ async function route(){
   if(!S.token)return login();
   if(!S.b){try{await boot()}catch(e){return}}
   const h=location.hash.slice(1); S.lines=[];
+  if(!S.b.me.profile_done){if(h!=='')go('');return profileScreen()}
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
@@ -176,6 +177,23 @@ function home(){
   <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
   <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
   <button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;
+}
+// ---------- first login: employee data ----------
+function profileScreen(){
+  $('#app').innerHTML=`${head('بياناتك','أول مرة بس · اكتبها كاملة علشان تبدأ',false)}
+  <div class="card"><p class="muted" style="margin-top:0">أهلًا يا ${esc(S.b.me.name)}. البيانات دي بتوصل للإدارة بس، ومحدش من زمايلك بيشوفها.</p>
+   <label for="p_ph">رقم الجوال</label><input id="p_ph" type="tel" inputmode="tel" dir="ltr" placeholder="05xxxxxxxx" autocomplete="tel">
+   <label for="p_b">تاريخ الميلاد</label><input id="p_b" type="date">
+   <label for="p_a">العنوان (الحي والمدينة)</label><input id="p_a" autocomplete="street-address">
+   <label>الحالة الاجتماعية</label><div class="seg" id="p_m">${['أعزب','متزوج','مطلق','أرمل'].map(m=>`<button data-m="${m}">${m}</button>`).join('')}</div>
+   <label for="p_h">بدأت الشغل هنا من تاريخ</label><input id="p_h" type="date">
+   <label for="p_s">الراتب الشهري (ريال)</label><input id="p_s" type="number" inputmode="decimal">
+   <button class="btn" id="p_ok">حفظ وابدأ</button><button class="btn sec" onclick="logout()">مش أنا – خروج</button></div>`;
+  let m='';$('#p_m').onclick=e=>{const x=e.target.closest('button');if(!x)return;m=x.dataset.m;$('#p_m').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  $('#p_ok').onclick=()=>act($('#p_ok'),async()=>{const g=k=>$('#'+k).value.trim();
+    if(!g('p_ph')||!g('p_b')||!g('p_a')||!m||!g('p_h')||!g('p_s'))throw new Error('كمّل كل البيانات');
+    await T('lc_my_profile_save',{p:{phone:g('p_ph'),birth:g('p_b'),address:g('p_a'),marital:m,hire:g('p_h'),salary:g('p_s')}});
+    S.b.me.profile_done=true;toast('اتحفظ ✓ شكرًا');route()});
 }
 // ---------- cashier shift ----------
 const CF=[['cash','كاش'],['card','شبكة / مدى'],['keeta','كيتا'],['hunger','هنقرستيشن'],['ninja','نينجا'],['other','أخرى'],['discounts','خصومات (للعلم)'],['staff_meals','وجبات موظفين (للعلم)']];
