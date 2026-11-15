@@ -169,6 +169,7 @@ function home(){
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>هيخلص خلال يوم (${low.length}) – اطلب دلوقتي</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}${i.use7>0?` · بيخلص في اليوم <span class="num">${n2(i.use7)}</span>`:''}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
+  ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
@@ -854,8 +855,8 @@ async function invoices(){
 // ---------- subscriptions ----------
 const wa=p=>{if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('05'))d='966'+d.slice(1);else if(d.startsWith('5')&&d.length===9)d='966'+d;return `https://wa.me/${d}`};
 async function subs(tab){
-  tab=tab||'deliver';
-  const tabs=[['deliver','تسليم اليوم'],['new','اشتراك / تجديد'],['follow','قرّب يخلص'],['pk','الباقات'],['st','الأرقام']];
+  tab=tab||S.subTab||'deliver';S.subTab=null;const mg=S.b.me.role!=='chef';
+  const tabs=[['deliver','تسليم اليوم'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
   $('#app').innerHTML=`${head('الاشتراكات',`وردية ${S.b.me.shift}`)}<div class="chips" style="margin-bottom:12px">${tabs.map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="subs('${k}')">${l}</button>`).join('')}</div><div id="sb"><div class="muted">جاري التحميل…</div></div>`;
   if(tab==='st')return subStats();
   const L=await T('lc_sub_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
@@ -884,9 +885,17 @@ async function subs(tab){
     $('#sv').onclick=()=>act($('#sv'),async()=>{const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
       toast(r.renewal?'التجديد اتسجل ✓':'الاشتراك اتسجل ✓');subs('deliver')});
   }
+  if(tab==='list'){
+    let q='';const draw=()=>{const R=L.active.filter(a=>!q||a.name.includes(q)||(a.phone||'').includes(q));
+      $('#sl').innerHTML=`<div style="overflow-x:auto"><table class="pl" style="min-width:600px"><tr class="muted"><td>العميل</td><td>نوع الاشتراك</td><td>الدفع</td><td>تاريخ التجديد</td><td>تاريخ الانتهاء</td><td>فاضل</td></tr>
+      ${R.map(a=>{const dl=Math.round((new Date(a.end)-new Date(new Date().toISOString().slice(0,10)))/864e5);return `<tr><td><b>${esc(a.name)}</b><br><small class="muted" dir="ltr">${esc(a.phone||'')}</small></td><td>${esc(a.package)}</td><td>${esc(a.pay||'—')}</td><td class="num">${a.start}${a.renewal?' <small class="muted">تجديد</small>':''}</td><td class="num" style="color:${dl<=3?'var(--bad)':'inherit'}">${a.end}</td><td class="num">${a.remaining} وجبة${a.status!=='نشط'?' · '+a.status:''}</td></tr>`}).join('')||'<tr><td colspan="6" class="muted">مفيش مشتركين</td></tr>'}</table></div>`};
+    box.innerHTML=`<div class="card"><input id="q" placeholder="دوّر بالاسم أو الجوال"><p class="muted"><b class="num">${L.active.length}</b> مشترك نشط</p><div id="sl"></div></div>`;
+    $('#q').oninput=()=>{q=$('#q').value.trim();draw()};draw();
+  }
   if(tab==='follow'){
-    const row=(a,extra)=>`<div class="li"><div class="t"><b>${esc(a.name)}</b><small>${esc(a.package)} · ${extra}</small></div>${a.phone?`<a class="btn sm sec" href="${wa(a.phone)}" target="_blank" rel="noopener">واتساب</a>`:''}</div>`;
-    box.innerHTML=`<div class="card"><h2>قرّب يخلص (كلّمه يجدد)</h2><div class="list">${L.expiring.map(a=>row(a,`فاضل ${a.remaining} وجبة · لحد ${a.end}`)).join('')||'<div class="muted">مفيش</div>'}</div></div>
+    const msg=a=>`أهلًا ${a.name} 🌿\nاشتراكك في لو كالوري (${a.package}) بيخلص يوم ${a.end}.\nجهزنالك عرض خاص لو جددت دلوقتي، تحب أبعتلك التفاصيل؟`;
+    const row=(a,extra)=>`<div class="li"><div class="t"><b>${esc(a.name)}</b><small>${esc(a.package)} · ${extra}</small></div>${a.phone?`<a class="btn sm" href="${wa(a.phone)}?text=${encodeURIComponent(msg(a))}" target="_blank" rel="noopener">اعرض عليه تجديد</a>`:''}</div>`;
+    box.innerHTML=`<div class="card"><h2>قرّب يخلص – اعرض عليهم تجديد</h2><p class="muted" style="margin-top:0">الزرار بيفتح واتساب برسالة جاهزة، عدّل العرض قبل ما تبعت.</p><div class="list">${L.expiring.map(a=>row(a,`فاضل ${a.remaining} وجبة · بيخلص ${a.end}${a.days_left!=null?` (بعد ${a.days_left} يوم)`:''}${a.pay?' · '+esc(a.pay):''}`)).join('')||'<div class="muted">مفيش</div>'}</div></div>
     <div class="card"><h2>خلص وما جددش (آخر 30 يوم)</h2><div class="list">${L.ended.map(a=>row(a,`خلص ${a.end}`)).join('')||'<div class="muted">مفيش</div>'}</div></div>
     <div class="card"><h2>إيقاف مؤقت / إلغاء</h2><div class="list">${L.active.map(a=>`<div class="li"><div class="t"><b>${esc(a.name)}</b><small>${esc(a.package)} · ${a.status}</small></div>${a.status==='نشط'?`<button class="btn sm sec" onclick="subStatus(${a.id},'موقوف')">إيقاف</button>`:`<button class="btn sm" onclick="subResume(${a.id})">تشغيل</button>`}</div>`).join('')||'<div class="muted">مفيش</div>'}</div></div>`;
   }
