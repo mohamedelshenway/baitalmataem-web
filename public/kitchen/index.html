@@ -52,6 +52,11 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--brand2);outline-
 .seg button{flex:1;border:0;background:transparent;border-radius:9px;padding:9px;font-weight:600;color:var(--brand)}
 .seg button.on{background:var(--brand);color:#fff}
 .list{display:flex;flex-direction:column}
+.steps{display:flex;flex-direction:column;gap:10px}
+.step{display:flex;align-items:center;gap:12px;text-align:start;background:var(--card,#fff);border:1px solid var(--line);border-radius:18px;padding:16px 14px;font:inherit;color:inherit;cursor:pointer}
+.step .no{width:30px;height:30px;border-radius:50%;background:var(--pri,#1f5e3a);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:0 0 30px}
+.step .ic{font-size:30px}.step b{display:block;font-size:18px}.step small{color:var(--muted);font-size:13px}
+.hint{background:#f1f6f2;border-radius:12px;padding:8px 10px;font-size:13px;margin-top:8px}
 .li{display:flex;gap:10px;align-items:center;padding:11px 2px;border-bottom:1px solid var(--line)}
 .li:last-child{border-bottom:0}
 .li .t{flex:1;min-width:0}
@@ -135,8 +140,8 @@ async function route(){
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
-  const mgrOnly=['invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep,count,req:requests,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
+  const mgrOnly=['items','invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -151,14 +156,17 @@ function home(){
   <div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>تنبيه نواقص (${low.length})</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
   ${b.open_requests?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
+  <div class="steps">
+   <button class="step" onclick="go('receive')"><span class="no">1</span><span class="ic">📦</span><span><b>استلام</b><small>البضاعة اللي جت من المورد + صورة الفاتورة والميزان</small></span></button>
+   <button class="step" onclick="go('prep')"><span class="no">2</span><span class="ic">🍲</span><span><b>تحضير</b><small>عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع</small></span></button>
+   <button class="step" onclick="go('issue')"><span class="no">3</span><span class="ic">🥩</span><span><b>المستخدم اليومي</b><small>اللي اشتغلت بيه النهارده من الخامات والتحضيرات</small></span></button>
+  </div>
+  <h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2>
   <div class="grid">
-   ${T('issue','🥩','صرف خامات','قبل ما تشتغل',1)}
-   ${T('receive','📦','استلام بضاعة','فاتورة مورد')}
    ${T('waste','🗑️','هدر','بالكمية والسبب')}
-   ${T('yieldv','⚖️','فاقد وتسوية','أوزان قبل وبعد')}
-   ${T('prep','🍲','تجهيزات','اللي اتجهز النهارده')}
    ${T('count','📋','جرد','آخر الوردية')}
    ${T('req','🛒','نواقص','اطلب اللي ناقص')}
+   ${T('yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد')}
   </div>
   ${m?`<h2 style="font-size:15px;margin:18px 2px 10px">المدير</h2><div class="grid">
    ${T('subs','🥗','الاشتراكات','تسليم اليوم والتجديد',1)}
@@ -167,7 +175,8 @@ function home(){
    ${T('cash','🧾','الخزنة','كاش ومورّدين')}
    ${T('invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان')}
    ${T('report','📊','تقرير آخر اليوم','كيلوهات وتكلفة وكاش وربح')}
-   ${T('admin','⚙️','الإعدادات','خامات وموظفين')}
+   ${T('items','🧾','الأصناف والريسبي','الأسعار والفاقد والتكلفة',1)}
+   ${T('admin','⚙️','الإعدادات','موظفين وفروع ومواعيد')}
    ${T('stats','📈','التحليلات','أرقام ورسوم لكل حاجة',1)}
    ${T('att','📸','الحضور','صور الدخول والانصراف')}
    ${T('log','🕓','السجل','كل حركة باسم صاحبها')}
@@ -198,6 +207,11 @@ function scan(box,onCode,keep){
   box.id=box.id||'scanbox';const s=new Html5Qrcode(box.id);keep&&keep(s);
   s.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:120}},code=>{s.stop().catch(()=>{});box.innerHTML='';onCode(code)},()=>{}).catch(()=>toast('اسمح للتطبيق باستخدام الكاميرا',true));
 }
+
+const fq=(q,u)=>(u==='كجم'||u==='لتر')&&q>0&&q<1?`<span class="num">${n0(q*1000)}</span> ${u==='كجم'?'جم':'مل'}`:`<span class="num">${n2(q)}</span> ${esc(u)}`;
+// ---------- yields ----------
+function yieldHint(i,q){if(!q||!(i.cy||i.ky))return '';const u=i.unit;
+  return `<div class="hint">${i.cy?`بعد التنظيف ≈ <b class="num">${n2(q*i.cy)}</b> ${esc(u)}`:''}${i.cy&&i.ky?' · ':''}${i.ky?`بعد التسوية ≈ <b class="num">${n2(q*i.ky)}</b> ${esc(u)}`:''}</div>`}
 
 // ---------- live camera (back) ----------
 function snapCam(title,label){return new Promise(async res=>{
@@ -233,11 +247,12 @@ function addLine(withPrice){
   pickItem(i=>{
     const m=document.createElement('div');m.className='modal';
     m.innerHTML=`<div class="sheet"><h2 style="margin:0 0 4px">${esc(i.name)}</h2><div class="muted">${esc(i.unit)}${i.qty!=null?` · عندك <span class="num">${n2(i.qty)}</span>`:''}${i.cost?` · التكلفة <span class="num">${n2(i.cost)}</span> للـ${esc(i.unit)}`:''}</div>
-    <label for="lq">الكمية (${esc(i.unit)})</label><input id="lq" type="number" inputmode="decimal" step="any">
+    <label for="lq">الكمية (${esc(i.unit)})</label><input id="lq" type="number" inputmode="decimal" step="any"><div id="yh"></div>
     ${withPrice?`<label for="lp">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="lp" type="number" inputmode="decimal" step="any" value="${i.last??i.price??''}">
     <label>صورة الصنف على الميزان (إجباري)</label><div class="row" style="align-items:center"><div id="ph" class="muted" style="flex:1">لسه متصورش</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر على الميزان</button></div>`:''}
     <button class="btn" id="ok">إضافة</button><button class="btn sec" id="no">إلغاء</button></div>`;
     document.body.appendChild(m);m.querySelector('#lq').focus();
+    m.querySelector('#lq').oninput=()=>{m.querySelector('#yh').innerHTML=yieldHint(i,+m.querySelector('#lq').value)};
     m.querySelector('#no').onclick=()=>m.remove();let photo=null;
     if(withPrice)m.querySelector('#cam').onclick=async()=>{m.style.display='none';const q=m.querySelector('#lq').value;
       const img=await snapCam(`${i.name} على الميزان`,`استلام · ${i.name}${q?` · ${q} ${i.unit}`:''}`);m.style.display='';
@@ -246,12 +261,12 @@ function addLine(withPrice){
       if(!(q>0))return toast('اكتب الكمية',true); if(withPrice&&!(m.querySelector('#lp').value!==''&&p>=0))return toast('اكتب السعر',true);
       if(withPrice&&!photo)return toast('صوّر الصنف على الميزان الأول',true);
       S.lines.push(withPrice?{code:i.code,qty:q,price:p,photo}:{code:i.code,qty:q,price:p});m.remove();redrawLines(withPrice)};
-  });
+  },withPrice?(x=>x.kind!=='prep'):null);
 }
 
 // ---------- issue ----------
 function issue(){
-  $('#app').innerHTML=`${head('صرف خامات','اكتب اللي هتشتغل بيه قبل ما تبدأ')}
+  $('#app').innerHTML=`${head('المستخدم اليومي','اكتب اللي اشتغلت بيه من الخامات والتحضيرات')}
   <div class="card"><div class="seg" id="kind"><button class="on" data-k="issue">صرف للمطبخ</button><button data-k="return">إرجاع للمخزن</button></div>
   <div id="lines" style="margin-top:10px">${linesUI(false)}</div><button class="btn sec" onclick="addLine(false)">+ ضيف خامة</button>
   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">حفظ</button></div>`;
@@ -320,16 +335,77 @@ function yieldScreen(){
 }
 
 // ---------- prep ----------
-async function prep(){
-  const P=S.b.preps;
-  $('#app').innerHTML=`${head('تجهيزات','سجّل اللي اتجهز النهارده')}
-  <div class="card"><label for="p">التحضيرة</label><select id="p"><option value="">اختار</option>${P.map(p=>`<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('')}</select>
-  <label for="q">الكمية اللي اتجهزت (جرام)</label><input id="q" type="number" inputmode="decimal">
-  <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">حفظ</button></div>
-  <div class="card"><h2>تجهيزات النهارده</h2><div class="list" id="tl"><div class="muted">جاري التحميل…</div></div></div>`;
-  $('#sv').onclick=()=>act($('#sv'),async()=>{if(!$('#p').value)throw new Error('اختار التحضيرة');
-    await T('lc_prep',{p_prep:$('#p').value,p_qty_g:+$('#q').value,p_note:$('#nt').value||null});toast('اتسجل ✓');prep()});
-  try{const d=await T('lc_today_safe');$('#tl').innerHTML=d.preps.map(x=>`<div class="li"><div class="t"><b>${esc(x.prep)}</b><small>${esc(x.by)} · ${tm(x.at)} · ${esc(x.shift)}</small></div><span class="num">${n0(x.qty)} جم</span></div>`).join('')||'<div class="muted">لسه مفيش</div>'}catch(e){}
+async function make(){
+  $('#app').innerHTML=`${head('تحضير','اختار الريسبي، وزّن المكونات، واكتب اللي طلع')}<div id="mk"><div class="card muted">جاري التحميل…</div></div>`;
+  const R=await T('lc_recipes').catch(e=>{toast(e.message,true);return null});if(!R)return;
+  if(!R.length){$('#mk').innerHTML=`<div class="card muted">مفيش ريسبي متسجلة لسه. المدير يضيفها من «الأصناف والريسبي».</div>`;return}
+  let r=null,b=1;
+  const draw=()=>{
+    $('#mk').innerHTML=`<div class="card"><label for="rs">الريسبي</label><select id="rs"><option value="">اختار</option>${R.map(x=>`<option value="${esc(x.code)}" ${r&&r.code===x.code?'selected':''}>${esc(x.name)} · ${n2(x.out)} ${esc(x.unit)}</option>`).join('')}</select>
+    ${r?`<label for="bt">عدد الخلطات</label><div class="seg" id="bq">${[0.5,1,2,3].map(v=>`<button data-v="${v}" class="${b===v?'on':''}">${v===0.5?'نص':v}</button>`).join('')}</div>
+     <div class="hint" style="margin-top:10px"><b>وزّن المكونات دي:</b><div class="list">${r.lines.map(l=>`<div class="li" style="padding:6px 2px"><div class="t">${esc(l.name)}</div><b>${fq(l.qty*b,l.unit)}</b></div>`).join('')}</div></div>
+     <label for="ot">الوزن اللي طلع بعد التحضير (${esc(r.unit)})</label><input id="ot" type="number" inputmode="decimal" step="any" value="${+(r.out*b).toFixed(3)}">
+     <p class="muted" style="margin:4px 0 0">المفروض حوالي ${n2(r.out*b)} ${esc(r.unit)}. وزّن واكتب الرقم الحقيقي.</p>
+     <button class="btn" id="sv">حفظ التحضير</button>`:''}</div>
+    <div class="card"><h2>تحضيرات النهارده</h2><div class="list" id="tl"><div class="muted">جاري التحميل…</div></div></div>`;
+    $('#rs').onchange=()=>{r=R.find(x=>x.code===$('#rs').value)||null;b=1;draw()};
+    if(r){$('#bq').onclick=e=>{const x=e.target.closest('button');if(!x)return;b=+x.dataset.v;draw()};
+      $('#sv').onclick=()=>act($('#sv'),async()=>{const o=+$('#ot').value;if(!(o>0))throw new Error('اكتب الوزن اللي طلع');
+        const x=await T('lc_make',{p_code:r.code,p_batches:b,p_out:o,p_note:null});await boot();
+        toast(`اتسجل ✓ ${n2(x.out)} ${x.unit} ${r.name}${x.uc?` · تكلفة الكيلو ${n2(x.uc)}`:''}`);
+        if(x.short&&x.short.length)setTimeout(()=>toast('خامات مش متسجل استلامها: '+x.short.map(s=>s.item).join('، '),true),2700);
+        r=null;draw()})}
+    T('lc_productions').then(P=>{$('#tl').innerHTML=P.map(p=>`<div class="li"><div class="t"><b>${esc(p.name)}</b><small>${esc(p.by||'')} · ${tm(p.at)} · ${esc(p.shift)} · ${n2(p.batches)} خلطة${p.std?` · المفروض ${n2(p.std)}`:''}</small></div><span class="num">${n2(p.out)} ${esc(p.unit)}</span>${p.cost!=null?`<small class="num muted">${n0(p.cost)} ر</small>`:''}</div>`).join('')||'<div class="muted">لسه مفيش</div>'}).catch(()=>{});
+  };
+  draw();
+}
+
+// ---------- items & recipes (manager) ----------
+async function itemsMgr(tab){
+  tab=tab||'raw';
+  $('#app').innerHTML=`${head('الأصناف والريسبي','الأسعار والفاقد وتكلفة كل تحضيرة')}<div class="chips" style="margin-bottom:12px">${[['raw','الخامات'],['rec','الريسبي والصوصات']].map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="itemsMgr('${k}')">${l}</button>`).join('')}</div><div id="im"></div>`;
+  if(tab==='raw'){
+    let q='',nop=false;
+    const draw=()=>{const L=S.b.items.filter(i=>i.kind!=='prep'&&(!q||i.name.includes(q))&&(!nop||!i.cost));
+      $('#il').innerHTML=L.map(i=>`<div class="li" onclick="editItem(item('${esc(i.code)}'))" style="cursor:pointer"><div class="t"><b>${esc(i.name)}</b><small>${i.cost?`${n2(i.cost)} ريال/${esc(i.unit)}`:'<span style="color:var(--bad)">بدون سعر</span>'}${i.cy?` · صافي ${pc(i.cy)} = ${n2(i.cost/i.cy)} للصافي`:''}${i.ky?` · بعد التسوية ${pc(i.ky)} = ${n2(i.cost/i.ky)}`:''}</small></div><span class="muted">✎</span></div>`).join('')||'<div class="muted">مفيش</div>'};
+    const np=S.b.items.filter(i=>i.kind!=='prep'&&!i.cost).length;
+    $('#im').innerHTML=`<div class="card"><p class="muted" style="margin-top:0">دوس على أي خامة واكتب سعرها، ووزنها قبل وبعد التنظيف والتسوية مرة واحدة، والسيستم يحسب الباقي لوحده.</p>
+     <input id="q" placeholder="دوّر على خامة"><div class="seg" id="f" style="margin-top:8px"><button class="on">الكل</button><button>بدون سعر (${np})</button></div><div class="list" id="il" style="margin-top:6px"></div>
+     <button class="btn sec" onclick="editItem(null)">+ خامة جديدة</button></div>`;
+    $('#q').oninput=()=>{q=$('#q').value.trim();draw()};
+    $('#f').onclick=e=>{const b=e.target.closest('button');if(!b)return;nop=b.textContent!=='الكل';$('#f').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+    draw();return;
+  }
+  const R=await T('lc_recipes').catch(e=>{toast(e.message,true);return[]});S.recipes=R;
+  $('#im').innerHTML=`<div class="card"><p class="muted" style="margin-top:0">اكتب الريسبي مرة واحدة: المكونات بكمياتها الخام، والوزن اللي بيطلع بعد التحضير. بعدها الشيف يختارها ويكتب اللي طلع، والسيستم يخصم كل مكون لوحده ويحسب تكلفة الكيلو.</p>
+   <div class="list">${R.map((r,k)=>`<div class="li" onclick="editRecipe(S.recipes[${k}])" style="cursor:pointer"><div class="t"><b>${esc(r.name)}</b><small>${r.lines.length} مكون · بتطلع ${n2(r.out)} ${esc(r.unit)} · تكلفة الخلطة ${n0(r.cost)} ريال${r.missing?` · <span style="color:var(--bad)">${r.missing} مكون بدون سعر</span>`:''}</small></div><b class="num">${r.cost?n2(r.cost/r.out):'—'}</b><small class="muted">ر/${esc(r.unit)}</small></div>`).join('')||'<div class="muted">لسه مفيش ريسبي</div>'}</div>
+   <button class="btn" onclick="editRecipe(null)">+ ريسبي جديدة</button></div>`;
+}
+function editRecipe(r){
+  const L=r?r.lines.map(l=>({code:l.code,qty:l.qty})):[];
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet"><h2 style="margin:0">${r?esc(r.name):'ريسبي جديدة'}</h2>
+   <label for="r_n">اسم التحضيرة</label><input id="r_n" value="${esc(r?.name||'')}" placeholder="مثلًا: صلصة طماطم">
+   <div class="row"><div><label for="r_o">الوزن بعد التحضير</label><input id="r_o" type="number" inputmode="decimal" step="any" value="${r?.out??''}" placeholder="مثلًا 10"></div>
+   <div><label for="r_u">الوحدة</label><select id="r_u">${['كجم','لتر','قطعة'].map(u=>`<option ${r?.unit===u?'selected':''}>${u}</option>`).join('')}</select></div></div>
+   <label>المكونات (بالوزن الخام قبل التحضير)</label><div class="list" id="r_l"></div>
+   <button class="btn sec" id="r_a">+ ضيف مكون</button><div id="r_t" class="hint"></div>
+   <button class="btn" id="r_ok">حفظ الريسبي</button><button class="btn sec" id="r_no">إلغاء</button></div>`;
+  document.body.appendChild(m);
+  const tot=()=>{let c=0,miss=[];L.forEach(l=>{const i=item(l.code);if(i.cost)c+=l.qty*i.cost;else miss.push(i.name)});const o=+m.querySelector('#r_o').value;
+    m.querySelector('#r_t').innerHTML=`تكلفة الخلطة: <b class="num">${n2(c)}</b> ريال${o>0?` · تكلفة ال${esc(m.querySelector('#r_u').value)}: <b class="num">${n2(c/o)}</b> ريال`:''}${miss.length?`<br><span style="color:var(--bad)">بدون سعر: ${miss.map(esc).join('، ')}</span>`:''}`};
+  const drawL=()=>{m.querySelector('#r_l').innerHTML=L.map((l,k)=>{const i=item(l.code);return `<div class="li"><div class="t"><b>${esc(i.name)}</b><small>${i.cost?`${n2(i.cost)} ر/${esc(i.unit)} = ${n2(l.qty*i.cost)}`:'بدون سعر'}</small></div><input data-k="${k}" type="number" inputmode="decimal" step="any" value="${l.qty}" style="width:90px;flex:0 0 90px"><span class="muted">${esc(i.unit)}</span><button class="x" data-x="${k}">✕</button></div>`}).join('')||'<div class="muted">لسه مفيش مكونات</div>';tot()};
+  m.querySelector('#r_l').oninput=e=>{const k=e.target.dataset.k;if(k!=null){L[k].qty=+e.target.value;tot()}};
+  m.querySelector('#r_l').onclick=e=>{const k=e.target.dataset.x;if(k!=null){L.splice(+k,1);drawL()}};
+  m.querySelector('#r_o').oninput=tot;m.querySelector('#r_u').onchange=tot;
+  m.querySelector('#r_a').onclick=()=>{m.style.display='none';pickItem(i=>{m.style.display='';if(L.some(l=>l.code===i.code))return toast('المكون موجود بالفعل',true);
+    L.push({code:i.code,qty:0});drawL();const ins=m.querySelectorAll('#r_l input');const last=ins[ins.length-1];last.value='';last.placeholder='الكمية';last.focus()},x=>!r||x.code!==r.code);
+    const obs=new MutationObserver(()=>{if(!document.querySelector('.modal .sheet #res')){m.style.display='';obs.disconnect()}});obs.observe(document.body,{childList:true})};
+  m.querySelector('#r_no').onclick=()=>m.remove();
+  m.querySelector('#r_ok').onclick=()=>act(m.querySelector('#r_ok'),async()=>{
+    await T('lc_save_recipe',{p:{code:r?.code||'',name:m.querySelector('#r_n').value,unit:m.querySelector('#r_u').value,out_qty:m.querySelector('#r_o').value,lines:L.filter(l=>l.qty>0)}});
+    await boot();m.remove();toast('الريسبي اتحفظت ✓');itemsMgr('rec')});
+  drawL();
 }
 
 // ---------- count ----------
@@ -460,16 +536,16 @@ function drawReport(x,e,lab){
   ${x.expenses_by.length?`<div class="card"><h2>المصاريف النثرية</h2><table class="pl">${x.expenses_by.map(i=>line(esc(i.party),i.amount)).join('')}</table></div>`:''}
   ${x.yields.length?`<div class="card"><h2>الفاقد والتسوية</h2><table class="pl">${x.yields.map(y=>`<tr><td>${esc(y.name)} (${y.n} مرة)</td><td>${y.clean?`تنظيف ${pc(y.clean)}`:''}${y.cooked?` · تسوية ${pc(y.cooked)}`:''}${y.std_cook?` · المعيار ${pc(y.std_cook)}`:''}</td></tr>`).join('')}</table></div>`:''}`;
   // ---- full day sections ----
-  const U=e.usage.filter(u=>+u.used||+u.wasted||+u.short);const ut=k=>U.reduce((a,u)=>a+ +u[k],0);
+  const U=e.usage.filter(u=>+u.used||+u.wasted||+u.short||+u.in_recipes);const ut=k=>U.reduce((a,u)=>a+ +u[k],0);
   const kgOnly=U.filter(u=>u.unit==='كجم');
   const ins=Object.fromEntries(e.cash.in.map(i=>[i.kind,+i.amount]));
   const cashIn=e.cash.in.reduce((a,i)=>a+ +i.amount,0),cashOut=e.cash.out.reduce((a,i)=>a+ +i.amount,0);
   const html=`
   <div class="card"><h2>استهلاك المخزون</h2>
    ${kgOnly.length?`<p class="muted" style="margin-top:0">إجمالي الكيلوهات اللي اتصرفت: <b class="num">${n2(kgOnly.reduce((a,u)=>a+ +u.used,0))}</b> كجم</p>`:''}
-   <div style="overflow-x:auto"><table class="pl" style="min-width:520px"><tr class="muted"><td>الخامة</td><td>اتصرف</td><td>هدر</td><td>عجز جرد</td><td>التكلفة</td></tr>
-   ${U.map(u=>`<tr><td>${esc(u.name)}</td><td class="num">${n2(u.used)} ${esc(u.unit)}</td><td class="num">${+u.wasted?n2(u.wasted):'—'}</td><td class="num" style="color:${+u.short>0?'var(--bad)':'inherit'}">${+u.short?n2(u.short):'—'}</td><td class="num">${n0(u.cost)}</td></tr>`).join('')||'<tr><td colspan="5" class="muted">مفيش صرف في الفترة دي</td></tr>'}
-   ${U.length?`<tr class="tot"><td>الإجمالي</td><td></td><td></td><td></td><td class="num">${n0(ut('cost'))}</td></tr>`:''}</table></div></div>
+   <div style="overflow-x:auto"><table class="pl" style="min-width:520px"><tr class="muted"><td>الخامة</td><td>اتصرف</td><td>في التحضير</td><td>هدر</td><td>عجز جرد</td><td>التكلفة</td></tr>
+   ${U.map(u=>`<tr><td>${esc(u.name)}</td><td class="num">${n2(u.used)} ${esc(u.unit)}</td><td class="num">${+u.in_recipes?n2(u.in_recipes):'—'}</td><td class="num">${+u.wasted?n2(u.wasted):'—'}</td><td class="num" style="color:${+u.short>0?'var(--bad)':'inherit'}">${+u.short?n2(u.short):'—'}</td><td class="num">${n0(u.cost)}</td></tr>`).join('')||'<tr><td colspan="6" class="muted">مفيش صرف في الفترة دي</td></tr>'}
+   ${U.length?`<tr class="tot"><td>الإجمالي</td><td></td><td></td><td></td><td></td><td class="num">${n0(ut('cost'))}</td></tr>`:''}</table></div></div>
   <div class="card"><h2>المشتريات (البضاعة اللي دخلت)</h2><table class="pl">
    <tr><td>إجمالي الفواتير</td><td class="num">${n0(e.purchases.total)}</td></tr><tr><td>منها كاش</td><td class="num">${n0(e.purchases.cash)}</td></tr><tr><td>منها آجل</td><td class="num">${n0(e.purchases.credit)}</td></tr></table>
    ${e.purchases.invoices.length?`<div class="list" style="margin-top:8px">${e.purchases.invoices.map(i=>`<div class="li"><div class="t"><b>${esc(i.supplier)}</b><small>فاتورة ${esc(i.invoice||'-')} · ${i.pay} · ${esc(i.by||'')} · ${esc(i.shift)}</small></div><b class="num">${n0(i.total)}</b></div>`).join('')}</div>`:''}</div>
@@ -482,7 +558,7 @@ function drawReport(x,e,lab){
    ${e.cash.counts.map(k=>`<div class="alert ${k.diff<0?'bad':''}" style="margin:8px 0 0">جرد ${esc(k.shift)} (${esc(k.by||'')}): المفروض ${n0(k.expected)} · الموجود ${n0(k.counted)} · ${k.diff<0?'عجز':'فرق'} ${n2(k.diff)}</div>`).join('')}</div>
   <div class="card"><h2>الاشتراكات</h2><table class="pl"><tr><td>اشتراكات جديدة وتجديد</td><td class="num">${e.subs.count}</td></tr><tr><td>فلوس اشتراكات اتدفعت</td><td class="num">${n0(e.subs.collected)}</td></tr><tr><td>وجبات اشتراكات اتسلمت</td><td class="num">${e.subs.meals}</td></tr><tr><td>قيمة الوجبات اللي اتسلمت (داخلة في المبيعات)</td><td class="num">${n0(x.subs_earned)}</td></tr></table></div>
   <div class="card"><h2>المخزون دلوقتي</h2><div class="big num">${n0(e.stock_value)} ريال</div><div class="muted">قيمة الخامات الموجودة بالتكلفة</div></div>
-  ${e.preps.length?`<div class="card"><h2>التجهيزات</h2><table class="pl">${e.preps.map(p=>`<tr><td>${esc(p.name)}</td><td class="num">${n2(p.g/1000)} كجم</td></tr>`).join('')}</table></div>`:''}
+  ${e.preps.length?`<div class="card"><h2>التجهيزات</h2><table class="pl">${e.preps.map(p=>`<tr><td>${esc(p.name)} · <span class="num">${n2(p.qty)}</span> ${esc(p.unit)}</td><td class="num">${n0(p.cost)}</td></tr>`).join('')}</table></div>`:''}
   ${e.staff.length?`<div class="card"><h2>الحضور</h2><table class="pl">${e.staff.map(a=>`<tr><td>${esc(a.name)}</td><td>دخول ${a.ins} · انصراف ${a.outs}</td></tr>`).join('')}</table></div>`:''}
   <div class="row noprint"><button class="btn sec" id="shr">مشاركة واتساب</button><button class="btn sec" id="prt">حفظ PDF / طباعة</button></div>`;
   $('#rp').insertAdjacentHTML('beforeend',html);
@@ -501,7 +577,7 @@ async function admin(){
   $('#app').innerHTML=`${head('الإعدادات',esc(b.branch.name))}
   ${own&&b.branches?`<div class="card"><h2>الفروع</h2><select id="br">${b.branches.map(x=>`<option value="${x.id}" ${x.id===b.branch.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
    <div class="row"><input id="nb" placeholder="اسم فرع جديد"><button class="btn sm" id="ab" style="flex:0 0 auto">إضافة</button></div><p class="muted">الفرع الجديد بياخد نفس الخامات والتحضيرات من الفرع الحالي، بمخزون صفر.</p></div>`:''}
-  <div class="card"><h2>الخامات</h2><button class="btn sec" id="ei" style="margin-top:0">تعديل خامة (السعر، الحد الأدنى، الباركود، الفاقد)</button><button class="btn sec" id="ni">+ خامة جديدة</button></div>
+  <div class="card"><h2>الخامات والريسبي</h2><button class="btn sec" style="margin-top:0" onclick="go('items')">افتح «الأصناف والريسبي»</button></div>
   <div class="card"><h2>الموظفين</h2><div class="list" id="st"></div>
    <div class="row"><div><label for="sn">الاسم</label><input id="sn"></div><div><label for="spn">رقم سري</label><input id="spn" inputmode="numeric" maxlength="8"></div></div>
    <div class="seg" id="sr" style="margin-top:8px"><button class="on" data-r="chef">شيف</button>${own?'<button data-r="manager">مدير</button>':''}</div><button class="btn" id="as">إضافة موظف</button></div>
@@ -520,7 +596,6 @@ async function admin(){
     $('#ab').onclick=()=>act($('#ab'),async()=>{await T('lc_add_branch',{p_name:$('#nb').value,p_city:null,p_copy_from:b.branch.id});await boot();toast('الفرع اتضاف ✓');admin()})}
   $('#sst').onclick=()=>act($('#sst'),async()=>{await T('lc_save_shift_times',{p_morning:$('#ms').value||null,p_evening:$('#es').value||null});toast('المواعيد اتحفظت ✓')});
   $('#loc').onclick=()=>act($('#loc'),async()=>{const p=await getPos();if(!p)throw new Error('اسمح للتطبيق بالموقع');await T('lc_set_location',{p_lat:p.lat,p_lng:p.lng,p_radius:+$('#rad').value||150});toast('موقع الفرع اتحفظ ✓')});
-  $('#ei').onclick=()=>pickItem(i=>editItem(i));$('#ni').onclick=()=>editItem(null);
   let role='chef';$('#sr').onclick=e=>{const x=e.target.closest('button');if(!x)return;role=x.dataset.r;$('#sr').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
   $('#as').onclick=()=>act($('#as'),async()=>{await T('lc_add_staff',{p_name:$('#sn').value,p_pin:$('#spn').value,p_role:role});toast('الموظف اتضاف ✓');admin()});
   $('#af').onclick=()=>act($('#af'),async()=>{await T('lc_save_fixed',{p_id:null,p_name:$('#fn').value,p_monthly:+$('#fm').value});toast('اتضاف ✓');admin()});
@@ -541,17 +616,25 @@ function editItem(i){
   m.innerHTML=`<div class="sheet"><h2 style="margin:0">${i?esc(i.name):'خامة جديدة'}</h2>
   <label for="e_n">الاسم</label><input id="e_n" value="${esc(v(i?.name))}">
   <div class="row"><div><label for="e_u">الوحدة</label><select id="e_u">${['كجم','لتر','قطعة','علبة','كرتونة','رول','ربطة'].map(u=>`<option ${i?.unit===u?'selected':''}>${u}</option>`).join('')}</select></div>
-  <div><label for="e_p">السعر المرجعي</label><input id="e_p" type="number" inputmode="decimal" step="any" value="${v(i?.price)}"></div></div>
+  <div><label for="e_p">سعر الشراء للوحدة</label><input id="e_p" type="number" inputmode="decimal" step="any" value="${v(i?.price??i?.cost)}"></div></div>
   <div class="row"><div><label for="e_m">الحد الأدنى (تنبيه)</label><input id="e_m" type="number" inputmode="decimal" step="any" value="${v(i?.min)}"></div>
   <div><label for="e_d">جرد يومي</label><select id="e_d"><option value="false">لا</option><option value="true" ${i?.daily?'selected':''}>نعم</option></select></div></div>
-  <div class="row"><div><label for="e_cy">الصافي بعد التنظيف %</label><input id="e_cy" type="number" inputmode="decimal" value="${i?.cy!=null?i.cy*100:''}"></div><div><label for="e_ky">الناتج بعد التسوية %</label><input id="e_ky" type="number" inputmode="decimal" value="${i?.ky!=null?i.ky*100:''}"></div></div>
+  <div class="hint"><b>الفاقد:</b> وزّن كمية مرة واحدة واكتب الأوزان، والنسب هتتحسب لوحدها.
+   <div class="row"><div><label for="w_r">الوزن الإجمالي</label><input id="w_r" type="number" inputmode="decimal" step="any" placeholder="مثلًا 10"></div><div><label for="w_c">بعد التنظيف</label><input id="w_c" type="number" inputmode="decimal" step="any"></div><div><label for="w_k">بعد التسوية</label><input id="w_k" type="number" inputmode="decimal" step="any"></div></div></div>
+  <div class="row"><div><label for="e_cy">الصافي بعد التنظيف %</label><input id="e_cy" type="number" inputmode="decimal" value="${i?.cy!=null?+(i.cy*100).toFixed(1):''}"></div><div><label for="e_ky">الناتج بعد التسوية %</label><input id="e_ky" type="number" inputmode="decimal" value="${i?.ky!=null?+(i.ky*100).toFixed(1):''}"></div></div>
+  <div id="e_res" class="hint"></div>
   <label for="e_b">الباركود</label><div class="row"><input id="e_b" value="${esc(v(i?.barcode))}"><button class="btn sm sec" id="e_s" style="flex:0 0 auto">📷 امسح</button></div><div id="scanbox2"></div>
   <button class="btn" id="e_ok">حفظ</button><button class="btn sec" id="e_no">إلغاء</button></div>`;
   document.body.appendChild(m);
   m.querySelector('#e_no').onclick=()=>m.remove();
+  const res=()=>{const p=+m.querySelector('#e_p').value,cy=+m.querySelector('#e_cy').value/100,ky=+m.querySelector('#e_ky').value/100,u=m.querySelector('#e_u').value;
+    m.querySelector('#e_res').innerHTML=p>0?`سعر الشراء <b class="num">${n2(p)}</b> ر/${u}${cy>0?` · تكلفة ال${u} الصافي <b class="num">${n2(p/cy)}</b>`:''}${ky>0?` · تكلفة ال${u} بعد التسوية <b class="num">${n2(p/ky)}</b>`:''}`:'اكتب السعر عشان يتحسب'};
+  const wt=()=>{const r=+m.querySelector('#w_r').value,c=+m.querySelector('#w_c').value,k=+m.querySelector('#w_k').value;
+    if(r>0&&c>0)m.querySelector('#e_cy').value=+(c/r*100).toFixed(1);if(r>0&&k>0)m.querySelector('#e_ky').value=+(k/r*100).toFixed(1);res()};
+  ['w_r','w_c','w_k'].forEach(x=>m.querySelector('#'+x).oninput=wt);['e_p','e_cy','e_ky'].forEach(x=>m.querySelector('#'+x).oninput=res);m.querySelector('#e_u').onchange=res;res();
   m.querySelector('#e_s').onclick=()=>scan(m.querySelector('#scanbox2'),c=>m.querySelector('#e_b').value=c);
   const g=id=>m.querySelector('#'+id).value;const p100=id=>g(id)===''?'':String(+g(id)/100);
-  m.querySelector('#e_ok').onclick=()=>act(m.querySelector('#e_ok'),async()=>{await T('lc_save_item',{p:{code:i?.code||'',name:g('e_n'),unit:g('e_u'),price:g('e_p'),min:g('e_m'),daily:g('e_d')==='true',barcode:g('e_b'),cy:p100('e_cy'),ky:p100('e_ky')}});await boot();m.remove();toast('اتحفظ ✓')});
+  m.querySelector('#e_ok').onclick=()=>act(m.querySelector('#e_ok'),async()=>{await T('lc_save_item',{p:{code:i?.code||'',name:g('e_n'),unit:g('e_u'),price:g('e_p'),min:g('e_m'),daily:g('e_d')==='true',barcode:g('e_b'),cy:p100('e_cy'),ky:p100('e_ky')}});await boot();m.remove();toast('اتحفظ ✓');if(location.hash==='#items')itemsMgr('raw')});
 }
 
 // ---------- audit ----------
