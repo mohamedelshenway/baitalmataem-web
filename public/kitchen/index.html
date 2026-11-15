@@ -140,16 +140,21 @@ async function route(){
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
-  const mgrOnly=['items','invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
+  const mgrOnly=['menu','items','invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
 
 // ---------- home ----------
 function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.use7>0&&i.qty/i.use7<=2))}
+const NONKITCHEN=['كاشير','ستيوارد'];
 function home(){
   const b=S.b, m=isMgr(), low=lowItems();
+  if(!m&&NONKITCHEN.includes(b.me.job)){
+    $('#app').innerHTML=`${head(`أهلًا يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+' · '+esc(b.me.job),false)}
+    <div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>
+    <button class="btn" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button><button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;return}
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
   const T=(h,ic,t,s,main)=>`<button class="tile${main?' main':''}" onclick="go('${h}')"><span class="ic">${ic}</span><b>${t}</b><span>${s}</span></button>`;
   $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name),false)}
@@ -175,6 +180,7 @@ function home(){
    ${T('cash','🧾','الخزنة','كاش ومورّدين')}
    ${T('invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان')}
    ${T('report','📊','تقرير آخر اليوم','كيلوهات وتكلفة وكاش وربح')}
+   ${T('menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس اليومي وتكلفة كل طبق',1)}
    ${T('items','🧾','الأصناف والريسبي','الأسعار والفاقد والتكلفة',1)}
    ${T('admin','⚙️','الإعدادات','موظفين وفروع ومواعيد')}
    ${T('stats','📈','التحليلات','أرقام ورسوم لكل حاجة',1)}
@@ -505,7 +511,9 @@ async function report(){
   const R=[['اليوم',d(0),d(0)],['امبارح',d(1),d(1)],['آخر 7 أيام',d(6),d(0)],['الشهر ده',first,d(0)]];
   $('#app').innerHTML=`${head('التقرير اليومي','المبيعات والخامات والكاش والربح وفين العجز')}<div class="chips" id="rg" style="margin-bottom:12px">${R.map((r,k)=>`<button class="chip${k?'':' on'}" data-k="${k}">${r[0]}</button>`).join('')}</div><div id="rp"><div class="muted">جاري الحساب…</div></div>`;
   const load=async k=>{$('#rp').innerHTML='<div class="muted">جاري الحساب…</div>';const [,f,t]=R[k];
-    const [x,e]=await Promise.all([T('lc_report',{p_from:f,p_to:t}),T('lc_report_extra',{p_from:f,p_to:t})].map(p=>p.catch(er=>{toast(er.message,true);return null})));if(!x||!e)return;drawReport(x,e,R[k][0])};
+    const [x,e]=await Promise.all([T('lc_report',{p_from:f,p_to:t}),T('lc_report_extra',{p_from:f,p_to:t})].map(p=>p.catch(er=>{toast(er.message,true);return null})));if(!x||!e)return;drawReport(x,e,R[k][0]);
+    const D=await T('lc_dish_report',{p_from:f,p_to:t}).catch(()=>null);if(D&&D.rows.length){const sq=D.rows.reduce((a,r)=>a+ +r.qty,0),ss=D.rows.reduce((a,r)=>a+ +(r.sales||0),0);
+      $('#rp').insertAdjacentHTML('beforeend',`<div class="card"><h2>الأصناف اللي اتباعت</h2><p class="muted" style="margin-top:0"><b class="num">${n0(sq)}</b> طبق · <b class="num">${n0(ss)}</b> ريال (من فودكس)</p>${dishTable(D.rows.slice(0,25))}</div>`)}};
   $('#rg').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;$('#rg').querySelectorAll('.chip').forEach(c=>c.classList.toggle('on',c===b));load(+b.dataset.k)};
   load(0);
 }
@@ -603,7 +611,7 @@ async function admin(){
   $('#sb').onclick=()=>act($('#sb'),async()=>{await T('lc_save_branch',{p:{fct:pv('fct'),ck:pv('ck'),cn:pv('cn'),ch:pv('ch')}});await boot();toast('اتحفظ ✓')});
   $('#cp').onclick=()=>act($('#cp'),async()=>{await T('lc_change_pin',{p_old:$('#op').value,p_new:$('#np').value});toast('الرقم السري اتغير ✓');$('#op').value=$('#np').value=''});
   const st=await T('lc_staff').catch(()=>[]);
-  $('#st').innerHTML=st.map(s=>`<div class="li"><div class="t"><b>${esc(s.name)}</b><small>${{chef:'شيف',manager:'مدير',owner:'مالك'}[s.role]}</small></div>${s.role!=='owner'?`<button class="btn sm ${s.active?'bad':'sec'}" onclick="staffActive('${esc(s.name)}',${!s.active})">${s.active?'إيقاف':'تفعيل'}</button>`:''}</div>`).join('')||'<div class="muted">مفيش موظفين في الفرع ده لسه</div>';
+  $('#st').innerHTML=st.map(s=>`<div class="li"><div class="t"><b>${esc(s.name)}</b><small>${esc(s.job||{chef:'شيف',manager:'مدير',owner:'مالك'}[s.role])}</small></div>${s.role!=='owner'?`<button class="btn sm ${s.active?'bad':'sec'}" onclick="staffActive('${esc(s.name)}',${!s.active})">${s.active?'إيقاف':'تفعيل'}</button>`:''}</div>`).join('')||'<div class="muted">مفيش موظفين في الفرع ده لسه</div>';
   const M=await T('lc_money').catch(()=>null);
   if(M){const tot=M.fixed.reduce((a,f)=>a+ +f.monthly,0);
     $('#fx').innerHTML=M.fixed.map(f=>`<div class="li"><div class="t"><b>${esc(f.name)}</b><small>${esc(f.note||'')}</small></div><input type="number" inputmode="decimal" value="${f.monthly}" style="width:110px;flex:0 0 110px" onchange="fixedUpd(${f.id},this.value)"><button class="x" onclick="fixedOff(${f.id})">✕</button></div>`).join('')+`<div class="li"><div class="t"><b>الإجمالي الشهري</b><small>في اليوم ≈ <span class="num">${n0(tot*12/365)}</span></small></div><b class="num">${n0(tot)}</b></div>`}
@@ -678,6 +686,69 @@ async function attendance(){
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
     $('#al').innerHTML=A.map(a=>`<div class="li"><img src="${a.photo}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:12px" onclick="this.style.width=this.style.width==='100%'?'64px':'100%';this.style.height='auto'"><div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
   $('#d').onchange=load;load();
+}
+
+// ---------- menu & dish sales (manager) ----------
+function dishTable(rows){return `<div style="overflow-x:auto"><table class="pl" style="min-width:520px"><tr class="muted"><td>الطبق</td><td>العدد</td><td>المبيعات</td><td>متوسط السعر</td><td>تكلفة الطبق</td><td>نسبة التكلفة</td></tr>
+  ${rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${n0(r.qty)}</td><td class="num">${n0(r.sales)}</td><td class="num">${n2(r.avg_price)}</td><td class="num">${r.unit_cost!=null?n2(r.unit_cost):'—'}${r.missing?'<small style="color:var(--bad)"> ناقص</small>':''}</td><td class="num" style="color:${r.pct>0.35?'var(--bad)':'inherit'}">${r.pct!=null?pc(r.pct):'—'}</td></tr>`).join('')}</table></div>`}
+function loadXLSX(){return window.XLSX?Promise.resolve():new Promise((ok,no)=>{const sc=document.createElement('script');sc.src='https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js';sc.onload=ok;sc.onerror=()=>no(new Error('مش قادر أفتح قارئ الإكسل، اتأكد من النت'));document.head.appendChild(sc)})}
+function guessCols(H){const f=re=>H.findIndex(h=>re.test(String(h||'')));
+  let name=f(/product|item|name|الصنف|المنتج|اسم|الوجبة/i),qty=f(/quantity|qty|count|الكمية|العدد/i),sales=f(/net\s*sales|صافي/i);
+  if(sales<0)sales=f(/total|sales|amount|المبيعات|الإجمالي|المبلغ|السعر/i);return {name,qty,sales}}
+async function menuMgr(tab){
+  tab=tab||'up';
+  $('#app').innerHTML=`${head('المنيو ومبيعات الأصناف','اللي اتباع وأسعاره وتكلفة كل طبق')}<div class="chips" style="margin-bottom:12px">${[['up','رفع ملف فودكس'],['sold','اللي اتباع'],['dishes','الأطباق وتكلفتها']].map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="menuMgr('${k}')">${l}</button>`).join('')}</div><div id="mm"></div>`;
+  const box=$('#mm');const today=new Date().toISOString().slice(0,10);
+  if(tab==='up'){
+    box.innerHTML=`<div class="card"><p class="muted" style="margin-top:0">آخر اليوم: من فودكس طلّع تقرير مبيعات المنتجات لليوم ده (Excel أو CSV) وارفعه هنا. السيستم بيقرا اسم الطبق والكمية والمبلغ لوحده.</p>
+     <label for="d">يوم المبيعات</label><input id="d" type="date" value="${today}"><label for="f">الملف</label><input id="f" type="file" accept=".xlsx,.xls,.csv"><div id="pv"></div></div>`;
+    $('#f').onchange=()=>act(null,async()=>{const file=$('#f').files[0];if(!file)return;await loadXLSX();
+      const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});const ws=wb.Sheets[wb.SheetNames[0]];const A=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      let hi=A.findIndex(r=>{const g=guessCols(r);return g.name>=0&&g.qty>=0});if(hi<0)hi=0;const H=A[hi].map(String);let c=guessCols(H);
+      const draw=()=>{const rows=A.slice(hi+1).map(r=>({name:String(r[c.name]??'').trim(),qty:+String(r[c.qty]).replace(/,/g,''),sales:c.sales>=0?+String(r[c.sales]).replace(/,/g,''):null})).filter(r=>r.name&&r.qty>0&&!/^(total|الإجمالي|المجموع)/i.test(r.name));
+        const opt=k=>`<select data-k="${k}">${k==='sales'?'<option value="-1">مفيش</option>':''}${H.map((h,i)=>`<option value="${i}" ${c[k]===i?'selected':''}>${esc(h||('عمود '+(i+1)))}</option>`).join('')}</select>`;
+        $('#pv').innerHTML=`<div class="hint"><div class="row"><div><label>اسم الطبق</label>${opt('name')}</div><div><label>الكمية</label>${opt('qty')}</div><div><label>المبلغ</label>${opt('sales')}</div></div></div>
+         <p class="muted"><b class="num">${rows.length}</b> صنف · <b class="num">${n0(rows.reduce((a,r)=>a+r.qty,0))}</b> طبق · <b class="num">${n0(rows.reduce((a,r)=>a+(r.sales||0),0))}</b> ريال</p>
+         <div class="list">${rows.slice(0,8).map(r=>`<div class="li"><div class="t">${esc(r.name)}</div><span class="num">${n0(r.qty)}</span><span class="num muted">${r.sales!=null?n0(r.sales):''}</span></div>`).join('')}${rows.length>8?`<div class="muted">و${rows.length-8} صنف كمان…</div>`:''}</div>
+         <button class="btn" id="go">حفظ مبيعات يوم ${$('#d').value}</button>`;
+        $('#pv').querySelectorAll('select').forEach(x=>x.onchange=()=>{c[x.dataset.k]=+x.value;draw()});
+        $('#go').onclick=()=>act($('#go'),async()=>{if(!rows.length)throw new Error('مفيش أصناف في الملف');const r=await T('lc_import_sales',{p_day:$('#d').value,p_rows:rows});
+          toast(`اتحفظ ✓ ${n0(r.qty)} طبق · ${n0(r.sales)} ريال${r.created?` · ${r.created} طبق جديد اتضاف للمنيو`:''}`);menuMgr('sold')})};
+      draw()});
+    return;
+  }
+  if(tab==='sold'){
+    box.innerHTML=`<div class="card"><div class="row"><div><label for="f1">من</label><input id="f1" type="date" value="${today.slice(0,8)}01"></div><div><label for="t1">إلى</label><input id="t1" type="date" value="${today}"></div></div><div id="sr" style="margin-top:10px"></div></div>`;
+    const load=async()=>{const D=await T('lc_dish_report',{p_from:$('#f1').value,p_to:$('#t1').value}).catch(e=>{toast(e.message,true);return null});if(!D)return;
+      const sq=D.rows.reduce((a,r)=>a+ +r.qty,0),ss=D.rows.reduce((a,r)=>a+ +(r.sales||0),0);
+      $('#sr').innerHTML=D.rows.length?`<div class="kpis"><div class="kpi"><div class="v num">${n0(sq)}</div><div class="l">طبق اتباع في ${D.days} يوم</div></div><div class="kpi"><div class="v num">${n0(ss)}</div><div class="l">ريال مبيعات الأصناف</div></div></div>${dishTable(D.rows)}`:'<div class="muted">مفيش مبيعات أصناف مرفوعة في الفترة دي. ارفع ملف فودكس من التبويب الأول.</div>'};
+    $('#f1').onchange=load;$('#t1').onchange=load;load();return;
+  }
+  const M=await T('lc_menu').catch(e=>{toast(e.message,true);return[]});S.menu=M;let q='';
+  const draw=()=>{let cat=null;$('#ml').innerHTML=M.map((d,k)=>[d,k]).filter(([d])=>!q||d.name.includes(q)).map(([d,k])=>`${d.cat!==cat?`<h3 style="margin:14px 2px 4px">${esc(cat=d.cat||'بدون قسم')}</h3>`:''}<div class="li" onclick="editDish(S.menu[${k}])" style="cursor:pointer"><div class="t"><b>${esc(d.name)}</b><small>سعر البيع ${n2(d.price)}${d.cost!=null?` · التكلفة ${n2(d.cost)}`:' · من غير ريسبي'}${d.missing?` · <span style="color:var(--bad)">${d.missing} مكون بدون سعر</span>`:''}</small></div><b class="num" style="color:${d.pct>0.35?'var(--bad)':'inherit'}">${d.pct!=null?pc(d.pct):'—'}</b></div>`).join('')};
+  box.innerHTML=`<div class="card"><p class="muted" style="margin-top:0">نسبة التكلفة = تكلفة مكونات الطبق ÷ سعر البيع بدون الضريبة.</p><input id="q" placeholder="دوّر على طبق"><div class="list" id="ml"></div><button class="btn" onclick="editDish(null)">+ طبق جديد</button></div>`;
+  $('#q').oninput=()=>{q=$('#q').value.trim();draw()};draw();
+}
+function editDish(d){
+  const L=d&&d.lines?d.lines.map(l=>({code:l.code,qty:l.qty})):[];
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet"><h2 style="margin:0">${d?esc(d.name):'طبق جديد'}</h2>
+   <label for="d_n">اسم الطبق (زي ما هو مكتوب في فودكس)</label><input id="d_n" value="${esc(d?.name||'')}">
+   <div class="row"><div><label for="d_p">سعر البيع شامل الضريبة</label><input id="d_p" type="number" inputmode="decimal" step="any" value="${d?.price??''}"></div><div><label for="d_c">القسم</label><input id="d_c" value="${esc(d?.cat||'')}"></div></div>
+   <label>مكونات الطبق الواحد</label><div class="list" id="d_l"></div><button class="btn sec" id="d_a">+ ضيف مكون</button><div id="d_t" class="hint"></div>
+   <button class="btn" id="d_ok">حفظ</button>${d?'<button class="btn sec" id="d_off" style="color:var(--bad)">شيل الطبق من المنيو</button>':''}<button class="btn sec" id="d_no">إلغاء</button></div>`;
+  document.body.appendChild(m);
+  const tot=()=>{let c=0,miss=0;L.forEach(l=>{const i=item(l.code);if(i.cost)c+=l.qty*i.cost;else miss++});const p=+m.querySelector('#d_p').value,net=p/(1+S.b.branch.vat);
+    m.querySelector('#d_t').innerHTML=`تكلفة الطبق: <b class="num">${n2(c)}</b> ريال${p>0?` · السعر بدون ضريبة ${n2(net)} · نسبة التكلفة <b>${pc(c/net)}</b> · الربح المباشر <b class="num">${n2(net-c)}</b>`:''}${miss?`<br><span style="color:var(--bad)">${miss} مكون بدون سعر</span>`:''}`};
+  const drawL=()=>{m.querySelector('#d_l').innerHTML=L.map((l,k)=>{const i=item(l.code);return `<div class="li"><div class="t"><b>${esc(i.name)}</b><small>${i.cost?`${n2(i.cost)} ر/${esc(i.unit)} = ${n2(l.qty*i.cost)}`:'بدون سعر'}</small></div><input data-k="${k}" type="number" inputmode="decimal" step="any" value="${l.qty||''}" placeholder="الكمية" style="width:90px;flex:0 0 90px"><span class="muted">${esc(i.unit)}</span><button class="x" data-x="${k}">✕</button></div>`}).join('')||'<div class="muted">لسه مفيش مكونات (بالكيلو أو اللتر أو القطعة)</div>';tot()};
+  m.querySelector('#d_l').oninput=e=>{const k=e.target.dataset.k;if(k!=null){L[k].qty=+e.target.value;tot()}};
+  m.querySelector('#d_l').onclick=e=>{const k=e.target.dataset.x;if(k!=null){L.splice(+k,1);drawL()}};m.querySelector('#d_p').oninput=tot;
+  m.querySelector('#d_a').onclick=()=>{m.style.display='none';pickItem(i=>{m.style.display='';if(L.some(l=>l.code===i.code))return toast('المكون موجود بالفعل',true);L.push({code:i.code,qty:0});drawL();const ins=m.querySelectorAll('#d_l input');ins[ins.length-1].focus()});
+    const obs=new MutationObserver(()=>{if(!document.querySelector('.modal .sheet #res')){m.style.display='';obs.disconnect()}});obs.observe(document.body,{childList:true})};
+  m.querySelector('#d_no').onclick=()=>m.remove();
+  const save=active=>act(m.querySelector('#d_ok'),async()=>{await T('lc_save_menu',{p:{id:d?.id||'',name:m.querySelector('#d_n').value,price:m.querySelector('#d_p').value,cat:m.querySelector('#d_c').value,active,lines:L.filter(l=>l.qty>0)}});m.remove();toast(active?'اتحفظ ✓':'الطبق اتشال ✓');menuMgr('dishes')});
+  m.querySelector('#d_ok').onclick=()=>save(true);if(d)m.querySelector('#d_off').onclick=()=>save(false);
+  drawL();
 }
 
 // ---------- received invoices (manager) ----------
