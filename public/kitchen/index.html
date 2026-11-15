@@ -143,7 +143,7 @@ async function route(){
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -157,7 +157,7 @@ const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم وال�
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb')return true;if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
@@ -175,6 +175,7 @@ function home(){
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
   ${other.length?`<h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2><div class="grid">${other.map(x=>T(...x)).join('')}</div>`:''}
   ${mg.length||isOwner()?`<h2 style="font-size:15px;margin:18px 2px 10px">الإدارة</h2><div class="grid">${isOwner()?T('hr','👥','الموظفين (HR)','الملفات والرواتب والصلاحيات',1):''}${mg.map(x=>T(...x,['subs','sales','report','menu','stats'].includes(x[0]))).join('')}</div>`:''}
+  ${isOwner()?'':`<button class="btn sec" onclick="go('mynote')">✉️ رسالة للإدارة أو تحديث لملفي</button>`}
   <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
   <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
   <button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;
@@ -225,6 +226,17 @@ function shiftClose(){
     if(!Object.keys(p).length)throw new Error('اكتب مبيعات الوردية');const r=await T('lc_shift_close',{p,p_counted:+$('#c').value,p_note:$('#nt').value||null});
     toast(r.diff!=null&&Math.abs(r.diff)>0.009?`اتقفلت ✓ فرق الدرج ${n2(r.diff)}`:'الوردية اتقفلت ✓',r.diff<0);go('')});
 }
+// ---------- employee self update ----------
+async function myNote(){
+  $('#app').innerHTML=`${head('رسالة للإدارة','بتوصل للإدارة باسمك، والرد بيظهرلك هنا')}
+  <div class="card"><p class="muted" style="margin-top:0">أي حاجة عايز تقولها للإدارة: طلب إجازة أو سلفة، جددت الإقامة أو الشهادة الصحية، غيّرت رقمك أو سكنك، تعبان النهارده… ولو عندك ورقة صوّرها.</p>
+   <label for="b">اكتب رسالتك</label><textarea id="b" rows="4" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px"></textarea>
+   <div class="row" style="align-items:center;margin-top:8px"><div id="ph" class="muted" style="flex:1">صورة (اختياري): الإقامة الجديدة، الشهادة، تقرير طبي…</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر</button></div>
+   <button class="btn" id="sv">إرسال</button></div><div class="card"><h2>اللي بعته قبل كده</h2><div class="list" id="ml"><div class="muted">جاري التحميل…</div></div></div>`;
+  let photo=null;$('#cam').onclick=async()=>{const img=await snapCam('صورة المستند','تحديث ملف · '+S.b.me.name);if(img){photo=img;$('#ph').innerHTML=thumb(img,64)}};
+  $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_my_note',{p_body:$('#b').value,p_photo:photo});toast('وصل للإدارة ✓');myNote()});
+  const L=await T('lc_my_notes').catch(()=>[]);$('#ml').innerHTML=L.map(n=>`<div class="li"><div class="t"><b>${new Date(n.at).toLocaleDateString('ar-EG')}${n.has_photo?' · 📎 صورة':''}</b><small>${esc(n.body)}</small>${n.reply?`<div class="hint">رد الإدارة: ${esc(n.reply)}</div>`:''}</div><span class="pill ${n.seen?'p-ok':'p-warn'}">${n.reply?'اتردّ':n.seen?'اتقرت':'لسه'}</span></div>`).join('')||'<div class="muted">لسه مفيش</div>';
+}
 // ---------- feedback ----------
 async function feedback(){
   $('#app').innerHTML=`${head('اقتراح أو شكوى','بيوصل للإدارة بس')}
@@ -243,7 +255,7 @@ async function hrList(){
   const tot=L.filter(x=>x.active&&x.salary).reduce((a,x)=>a+ +x.salary,0);
   const AL=L.flatMap(x=>(x.flags||[]).filter(f=>f.l!=='info').map(f=>({...f,n:x.name,id:x.id}))).sort((a,b)=>(a.l==='bad'?0:1)-(b.l==='bad'?0:1));
   $('#hl').innerHTML=`${AL.length?`<div class="card"><h2>ملاحظات على الموظفين (${AL.length})</h2>${AL.map(f=>`<div class="alert ${f.l==='bad'?'bad':''}" style="margin-bottom:6px;cursor:pointer" onclick="S.hrId='${f.id}';go('hrp')"><b>${esc(f.n)}:</b> ${esc(f.t)}</div>`).join('')}</div>`:''}<div class="kpis"><div class="kpi"><div class="v num">${L.filter(x=>x.active).length}</div><div class="l">موظف شغال</div></div><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي الرواتب المسجلة</div></div></div>
-   <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${(()=>{const F=x.flags||[],b=F.filter(f=>f.l==='bad').length,w=F.filter(f=>f.l==='warn').length;return (b?`<span class="pill p-bad">${b}</span>`:'')+(w?`<span class="pill p-warn">${w}</span>`:'')})()}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
+   <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${(()=>{const F=x.flags||[],b=F.filter(f=>f.l==='bad').length,w=F.filter(f=>f.l==='warn').length;return (x.new_notes?`<span class="pill" style="background:#e3eefc;color:#1b4d8c">📝 ${x.new_notes}</span>`:'')+(b?`<span class="pill p-bad">${b}</span>`:'')+(w?`<span class="pill p-warn">${w}</span>`:'')})()}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
    <button class="btn" onclick="S.hrId=null;go('hrp')">+ موظف جديد</button></div>`;
 }
 async function hrPage(){
@@ -275,7 +287,9 @@ async function hrPage(){
   <button class="btn" id="h_ok">حفظ</button>
   ${id?`<div class="card"><h2>الحضور</h2><p><b class="num">${x.month.hours}</b> ساعة في <b class="num">${x.month.days}</b> يوم الشهر ده · الشهر اللي فات ${x.prev.hours} ساعة${x.month.open?` · <span style="color:var(--bad)">${x.month.open} وردية من غير انصراف</span>`:''}${x.month.outside?` · <span style="color:var(--bad)">${x.month.outside} تسجيل بره الفرع</span>`:''}</p>
    <div class="list">${x.days.map(d=>`<div class="li"><div class="t">${d.day}</div><span class="num">${d.first_in?tm(d.first_in):'—'}</span> ← <span class="num">${d.last_out?tm(d.last_out):'<span style="color:var(--bad)">مفيش انصراف</span>'}</span></div>`).join('')||'<div class="muted">مفيش حضور آخر أسبوعين</div>'}</div></div>`:''}
+  ${id&&(x.notes||[]).length?`<div class="card"><h2>رسائل وتحديثات من الموظف</h2><div class="list">${x.notes.map(n=>`<div class="li">${n.photo?thumb(n.photo,56):''}<div class="t"><b>${new Date(n.at).toLocaleDateString('ar-EG')} ${tm(n.at)}${n.seen?'':' <span class="pill p-warn">جديد</span>'}</b><small style="white-space:pre-wrap">${esc(n.body)}</small><div class="row" style="margin-top:6px"><input id="nr${n.id}" placeholder="ردّك (بيظهرله)" value="${esc(n.reply||'')}"><button class="btn sm" style="flex:0 0 auto" onclick="noteReply(${n.id})">رد</button></div></div></div>`).join('')}</div></div>`:''}
   ${id&&(x.flags||[]).length?`<div class="card"><h2>ملاحظات على الملف</h2>${x.flags.map(f=>`<div class="alert ${f.l==='bad'?'bad':''}" style="margin-bottom:6px;${f.l==='info'?'background:#f1f6f2;border-color:#d6e4da;color:inherit':''}">${esc(f.t)}</div>`).join('')}</div>`:''}`;
+  if(id&&(x.notes||[]).some(n=>!n.seen))T('lc_hr_notes_seen',{p_id:id}).catch(()=>{});
   const setP=a=>document.querySelectorAll('[data-p]').forEach(c=>c.checked=a.includes(c.dataset.p));
   if(!own){$('#pk').onclick=()=>setP(KITCHEN.map(k=>k[0]));$('#pc').onclick=()=>setP(['shift']);$('#pn').onclick=()=>setP([])}
   $('#h_ok').onclick=()=>act($('#h_ok'),async()=>{const g=k=>$('#'+k).value;
@@ -284,6 +298,7 @@ async function hrPage(){
     if(id&&!own)p.active=$('#h_act').checked;if(!id&&$('#h_own').checked)p.role='owner';
     const r=await T('lc_hr_save',{p});S.hrId=r.id;toast('اتحفظ ✓');go('hr')});
 }
+async function noteReply(nid){await act(null,async()=>{await T('lc_hr_note_reply',{p_id:nid,p_reply:$('#nr'+nid).value});toast('الرد اتبعت ✓')})}
 async function fbReply(fid){await act(null,async()=>{await T('lc_feedback_reply',{p_id:fid,p_status:$('#st'+fid).value,p_reply:$('#r'+fid).value});toast('اتحفظ ✓')})}
 async function setShift(s){await act(null,async()=>{await T('lc_set_shift',{p_shift:s});S.b.me.shift=s;route();toast('الوردية: '+s)})}
 
