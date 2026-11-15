@@ -135,8 +135,8 @@ async function route(){
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
-  const mgrOnly=['stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep,count,req:requests,stock,sales,cash,report,admin,log:audit,att:attendance,stats:analytics,subs};
+  const mgrOnly=['invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep,count,req:requests,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -165,6 +165,7 @@ function home(){
    ${T('sales','💰','مبيعات الوردية','آخر اليوم',1)}
    ${T('stock','🏬','المخزون','عندي كام وناقص إيه')}
    ${T('cash','🧾','الخزنة','كاش ومورّدين')}
+   ${T('invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان')}
    ${T('report','📊','تقرير آخر اليوم','كيلوهات وتكلفة وكاش وربح')}
    ${T('admin','⚙️','الإعدادات','خامات وموظفين')}
    ${T('stats','📈','التحليلات','أرقام ورسوم لكل حاجة',1)}
@@ -198,11 +199,32 @@ function scan(box,onCode,keep){
   s.start({facingMode:'environment'},{fps:10,qrbox:{width:250,height:120}},code=>{s.stop().catch(()=>{});box.innerHTML='';onCode(code)},()=>{}).catch(()=>toast('اسمح للتطبيق باستخدام الكاميرا',true));
 }
 
+// ---------- live camera (back) ----------
+function snapCam(title,label){return new Promise(async res=>{
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet" style="text-align:center"><h2 style="margin:0 0 8px;font-size:17px">${esc(title)}</h2><video playsinline autoplay muted style="width:100%;max-height:58vh;border-radius:14px;background:#000"></video><canvas style="display:none"></canvas>
+  <button class="btn" id="cs" disabled>📸 صوّر</button><button class="btn sec" id="cx">إلغاء</button></div>`;
+  document.body.appendChild(m);const v=m.querySelector('video'),c=m.querySelector('canvas');let st=null;
+  const end=r=>{st&&st.getTracks().forEach(t=>t.stop());m.remove();res(r)};
+  m.querySelector('#cx').onclick=()=>end(null);
+  try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}},audio:false});v.srcObject=st;m.querySelector('#cs').disabled=false}catch(e){toast('اسمح للتطبيق باستخدام الكاميرا',true);return end(null)}
+  m.querySelector('#cs').onclick=()=>act(m.querySelector('#cs'),async()=>{
+    const w=960,h=Math.round(w*(v.videoHeight||720)/(v.videoWidth||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(v,0,0,w,h);
+    const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
+    x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-66,w,66);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
+    x.font='600 22px "IBM Plex Sans Arabic", sans-serif';x.fillText(label,w-14,h-38);
+    x.font='500 18px "IBM Plex Sans Arabic", sans-serif';x.fillText(`${S.b.me.name} · ${S.b.branch.name} · ${ts}`,w-14,h-12);
+    let img=c.toDataURL('image/jpeg',0.6);if(img.length>560000)img=c.toDataURL('image/jpeg',0.4);
+    end(img)});
+})}
+const thumb=(src,sz=56)=>`<img src="${src}" alt="" style="width:${sz}px;height:${sz}px;object-fit:cover;border-radius:10px;flex:0 0 auto" onclick="event.stopPropagation();bigImg(this.src)">`;
+function bigImg(src){const m=document.createElement('div');m.className='modal';m.style.alignItems='center';m.innerHTML=`<img src="${src}" style="max-width:96%;max-height:92vh;border-radius:12px">`;m.onclick=()=>m.remove();document.body.appendChild(m)}
+
 // ---------- lines builder (issue / receive) ----------
 function linesUI(withPrice){
   const rows=S.lines.map((l,k)=>{const i=item(l.code);const cost=withPrice?l.qty*l.price:l.qty*(i.cost||0);
     const money=withPrice||isMgr();
-    return `<div class="li"><div class="t"><b>${esc(i.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
+    return `<div class="li">${l.photo?thumb(l.photo,48):''}<div class="t"><b>${esc(i.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
   const tot=S.lines.reduce((a,l)=>a+(withPrice?l.qty*l.price:l.qty*(item(l.code).cost||0)),0);
   return `<div class="list">${rows||'<div class="muted">لسه مضفتش خامات</div>'}</div>${S.lines.length&&(withPrice||isMgr())?`<div class="row" style="margin-top:10px"><b>الإجمالي</b><b class="num" style="text-align:left">${n2(tot)} ريال</b></div>`:''}`;
 }
@@ -212,13 +234,18 @@ function addLine(withPrice){
     const m=document.createElement('div');m.className='modal';
     m.innerHTML=`<div class="sheet"><h2 style="margin:0 0 4px">${esc(i.name)}</h2><div class="muted">${esc(i.unit)}${i.qty!=null?` · عندك <span class="num">${n2(i.qty)}</span>`:''}${i.cost?` · التكلفة <span class="num">${n2(i.cost)}</span> للـ${esc(i.unit)}`:''}</div>
     <label for="lq">الكمية (${esc(i.unit)})</label><input id="lq" type="number" inputmode="decimal" step="any">
-    ${withPrice?`<label for="lp">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="lp" type="number" inputmode="decimal" step="any" value="${i.last??i.price??''}">`:''}
+    ${withPrice?`<label for="lp">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="lp" type="number" inputmode="decimal" step="any" value="${i.last??i.price??''}">
+    <label>صورة الصنف على الميزان (إجباري)</label><div class="row" style="align-items:center"><div id="ph" class="muted" style="flex:1">لسه متصورش</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر على الميزان</button></div>`:''}
     <button class="btn" id="ok">إضافة</button><button class="btn sec" id="no">إلغاء</button></div>`;
     document.body.appendChild(m);m.querySelector('#lq').focus();
-    m.querySelector('#no').onclick=()=>m.remove();
+    m.querySelector('#no').onclick=()=>m.remove();let photo=null;
+    if(withPrice)m.querySelector('#cam').onclick=async()=>{m.style.display='none';const q=m.querySelector('#lq').value;
+      const img=await snapCam(`${i.name} على الميزان`,`استلام · ${i.name}${q?` · ${q} ${i.unit}`:''}`);m.style.display='';
+      if(img){photo=img;m.querySelector('#ph').innerHTML=thumb(img,64);m.querySelector('#cam').textContent='📷 إعادة التصوير'}};
     m.querySelector('#ok').onclick=()=>{const q=+m.querySelector('#lq').value;const p=withPrice?+m.querySelector('#lp').value:null;
       if(!(q>0))return toast('اكتب الكمية',true); if(withPrice&&!(m.querySelector('#lp').value!==''&&p>=0))return toast('اكتب السعر',true);
-      S.lines.push({code:i.code,qty:q,price:p});m.remove();redrawLines(withPrice)};
+      if(withPrice&&!photo)return toast('صوّر الصنف على الميزان الأول',true);
+      S.lines.push(withPrice?{code:i.code,qty:q,price:p,photo}:{code:i.code,qty:q,price:p});m.remove();redrawLines(withPrice)};
   });
 }
 
@@ -244,14 +271,17 @@ function receive(){
   <input id="spn" placeholder="اسم المورد الجديد" style="display:none;margin-top:8px">
   <div class="row"><div><label for="inv">رقم الفاتورة</label><input id="inv" inputmode="numeric"></div>
   <div><label>الدفع</label><div class="seg" id="pay"><button data-p="كاش">كاش</button><button data-p="آجل">آجل</button></div></div></div>
-  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة</button>
+  <label>صورة الفاتورة وهي ممضية (إجباري)</label><div class="row" style="align-items:center"><div id="invph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm sec" id="invcam" style="flex:0 0 auto;margin:0">📷 صوّر الفاتورة</button></div>
+  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة (وصوّرها على الميزان)</button>
   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">حفظ الفاتورة</button>
   <p class="muted">فاتورة الكاش بتتخصم من الخزنة لوحدها، والآجل بيتضاف على حساب المورد.</p></div>`;
   $('#sp').onchange=()=>{$('#spn').style.display=$('#sp').value==='__new'?'block':'none'};
+  let invPhoto=null;
+  $('#invcam').onclick=async()=>{const img=await snapCam('صوّر الفاتورة كاملة وهي ممضية','فاتورة استلام'+($('#inv').value?` رقم ${$('#inv').value}`:''));if(img){invPhoto=img;$('#invph').innerHTML=thumb(img,64);$('#invcam').textContent='📷 إعادة التصوير'}};
   let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=b.dataset.p;$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
   $('#sv').onclick=()=>act($('#sv'),async()=>{const s=$('#sp').value==='__new'?$('#spn').value:$('#sp').value;
-    if(!pay)throw new Error('اختار كاش ولا آجل');
-    const r=await T('lc_receive_safe',{p_supplier:s,p_invoice:$('#inv').value||null,p_pay:pay,p_lines:S.lines,p_note:$('#nt').value||null});
+    if(!pay)throw new Error('اختار كاش ولا آجل');if(!invPhoto)throw new Error('صوّر الفاتورة وهي ممضية الأول');if(!S.lines.length)throw new Error('ضيف خامة واحدة على الأقل');
+    const r=await T('lc_receive_v2',{p_supplier:s,p_invoice:$('#inv').value||null,p_pay:pay,p_lines:S.lines,p_invoice_photo:invPhoto,p_note:$('#nt').value||null});
     await boot();toast(r.total!=null?`الفاتورة اتسجلت ✓ ${n2(r.total)} ريال`:'الفاتورة اتسجلت ✓');go('')});
 }
 
@@ -564,6 +594,18 @@ async function attendance(){
   $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
     $('#al').innerHTML=A.map(a=>`<div class="li"><img src="${a.photo}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:12px" onclick="this.style.width=this.style.width==='100%'?'64px':'100%';this.style.height='auto'"><div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
+  $('#d').onchange=load;load();
+}
+
+// ---------- received invoices (manager) ----------
+async function invoices(){
+  const today=new Date().toISOString().slice(0,10);
+  $('#app').innerHTML=`${head('الفواتير المستلمة','صورة الفاتورة الممضية وكل صنف على الميزان')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"></div><div id="il"></div>`;
+  const ph=async(el,id)=>{if(!id)return;const src=await T('lc_receipt_photo',{p_id:id}).catch(()=>null);if(src)el.innerHTML=thumb(src,64)};
+  const load=async()=>{const R=await T('lc_receipts',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
+    $('#il').innerHTML=R.map(r=>`<div class="card"><div class="li" style="border:0"><span data-p="${r.inv_photo||''}">${r.inv_photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(r.supplier)}${r.invoice?' · فاتورة '+esc(r.invoice):''}</b><small>${tm(r.at)} · ${esc(r.shift)} · ${esc(r.by||'')} · ${esc(r.pay)}</small></div><b class="num">${n2(r.total)}</b></div>
+      <div class="list">${(r.lines||[]).map(l=>`<div class="li"><span data-p="${l.photo||''}">${l.photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(l.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(l.unit)} × <span class="num">${n2(l.price)}</span> = <span class="num">${n2(l.qty*l.price)}</span></small></div></div>`).join('')}</div></div>`).join('')||'<div class="card muted">مفيش فواتير في اليوم ده</div>';
+    $('#il').querySelectorAll('[data-p]').forEach(el=>ph(el,+el.dataset.p||0))};
   $('#d').onchange=load;load();
 }
 
