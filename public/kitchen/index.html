@@ -140,56 +140,118 @@ async function route(){
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
-  const mgrOnly=['menu','items','invs','stock','sales','cash','report','admin','log','att','stats','subs'];if(!isMgr()&&mgrOnly.includes(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs};
+  if(!canGo(h)){go('');return}
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
 
 // ---------- home ----------
 function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.use7>0&&i.qty/i.use7<=2))}
-const NONKITCHEN=['كاشير','ستيوارد'];
+// ---------- permissions ----------
+const KITCHEN=[['receive','📦','استلام','فاتورة المورد'],['prep','🍲','تحضير','صوص أو تتبيلة'],['issue','🥩','المستخدم اليومي','اللي اشتغلت بيه'],['waste','🗑️','هدر','بالكمية والسبب'],['count','📋','جرد','آخر الوردية'],['req','🛒','نواقص','اطلب اللي ناقص'],['yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد']];
+const CASHIER=[['shift','💵','فتح وتقفيل الوردية','الدرج والمبيعات']];
+const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم والتجديد'],['sales','💰','مبيعات الوردية','آخر اليوم'],['stock','🏬','المخزون','عندي كام وناقص إيه'],['cash','🧾','الخزنة','كاش ومورّدين'],['invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان'],['report','📊','تقرير آخر اليوم','الربح وفين العجز'],['menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس وتكلفة الطبق'],['items','🧾','الأصناف والريسبي','الأسعار والفاقد'],['stats','📈','التحليلات','أرقام ورسوم'],['att','📸','الحضور','صور الدخول والانصراف'],['log','🕓','السجل','كل حركة باسم صاحبها'],['admin','⚙️','الإعدادات','فروع ومواعيد ومصاريف']];
+const isOwner=()=>S.b&&S.b.me.role==='owner';
+function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
+const has=k=>{const P=myPerms();return P===null||P.includes(k)};
+function canGo(h){if(h===''||h==='fb')return true;if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
 function home(){
-  const b=S.b, m=isMgr(), low=lowItems();
-  if(!m&&NONKITCHEN.includes(b.me.job)){
-    $('#app').innerHTML=`${head(`أهلًا يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+' · '+esc(b.me.job),false)}
-    <div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>
-    <button class="btn" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button><button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;return}
+  const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
   const T=(h,ic,t,s,main)=>`<button class="tile${main?' main':''}" onclick="go('${h}')"><span class="ic">${ic}</span><b>${t}</b><span>${s}</span></button>`;
-  $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name),false)}
-  <div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>
+  const k=KITCHEN.filter(x=>has(x[0])),steps=k.filter(x=>['receive','prep','issue'].includes(x[0])),other=k.filter(x=>!['receive','prep','issue'].includes(x[0])),mg=MGMT.filter(x=>has(x[0]));
+  const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
+  const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner();
+  $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
+  ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
+  ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>تنبيه نواقص (${low.length})</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
-  ${b.open_requests?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
-  <div class="steps">
-   <button class="step" onclick="go('receive')"><span class="no">1</span><span class="ic">📦</span><span><b>استلام</b><small>البضاعة اللي جت من المورد + صورة الفاتورة والميزان</small></span></button>
-   <button class="step" onclick="go('prep')"><span class="no">2</span><span class="ic">🍲</span><span><b>تحضير</b><small>عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع</small></span></button>
-   <button class="step" onclick="go('issue')"><span class="no">3</span><span class="ic">🥩</span><span><b>المستخدم اليومي</b><small>اللي اشتغلت بيه النهارده من الخامات والتحضيرات</small></span></button>
-  </div>
-  <h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2>
-  <div class="grid">
-   ${T('waste','🗑️','هدر','بالكمية والسبب')}
-   ${T('count','📋','جرد','آخر الوردية')}
-   ${T('req','🛒','نواقص','اطلب اللي ناقص')}
-   ${T('yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد')}
-  </div>
-  ${m?`<h2 style="font-size:15px;margin:18px 2px 10px">المدير</h2><div class="grid">
-   ${T('subs','🥗','الاشتراكات','تسليم اليوم والتجديد',1)}
-   ${T('sales','💰','مبيعات الوردية','آخر اليوم',1)}
-   ${T('stock','🏬','المخزون','عندي كام وناقص إيه')}
-   ${T('cash','🧾','الخزنة','كاش ومورّدين')}
-   ${T('invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان')}
-   ${T('report','📊','تقرير آخر اليوم','كيلوهات وتكلفة وكاش وربح')}
-   ${T('menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس اليومي وتكلفة كل طبق',1)}
-   ${T('items','🧾','الأصناف والريسبي','الأسعار والفاقد والتكلفة',1)}
-   ${T('admin','⚙️','الإعدادات','موظفين وفروع ومواعيد')}
-   ${T('stats','📈','التحليلات','أرقام ورسوم لكل حاجة',1)}
-   ${T('att','📸','الحضور','صور الدخول والانصراف')}
-   ${T('log','🕓','السجل','كل حركة باسم صاحبها')}
-  </div>`:''}
-  <button class="btn sec" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
+  ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
+  ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
+  ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
+  ${other.length?`<h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2><div class="grid">${other.map(x=>T(...x)).join('')}</div>`:''}
+  ${mg.length||isOwner()?`<h2 style="font-size:15px;margin:18px 2px 10px">الإدارة</h2><div class="grid">${isOwner()?T('hr','👥','الموظفين (HR)','الملفات والرواتب والصلاحيات',1):''}${mg.map(x=>T(...x,['subs','sales','report','menu','stats'].includes(x[0]))).join('')}</div>`:''}
+  <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
+  <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
   <button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;
 }
+// ---------- cashier shift ----------
+const CF=[['cash','كاش'],['card','شبكة / مدى'],['keeta','كيتا'],['hunger','هنقرستيشن'],['ninja','نينجا'],['other','أخرى'],['discounts','خصومات (للعلم)'],['staff_meals','وجبات موظفين (للعلم)']];
+function shiftOpen(){
+  $('#app').innerHTML=`${head('فتح وردية','عِد الفلوس اللي في الدرج قبل ما تبدأ')}
+  <div class="card"><label>الوردية</label><div class="seg" id="sh">${['صباحي','مسائي'].map(s=>`<button data-s="${s}" class="${S.b.me.shift===s?'on':''}">${s}</button>`).join('')}</div>
+  <label for="c">الفلوس اللي في الدرج دلوقتي (ريال)</label><input id="c" type="number" inputmode="decimal" step="any" placeholder="عِد كويس واكتب الرقم">
+  <button class="btn" id="sv">فتح الوردية</button></div>`;
+  let sh=S.b.me.shift;$('#sh').onclick=e=>{const x=e.target.closest('button');if(!x)return;sh=x.dataset.s;$('#sh').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  $('#sv').onclick=()=>act($('#sv'),async()=>{if($('#c').value==='')throw new Error('اكتب الفلوس اللي في الدرج');const r=await T('lc_shift_open',{p_shift:sh,p_counted:+$('#c').value});S.b.me.shift=sh;
+    toast(r.diff!=null&&Math.abs(r.diff)>0.009?`اتفتحت ✓ فرق عن الدفتر ${n2(r.diff)}`:'الوردية اتفتحت ✓',r.diff<0);go('')});
+}
+function shiftClose(){
+  $('#app').innerHTML=`${head('تقفيل الوردية',`وردية ${S.b.me.shift} · من تقرير فودكس`)}
+  <div class="card"><p class="muted" style="margin-top:0">اطبع تقرير الوردية من فودكس واكتب الأرقام زي ما هي.</p>
+  ${CF.map(([k,l])=>`<div class="row" style="align-items:center"><label for="s_${k}" style="flex:1;margin:0">${l}</label><input id="s_${k}" type="number" inputmode="decimal" step="any" style="flex:0 0 140px"></div>`).join('')}
+  <label for="c">الفلوس اللي في الدرج دلوقتي بعد العد (ريال)</label><input id="c" type="number" inputmode="decimal" step="any">
+  <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">تقفيل الوردية</button>
+  <p class="muted">بعد التقفيل الأرقام بتروح للمدير على طول.</p></div>`;
+  $('#sv').onclick=()=>act($('#sv'),async()=>{if($('#c').value==='')throw new Error('عِد الدرج واكتب المبلغ');const p={};CF.forEach(([k])=>{const v=$('#s_'+k).value;if(v!=='')p[k]=v});
+    if(!Object.keys(p).length)throw new Error('اكتب مبيعات الوردية');const r=await T('lc_shift_close',{p,p_counted:+$('#c').value,p_note:$('#nt').value||null});
+    toast(r.diff!=null&&Math.abs(r.diff)>0.009?`اتقفلت ✓ فرق الدرج ${n2(r.diff)}`:'الوردية اتقفلت ✓',r.diff<0);go('')});
+}
+// ---------- feedback ----------
+async function feedback(){
+  $('#app').innerHTML=`${head('اقتراح أو شكوى','بيوصل للإدارة بس')}
+  <div class="card"><div class="seg" id="k"><button class="on" data-k="اقتراح">اقتراح</button><button data-k="شكوى">شكوى</button></div>
+  <label for="b">اكتب اللي عندك</label><textarea id="b" rows="5" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px"></textarea>
+  <button class="btn" id="sv">إرسال</button></div><div class="card"><h2>اللي بعته قبل كده</h2><div class="list" id="ml"><div class="muted">جاري التحميل…</div></div></div>`;
+  let k='اقتراح';$('#k').onclick=e=>{const x=e.target.closest('button');if(!x)return;k=x.dataset.k;$('#k').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_feedback',{p_kind:k,p_body:$('#b').value});toast('وصل للإدارة ✓');feedback()});
+  const L=await T('lc_my_feedback').catch(()=>[]);$('#ml').innerHTML=L.map(f=>`<div class="li"><div class="t"><b>${f.kind} · ${esc(f.status)}</b><small>${esc(f.body)}</small>${f.reply?`<div class="hint">رد الإدارة: ${esc(f.reply)}</div>`:''}</div></div>`).join('')||'<div class="muted">لسه مفيش</div>';
+}
+// ---------- HR (owner only) ----------
+const MARITAL=['أعزب','متزوج','مطلق','أرمل'];
+async function hrList(){
+  $('#app').innerHTML=`${head('الموظفين (HR)','الملفات دي بتظهر للمالك بس')}<div id="hl"><div class="card muted">جاري التحميل…</div></div>`;
+  const L=await T('lc_hr_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
+  const tot=L.filter(x=>x.active&&x.salary).reduce((a,x)=>a+ +x.salary,0);
+  $('#hl').innerHTML=`<div class="kpis"><div class="kpi"><div class="v num">${L.filter(x=>x.active).length}</div><div class="l">موظف شغال</div></div><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي الرواتب المسجلة</div></div></div>
+   <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${x.fb?`<span class="pill p-warn">${x.fb} جديد</span>`:''}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
+   <button class="btn" onclick="S.hrId=null;go('hrp')">+ موظف جديد</button></div>`;
+}
+async function hrPage(){
+  const id=S.hrId;let x={perms:['receive','prep','issue','waste','count','req','yieldv'],active:true};
+  if(id){$('#app').innerHTML=`${head('ملف موظف','')}<div class="card muted">جاري التحميل…</div>`;x=await T('lc_hr_get',{p_id:id}).catch(e=>{toast(e.message,true);return null});if(!x)return go('hr')}
+  const own=x.role==='owner',v=k=>esc(x[k]??''),P=new Set(x.perms||[]);
+  const box=(list)=>list.map(([k,ic,l])=>`<label style="display:flex;gap:8px;align-items:center;margin:6px 0;font-weight:400"><input type="checkbox" data-p="${k}" ${P.has(k)?'checked':''} style="width:22px;height:22px"> ${ic} ${l}</label>`).join('');
+  $('#app').innerHTML=`${head(id?esc(x.name):'موظف جديد',id?esc(x.job||''):'')}
+  <div class="card"><h2>البيانات</h2>
+   <label for="h_n">الاسم</label><input id="h_n" value="${v('name')}" autocomplete="off">
+   <label for="h_j">الوظيفة</label><input id="h_j" value="${v('job')}" list="jobs"><datalist id="jobs">${['سوبر فايزر','كاشير','ستيوارد','شيف سخن وتجهيزات','شيف فطور وحلويات ومساعد','مدير'].map(j=>`<option>${j}</option>`).join('')}</datalist>
+   <label for="h_ph">الجوال</label><input id="h_ph" type="tel" inputmode="tel" value="${v('phone')}" dir="ltr">
+   <div class="row"><div><label for="h_b">تاريخ الميلاد${x.age!=null?` (${x.age} سنة)`:''}</label><input id="h_b" type="date" value="${v('birth')}"></div><div><label for="h_m">الحالة الاجتماعية</label><select id="h_m"><option value=""></option>${MARITAL.map(m=>`<option ${x.marital===m?'selected':''}>${m}</option>`).join('')}</select></div></div>
+   <label for="h_a">العنوان</label><input id="h_a" value="${v('address')}">
+   <div class="row"><div><label for="h_s">الراتب الشهري</label><input id="h_s" type="number" inputmode="decimal" value="${v('salary')}"></div><div><label for="h_h">تاريخ التوظيف</label><input id="h_h" type="date" value="${v('hire')}"></div></div>
+   <label for="h_no">ملاحظات الإدارة</label><textarea id="h_no" rows="3" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px">${v('notes')}</textarea></div>
+  ${own?'':`<div class="card"><h2>الصلاحيات</h2><p class="muted" style="margin-top:0">علّم على اللي يشوفه بس. أي حاجة من «الإدارة» بتخليه يشوف أرقام الفلوس.</p>
+   <b>المطبخ</b>${box(KITCHEN)}<b>الكاشير</b>${box(CASHIER)}<b>الإدارة</b>${box(MGMT)}
+   <div class="row" style="margin-top:8px"><button class="btn sm sec" id="pk">مطبخ</button><button class="btn sm sec" id="pc">كاشير</button><button class="btn sm sec" id="pn">حضور بس</button></div></div>`}
+  <div class="card"><h2>الدخول</h2><label for="h_pin">${id?'رقم سري جديد (سيبه فاضي لو مش هتغيره)':'الرقم السري'}</label><input id="h_pin" inputmode="numeric" maxlength="8" autocomplete="off">
+   ${id&&!own?`<label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:400"><input type="checkbox" id="h_act" ${x.active?'checked':''} style="width:22px;height:22px"> شغال (لو شلت العلامة مش هيقدر يدخل)</label>`:''}
+   ${id?'':`<label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:400"><input type="checkbox" id="h_own" style="width:22px;height:22px"> مالك (يشوف كل حاجة زيك، والـ HR)</label>`}</div>
+  <button class="btn" id="h_ok">حفظ</button>
+  ${id?`<div class="card"><h2>الحضور</h2><p><b class="num">${x.month.hours}</b> ساعة في <b class="num">${x.month.days}</b> يوم الشهر ده · الشهر اللي فات ${x.prev.hours} ساعة${x.month.open?` · <span style="color:var(--bad)">${x.month.open} وردية من غير انصراف</span>`:''}${x.month.outside?` · <span style="color:var(--bad)">${x.month.outside} تسجيل بره الفرع</span>`:''}</p>
+   <div class="list">${x.days.map(d=>`<div class="li"><div class="t">${d.day}</div><span class="num">${d.first_in?tm(d.first_in):'—'}</span> ← <span class="num">${d.last_out?tm(d.last_out):'<span style="color:var(--bad)">مفيش انصراف</span>'}</span></div>`).join('')||'<div class="muted">مفيش حضور آخر أسبوعين</div>'}</div></div>
+  <div class="card"><h2>المقترحات والشكاوي</h2><div class="list">${x.feedback.map(f=>`<div class="li" style="display:block"><b>${f.kind}</b> <small class="muted">${new Date(f.at).toLocaleDateString('ar-EG')} · ${esc(f.status)}</small><div>${esc(f.body)}</div>
+     <div class="row" style="margin-top:6px"><input id="r${f.id}" placeholder="الرد (اختياري)" value="${esc(f.reply||'')}"><select id="st${f.id}" style="flex:0 0 120px">${['جديد','تحت المراجعة','اتحل','مرفوض'].map(o=>`<option ${f.status===o?'selected':''}>${o}</option>`).join('')}</select><button class="btn sm" style="flex:0 0 auto" onclick="fbReply(${f.id})">حفظ</button></div></div>`).join('')||'<div class="muted">مفيش</div>'}</div></div>`:''}`;
+  const setP=a=>document.querySelectorAll('[data-p]').forEach(c=>c.checked=a.includes(c.dataset.p));
+  if(!own){$('#pk').onclick=()=>setP(KITCHEN.map(k=>k[0]));$('#pc').onclick=()=>setP(['shift']);$('#pn').onclick=()=>setP([])}
+  $('#h_ok').onclick=()=>act($('#h_ok'),async()=>{const g=k=>$('#'+k).value;
+    const p={id:id||'',name:g('h_n'),job:g('h_j'),phone:g('h_ph'),birth:g('h_b'),marital:g('h_m'),address:g('h_a'),salary:g('h_s'),hire:g('h_h'),notes:g('h_no'),pin:g('h_pin')};
+    if(!own)p.perms=[...document.querySelectorAll('[data-p]:checked')].map(c=>c.dataset.p);
+    if(id&&!own)p.active=$('#h_act').checked;if(!id&&$('#h_own').checked)p.role='owner';
+    const r=await T('lc_hr_save',{p});S.hrId=r.id;toast('اتحفظ ✓');go('hr')});
+}
+async function fbReply(fid){await act(null,async()=>{await T('lc_feedback_reply',{p_id:fid,p_status:$('#st'+fid).value,p_reply:$('#r'+fid).value});toast('اتحفظ ✓')})}
 async function setShift(s){await act(null,async()=>{await T('lc_set_shift',{p_shift:s});S.b.me.shift=s;route();toast('الوردية: '+s)})}
 
 // ---------- item picker ----------
@@ -586,9 +648,7 @@ async function admin(){
   ${own&&b.branches?`<div class="card"><h2>الفروع</h2><select id="br">${b.branches.map(x=>`<option value="${x.id}" ${x.id===b.branch.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>
    <div class="row"><input id="nb" placeholder="اسم فرع جديد"><button class="btn sm" id="ab" style="flex:0 0 auto">إضافة</button></div><p class="muted">الفرع الجديد بياخد نفس الخامات والتحضيرات من الفرع الحالي، بمخزون صفر.</p></div>`:''}
   <div class="card"><h2>الخامات والريسبي</h2><button class="btn sec" style="margin-top:0" onclick="go('items')">افتح «الأصناف والريسبي»</button></div>
-  <div class="card"><h2>الموظفين</h2><div class="list" id="st"></div>
-   <div class="row"><div><label for="sn">الاسم</label><input id="sn"></div><div><label for="spn">رقم سري</label><input id="spn" inputmode="numeric" maxlength="8"></div></div>
-   <div class="seg" id="sr" style="margin-top:8px"><button class="on" data-r="chef">شيف</button>${own?'<button data-r="manager">مدير</button>':''}</div><button class="btn" id="as">إضافة موظف</button></div>
+  ${own?`<div class="card"><h2>الموظفين</h2><button class="btn sec" style="margin-top:0" onclick="go('hr')">افتح ملفات الموظفين (HR) والصلاحيات</button></div>`:''}
   <div class="card"><h2>المصاريف الثابتة (شهري)</h2><div class="list" id="fx"></div>
    <div class="row"><div><label for="fn">البند</label><input id="fn"></div><div><label for="fm">المبلغ الشهري</label><input id="fm" type="number" inputmode="decimal"></div></div><button class="btn sec" id="af">إضافة بند</button></div>
   <div class="card"><h2>المستهدفات والعمولات</h2>
@@ -604,14 +664,10 @@ async function admin(){
     $('#ab').onclick=()=>act($('#ab'),async()=>{await T('lc_add_branch',{p_name:$('#nb').value,p_city:null,p_copy_from:b.branch.id});await boot();toast('الفرع اتضاف ✓');admin()})}
   $('#sst').onclick=()=>act($('#sst'),async()=>{await T('lc_save_shift_times',{p_morning:$('#ms').value||null,p_evening:$('#es').value||null});toast('المواعيد اتحفظت ✓')});
   $('#loc').onclick=()=>act($('#loc'),async()=>{const p=await getPos();if(!p)throw new Error('اسمح للتطبيق بالموقع');await T('lc_set_location',{p_lat:p.lat,p_lng:p.lng,p_radius:+$('#rad').value||150});toast('موقع الفرع اتحفظ ✓')});
-  let role='chef';$('#sr').onclick=e=>{const x=e.target.closest('button');if(!x)return;role=x.dataset.r;$('#sr').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
-  $('#as').onclick=()=>act($('#as'),async()=>{await T('lc_add_staff',{p_name:$('#sn').value,p_pin:$('#spn').value,p_role:role});toast('الموظف اتضاف ✓');admin()});
   $('#af').onclick=()=>act($('#af'),async()=>{await T('lc_save_fixed',{p_id:null,p_name:$('#fn').value,p_monthly:+$('#fm').value});toast('اتضاف ✓');admin()});
   const pv=id=>$('#'+id).value===''?'':String(+$('#'+id).value/100);
   $('#sb').onclick=()=>act($('#sb'),async()=>{await T('lc_save_branch',{p:{fct:pv('fct'),ck:pv('ck'),cn:pv('cn'),ch:pv('ch')}});await boot();toast('اتحفظ ✓')});
   $('#cp').onclick=()=>act($('#cp'),async()=>{await T('lc_change_pin',{p_old:$('#op').value,p_new:$('#np').value});toast('الرقم السري اتغير ✓');$('#op').value=$('#np').value=''});
-  const st=await T('lc_staff').catch(()=>[]);
-  $('#st').innerHTML=st.map(s=>`<div class="li"><div class="t"><b>${esc(s.name)}</b><small>${esc(s.job||{chef:'شيف',manager:'مدير',owner:'مالك'}[s.role])}</small></div>${s.role!=='owner'?`<button class="btn sm ${s.active?'bad':'sec'}" onclick="staffActive('${esc(s.name)}',${!s.active})">${s.active?'إيقاف':'تفعيل'}</button>`:''}</div>`).join('')||'<div class="muted">مفيش موظفين في الفرع ده لسه</div>';
   const M=await T('lc_money').catch(()=>null);
   if(M){const tot=M.fixed.reduce((a,f)=>a+ +f.monthly,0);
     $('#fx').innerHTML=M.fixed.map(f=>`<div class="li"><div class="t"><b>${esc(f.name)}</b><small>${esc(f.note||'')}</small></div><input type="number" inputmode="decimal" value="${f.monthly}" style="width:110px;flex:0 0 110px" onchange="fixedUpd(${f.id},this.value)"><button class="x" onclick="fixedOff(${f.id})">✕</button></div>`).join('')+`<div class="li"><div class="t"><b>الإجمالي الشهري</b><small>في اليوم ≈ <span class="num">${n0(tot*12/365)}</span></small></div><b class="num">${n0(tot)}</b></div>`}
