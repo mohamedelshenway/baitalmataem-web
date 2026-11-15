@@ -180,19 +180,26 @@ function home(){
 }
 // ---------- first login: employee data ----------
 function profileScreen(){
+  const F=(id,l,t='text',x='')=>`<label for="${id}">${l}</label><input id="${id}" type="${t}" ${x}>`;
   $('#app').innerHTML=`${head('بياناتك','أول مرة بس · اكتبها كاملة علشان تبدأ',false)}
-  <div class="card"><p class="muted" style="margin-top:0">أهلًا يا ${esc(S.b.me.name)}. البيانات دي بتوصل للإدارة بس، ومحدش من زمايلك بيشوفها.</p>
-   <label for="p_ph">رقم الجوال</label><input id="p_ph" type="tel" inputmode="tel" dir="ltr" placeholder="05xxxxxxxx" autocomplete="tel">
-   <label for="p_b">تاريخ الميلاد</label><input id="p_b" type="date">
-   <label for="p_a">العنوان (الحي والمدينة)</label><input id="p_a" autocomplete="street-address">
-   <label>الحالة الاجتماعية</label><div class="seg" id="p_m">${['أعزب','متزوج','مطلق','أرمل'].map(m=>`<button data-m="${m}">${m}</button>`).join('')}</div>
-   <label for="p_h">بدأت الشغل هنا من تاريخ</label><input id="p_h" type="date">
-   <label for="p_s">الراتب الشهري (ريال)</label><input id="p_s" type="number" inputmode="decimal">
+  <div class="card"><p class="muted" style="margin-top:0">أهلًا يا ${esc(S.b.me.name)}. البيانات دي بتوصل للإدارة بس، ومحدش من زمايلك بيشوفها. كل الخانات إجباري.</p>
+   <h2>صورتك الشخصية</h2><div class="row" style="align-items:center"><div id="p_ph_img" class="muted" style="flex:1">صورة واضحة لوشّك، من غير نضارة شمس أو كاب</div><button class="btn sm sec" id="p_cam" style="flex:0 0 auto;margin:0">📸 صوّر نفسك</button></div></div>
+  <div class="card"><h2>البيانات الشخصية</h2>
+   ${F('p_nat','الجنسية')}${F('p_id','رقم الإقامة أو الهوية (10 أرقام)','text','inputmode="numeric" maxlength="10" dir="ltr"')}${F('p_ide','تاريخ انتهاء الإقامة أو الهوية','date')}
+   ${F('p_b','تاريخ الميلاد','date')}${F('p_ph','رقم الجوال','tel','inputmode="tel" dir="ltr" placeholder="05xxxxxxxx"')}${F('p_a','العنوان (الحي والمدينة)')}
+   <label>الحالة الاجتماعية</label><div class="seg" id="p_m">${['أعزب','متزوج','مطلق','أرمل'].map(m=>`<button data-m="${m}">${m}</button>`).join('')}</div></div>
+  <div class="card"><h2>الشغل</h2>
+   ${F('p_cs','بدأت الشغل في الشركة من تاريخ','date')}${F('p_h','بدأت الشغل في الفرع ده من تاريخ','date')}${F('p_s','الراتب الشهري (ريال)','number','inputmode="decimal"')}
+   ${F('p_ll','تاريخ آخر إجازة سنوية (سيبه فاضي لو لسه ماخدتش)','date')}${F('p_nl','تاريخ الإجازة السنوية المستحقة','date')}${F('p_he','تاريخ انتهاء الشهادة الصحية','date')}</div>
+  <div class="card"><h2>في حالة الطوارئ</h2>${F('p_en','اسم شخص نكلمه')}${F('p_ep','رقم جواله','tel','inputmode="tel" dir="ltr"')}
    <button class="btn" id="p_ok">حفظ وابدأ</button><button class="btn sec" onclick="logout()">مش أنا – خروج</button></div>`;
-  let m='';$('#p_m').onclick=e=>{const x=e.target.closest('button');if(!x)return;m=x.dataset.m;$('#p_m').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  let m='',photo=null;$('#p_m').onclick=e=>{const x=e.target.closest('button');if(!x)return;m=x.dataset.m;$('#p_m').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  $('#p_cam').onclick=async()=>{const img=await snapCam('صورتك الشخصية','صورة الملف · '+S.b.me.name,'user');if(img){photo=img;$('#p_ph_img').innerHTML=thumb(img,80);$('#p_cam').textContent='📸 إعادة'}};
   $('#p_ok').onclick=()=>act($('#p_ok'),async()=>{const g=k=>$('#'+k).value.trim();
-    if(!g('p_ph')||!g('p_b')||!g('p_a')||!m||!g('p_h')||!g('p_s'))throw new Error('كمّل كل البيانات');
-    await T('lc_my_profile_save',{p:{phone:g('p_ph'),birth:g('p_b'),address:g('p_a'),marital:m,hire:g('p_h'),salary:g('p_s')}});
+    if(!photo)throw new Error('صوّر صورتك الشخصية الأول');
+    for(const k of ['p_nat','p_id','p_ide','p_b','p_ph','p_a','p_cs','p_h','p_s','p_nl','p_he','p_en','p_ep'])if(!g(k)){$('#'+k).focus();throw new Error('كمّل كل البيانات')}
+    if(!m)throw new Error('اختار الحالة الاجتماعية');
+    await T('lc_my_profile_save',{p:{photo,nationality:g('p_nat'),id_number:g('p_id'),id_expiry:g('p_ide'),birth:g('p_b'),phone:g('p_ph'),address:g('p_a'),marital:m,company_start:g('p_cs'),hire:g('p_h'),salary:g('p_s'),last_leave:g('p_ll'),next_leave:g('p_nl'),health_expiry:g('p_he'),emergency_name:g('p_en'),emergency_phone:g('p_ep')}});
     S.b.me.profile_done=true;toast('اتحفظ ✓ شكرًا');route()});
 }
 // ---------- cashier shift ----------
@@ -234,7 +241,7 @@ async function hrList(){
   const L=await T('lc_hr_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
   const tot=L.filter(x=>x.active&&x.salary).reduce((a,x)=>a+ +x.salary,0);
   $('#hl').innerHTML=`<div class="kpis"><div class="kpi"><div class="v num">${L.filter(x=>x.active).length}</div><div class="l">موظف شغال</div></div><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي الرواتب المسجلة</div></div></div>
-   <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${x.fb?`<span class="pill p-warn">${x.fb} جديد</span>`:''}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
+   <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${x.done===false?'<span class="pill p-warn">بياناته ناقصة</span>':''}${(x.alerts||[]).map(a=>`<span class="pill p-bad">${a} قرّبت</span>`).join('')}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
    <button class="btn" onclick="S.hrId=null;go('hrp')">+ موظف جديد</button></div>`;
 }
 async function hrPage(){
@@ -246,10 +253,16 @@ async function hrPage(){
   <div class="card"><h2>البيانات</h2>
    <label for="h_n">الاسم</label><input id="h_n" value="${v('name')}" autocomplete="off">
    <label for="h_j">الوظيفة</label><input id="h_j" value="${v('job')}" list="jobs"><datalist id="jobs">${['سوبر فايزر','كاشير','ستيوارد','شيف سخن وتجهيزات','شيف فطور وحلويات ومساعد','مدير'].map(j=>`<option>${j}</option>`).join('')}</datalist>
+   ${x.photo?`<div style="text-align:center;margin:6px 0">${thumb(x.photo,110)}<div class="muted">الصورة الشخصية (المرجع)</div></div>`:''}
    <label for="h_ph">الجوال</label><input id="h_ph" type="tel" inputmode="tel" value="${v('phone')}" dir="ltr">
+   <div class="row"><div><label for="h_nat">الجنسية</label><input id="h_nat" value="${v('nationality')}"></div><div><label for="h_id">رقم الإقامة/الهوية</label><input id="h_id" inputmode="numeric" dir="ltr" value="${v('id_number')}"></div></div>
+   <div class="row"><div><label for="h_ide">انتهاء الإقامة</label><input id="h_ide" type="date" value="${v('id_expiry')}"></div><div><label for="h_he">انتهاء الشهادة الصحية</label><input id="h_he" type="date" value="${v('health_expiry')}"></div></div>
    <div class="row"><div><label for="h_b">تاريخ الميلاد${x.age!=null?` (${x.age} سنة)`:''}</label><input id="h_b" type="date" value="${v('birth')}"></div><div><label for="h_m">الحالة الاجتماعية</label><select id="h_m"><option value=""></option>${MARITAL.map(m=>`<option ${x.marital===m?'selected':''}>${m}</option>`).join('')}</select></div></div>
    <label for="h_a">العنوان</label><input id="h_a" value="${v('address')}">
-   <div class="row"><div><label for="h_s">الراتب الشهري</label><input id="h_s" type="number" inputmode="decimal" value="${v('salary')}"></div><div><label for="h_h">تاريخ التوظيف</label><input id="h_h" type="date" value="${v('hire')}"></div></div>
+   <div class="row"><div><label for="h_s">الراتب الشهري</label><input id="h_s" type="number" inputmode="decimal" value="${v('salary')}"></div><div><label for="h_cs">بداية الشغل في الشركة</label><input id="h_cs" type="date" value="${v('company_start')}"></div></div>
+   <div class="row"><div><label for="h_h">بداية الشغل في الفرع</label><input id="h_h" type="date" value="${v('hire')}"></div><div><label for="h_ll">آخر إجازة سنوية</label><input id="h_ll" type="date" value="${v('last_leave')}"></div></div>
+   <label for="h_nl">الإجازة المستحقة</label><input id="h_nl" type="date" value="${v('next_leave')}">
+   <div class="row"><div><label for="h_en">طوارئ: الاسم</label><input id="h_en" value="${v('emergency_name')}"></div><div><label for="h_ep">طوارئ: الجوال</label><input id="h_ep" type="tel" inputmode="tel" dir="ltr" value="${v('emergency_phone')}"></div></div>
    <label for="h_no">ملاحظات الإدارة</label><textarea id="h_no" rows="3" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px">${v('notes')}</textarea></div>
   ${own?'':`<div class="card"><h2>الصلاحيات</h2><p class="muted" style="margin-top:0">علّم على اللي يشوفه بس. أي حاجة من «الإدارة» بتخليه يشوف أرقام الفلوس.</p>
    <b>المطبخ</b>${box(KITCHEN)}<b>الكاشير</b>${box(CASHIER)}<b>الإدارة</b>${box(MGMT)}
@@ -265,7 +278,7 @@ async function hrPage(){
   const setP=a=>document.querySelectorAll('[data-p]').forEach(c=>c.checked=a.includes(c.dataset.p));
   if(!own){$('#pk').onclick=()=>setP(KITCHEN.map(k=>k[0]));$('#pc').onclick=()=>setP(['shift']);$('#pn').onclick=()=>setP([])}
   $('#h_ok').onclick=()=>act($('#h_ok'),async()=>{const g=k=>$('#'+k).value;
-    const p={id:id||'',name:g('h_n'),job:g('h_j'),phone:g('h_ph'),birth:g('h_b'),marital:g('h_m'),address:g('h_a'),salary:g('h_s'),hire:g('h_h'),notes:g('h_no'),pin:g('h_pin')};
+    const p={id:id||'',name:g('h_n'),job:g('h_j'),phone:g('h_ph'),birth:g('h_b'),marital:g('h_m'),address:g('h_a'),salary:g('h_s'),hire:g('h_h'),notes:g('h_no'),pin:g('h_pin'),nationality:g('h_nat'),id_number:g('h_id'),id_expiry:g('h_ide'),health_expiry:g('h_he'),company_start:g('h_cs'),last_leave:g('h_ll'),next_leave:g('h_nl'),emergency_name:g('h_en'),emergency_phone:g('h_ep')};
     if(!own)p.perms=[...document.querySelectorAll('[data-p]:checked')].map(c=>c.dataset.p);
     if(id&&!own)p.active=$('#h_act').checked;if(!id&&$('#h_own').checked)p.role='owner';
     const r=await T('lc_hr_save',{p});S.hrId=r.id;toast('اتحفظ ✓');go('hr')});
@@ -301,14 +314,14 @@ function yieldHint(i,q){if(!q||!(i.cy||i.ky))return '';const u=i.unit;
   return `<div class="hint">${i.cy?`بعد التنظيف ≈ <b class="num">${n2(q*i.cy)}</b> ${esc(u)}`:''}${i.cy&&i.ky?' · ':''}${i.ky?`بعد التسوية ≈ <b class="num">${n2(q*i.ky)}</b> ${esc(u)}`:''}</div>`}
 
 // ---------- live camera (back) ----------
-function snapCam(title,label){return new Promise(async res=>{
+function snapCam(title,label,facing){return new Promise(async res=>{
   const m=document.createElement('div');m.className='modal';
   m.innerHTML=`<div class="sheet" style="text-align:center"><h2 style="margin:0 0 8px;font-size:17px">${esc(title)}</h2><video playsinline autoplay muted style="width:100%;max-height:58vh;border-radius:14px;background:#000"></video><canvas style="display:none"></canvas>
   <button class="btn" id="cs" disabled>📸 صوّر</button><button class="btn sec" id="cx">إلغاء</button></div>`;
   document.body.appendChild(m);const v=m.querySelector('video'),c=m.querySelector('canvas');let st=null;
   const end=r=>{st&&st.getTracks().forEach(t=>t.stop());m.remove();res(r)};
   m.querySelector('#cx').onclick=()=>end(null);
-  try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}},audio:false});v.srcObject=st;m.querySelector('#cs').disabled=false}catch(e){toast('اسمح للتطبيق باستخدام الكاميرا',true);return end(null)}
+  try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:facing||'environment'},width:{ideal:1280}},audio:false});v.srcObject=st;m.querySelector('#cs').disabled=false}catch(e){toast('اسمح للتطبيق باستخدام الكاميرا',true);return end(null)}
   m.querySelector('#cs').onclick=()=>act(m.querySelector('#cs'),async()=>{
     const w=960,h=Math.round(w*(v.videoHeight||720)/(v.videoWidth||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(v,0,0,w,h);
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
@@ -759,7 +772,7 @@ async function attendance(){
   const today=new Date().toISOString().slice(0,10);
   $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
-    $('#al').innerHTML=A.map(a=>`<div class="li"><img src="${a.photo}" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:12px" onclick="this.style.width=this.style.width==='100%'?'64px':'100%';this.style.height='auto'"><div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
+    $('#al').innerHTML=A.map(a=>`<div class="li">${thumb(a.photo,64)}${a.ref?`<span style="opacity:.85">${thumb(a.ref,40)}</span>`:''}<div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
   $('#d').onchange=load;load();
 }
 
