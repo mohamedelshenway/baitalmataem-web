@@ -139,11 +139,12 @@ async function route(){
   if(!S.b){try{await boot()}catch(e){return}}
   const h=location.hash.slice(1); S.lines=[];
   if(!S.b.me.profile_done){if(h!=='')go('');return profileScreen()}
+  if(S.b.me.supplier){(({'':supplierHome,supinv:supInvoice,mystmt:myStatement,fb:feedback})[h]||supplierHome)();return}
   if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -153,11 +154,12 @@ function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.u
 // ---------- permissions ----------
 const KITCHEN=[['receive','📦','استلام','فاتورة المورد'],['prep','🍲','تحضير','صوص أو تتبيلة'],['issue','🥩','المستخدم اليومي','اللي اشتغلت بيه'],['waste','🗑️','هدر','بالكمية والسبب'],['count','📋','جرد','آخر الوردية'],['req','🛒','نواقص','اطلب اللي ناقص'],['yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد']];
 const CASHIER=[['shift','💵','فتح وتقفيل الوردية','الدرج والمبيعات']];
-const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم والتجديد'],['sales','💰','مبيعات الوردية','آخر اليوم'],['stock','🏬','المخزون','عندي كام وناقص إيه'],['cash','🧾','الخزنة','كاش ومورّدين'],['invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان'],['report','📊','تقرير آخر اليوم','الربح وفين العجز'],['menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس وتكلفة الطبق'],['items','🧾','الأصناف والريسبي','الأسعار والفاقد'],['stats','📈','التحليلات','أرقام ورسوم'],['att','📸','الحضور','صور الدخول والانصراف'],['log','🕓','السجل','كل حركة باسم صاحبها'],['admin','⚙️','الإعدادات','فروع ومواعيد ومصاريف']];
+const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم والتجديد'],['sales','💰','مبيعات الوردية','آخر اليوم'],['stock','🏬','المخزون','عندي كام وناقص إيه'],['cash','🧾','الخزنة','كاش ومورّدين'],['invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان'],['report','📊','تقرير آخر اليوم','الربح وفين العجز'],['menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس وتكلفة الطبق'],['items','🧾','الأصناف والريسبي','الأسعار والفاقد'],['stats','📈','التحليلات','أرقام ورسوم'],['att','📸','الحضور','صور الدخول والانصراف'],['log','🕓','السجل','كل حركة باسم صاحبها'],['sup','🚚','الموردين','الفواتير والمطابقة والحسابات'],['admin','⚙️','الإعدادات','فروع ومواعيد ومصاريف']];
+const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتيره ويشوف حسابه']];
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
@@ -226,6 +228,67 @@ function shiftClose(){
     if(!Object.keys(p).length)throw new Error('اكتب مبيعات الوردية');const r=await T('lc_shift_close',{p,p_counted:+$('#c').value,p_note:$('#nt').value||null});
     toast(r.diff!=null&&Math.abs(r.diff)>0.009?`اتقفلت ✓ فرق الدرج ${n2(r.diff)}`:'الوردية اتقفلت ✓',r.diff<0);go('')});
 }
+// ---------- supplier portal ----------
+const ST_PILL=s=>`<span class="pill ${s==='معتمدة'?'p-ok':s==='فيها فرق'?'p-bad':'p-warn'}">${esc(s)}</span>`;
+function supplierHome(){
+  $('#app').innerHTML=`${head(`أهلًا يا ${S.b.me.name.split(' ')[0]}`,'مندوب '+esc(S.b.me.supplier),false)}
+  <div class="steps"><button class="step" onclick="go('supinv')"><span class="ic">📸</span><span><b>ارفع فاتورة</b><small>صوّر الفاتورة واكتب رقمها وإجماليها</small></span></button>
+  <button class="step" onclick="go('mystmt')"><span class="ic">📒</span><span><b>كشف حسابي</b><small>الفواتير المعتمدة والدفعات والباقي</small></span></button></div>
+  <button class="btn sec" onclick="go('fb')">💬 رسالة أو ملاحظة للإدارة</button><button class="btn sec" onclick="logout()">خروج</button>`;
+}
+function supInvoice(){
+  const today=new Date().toISOString().slice(0,10);
+  $('#app').innerHTML=`${head('رفع فاتورة',esc(S.b.me.supplier))}<div class="card">
+   <label>صورة الفاتورة (إجباري)</label><div class="row" style="align-items:center"><div id="ph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر الفاتورة</button></div>
+   <label for="no">رقم الفاتورة</label><input id="no" dir="ltr" inputmode="text">
+   <label for="dt">تاريخ الفاتورة</label><input id="dt" type="date" value="${today}">
+   <div class="row"><div><label for="net">الإجمالي قبل الضريبة</label><input id="net" type="number" inputmode="decimal" step="any"></div><div><label for="gr">الإجمالي بعد الضريبة</label><input id="gr" type="number" inputmode="decimal" step="any"></div></div>
+   <label>طريقة الدفع</label><div class="seg" id="pay"><button class="on" data-v="آجل">آجل</button><button data-v="كاش">كاش</button></div>
+   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">إرسال الفاتورة</button>
+   <p class="muted">الفاتورة بتتعتمد لوحدها لما المطبخ يستلم نفس الفاتورة بنفس الرقم والإجمالي.</p></div>`;
+  let photo=null,pay='آجل';$('#cam').onclick=async()=>{const img=await snapCam('صوّر الفاتورة كاملة','فاتورة '+S.b.me.supplier);if(img){photo=img;$('#ph').innerHTML=thumb(img,64)}};
+  $('#pay').onclick=e=>{const x=e.target.closest('button');if(!x)return;pay=x.dataset.v;$('#pay').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
+  $('#net').oninput=()=>{if(!$('#gr').dataset.t){$('#gr').value=$('#net').value?(+$('#net').value*(1+(S.b.branch.vat||0.15))).toFixed(2):''}};$('#gr').oninput=()=>{$('#gr').dataset.t=1};
+  $('#sv').onclick=()=>act($('#sv'),async()=>{if(!photo)throw new Error('صوّر الفاتورة الأول');
+    const r=await T('lc_supplier_invoice',{p:{photo,invoice:$('#no').value,date:$('#dt').value,net:$('#net').value,gross:$('#gr').value,pay,note:$('#nt').value||null}});
+    toast(r.status==='معتمدة'?'اتعتمدت ✓ مطابقة لاستلام المطبخ':r.status==='فيها فرق'?'وصلت، بس فيه فرق عن استلام المطبخ والإدارة هتراجعه':'وصلت ✓ مستنية المطبخ يستلمها',r.status==='فيها فرق');go('mystmt')});
+}
+function stmtHTML(st){return `<div class="kpis"><div class="kpi"><div class="v num">${n2(st.approved)}</div><div class="l">فواتير معتمدة (آجل)</div></div><div class="kpi"><div class="v num">${n2(st.paid)}</div><div class="l">اتدفع</div></div><div class="kpi"><div class="v num" style="color:${st.balance>0?'var(--bad)':'inherit'}">${n2(st.balance)}</div><div class="l">الباقي</div></div></div>
+  ${st.pending?`<div class="alert">فيه فواتير بـ <b class="num">${n2(st.pending)}</b> لسه مش معتمدة (مستنية المطبخ أو فيها فرق)</div>`:''}
+  <div class="card"><h2>الفواتير</h2><div class="list">${st.invoices.map(i=>`<div class="li" ${i.id&&isMgr()?`onclick="supPhoto(${i.id})" style="cursor:pointer"`:''}><div class="t"><b>فاتورة ${esc(i.no||'بدون رقم')} · ${i.date}</b><small>${i.sup?'':'المطبخ استلمها والمورد لسه مارفعهاش · '}${esc(i.pay)}${i.gross?` · بعد الضريبة ${n2(i.gross)}`:''}${i.diff&&Math.abs(i.diff)>0.009?` · <span style="color:var(--bad)">فرق ${n2(i.diff)}</span>`:''}</small></div><span class="num">${n2(i.net)}</span>${ST_PILL(i.status)}</div>`).join('')||'<div class="muted">مفيش</div>'}</div></div>
+  <div class="card"><h2>الدفعات</h2><div class="list">${st.payments.map(p=>`<div class="li"><div class="t"><b>${p.day}</b><small>${esc(p.method)}${p.ref?' · '+esc(p.ref):''}${p.note?' · '+esc(p.note):''}</small></div><span class="num">${n2(p.amount)}</span></div>`).join('')||'<div class="muted">لسه مفيش دفعات</div>'}</div></div>`}
+async function myStatement(){
+  $('#app').innerHTML=`${head('كشف حسابي',esc(S.b.me.supplier))}<div id="ms"><div class="card muted">جاري التحميل…</div></div>`;
+  const r=await T('lc_my_supplier').catch(e=>{toast(e.message,true);return null});if(r)$('#ms').innerHTML=stmtHTML(r.st);
+}
+async function supPhoto(id){const src=await T('lc_supplier_photo',{p_id:id}).catch(()=>null);if(src)bigImg(src)}
+async function suppliersMgr(){
+  $('#app').innerHTML=`${head('الموردين','فواتير المورد قصاد استلام المطبخ، والحسابات')}<div id="sm"><div class="card muted">جاري التحميل…</div></div>`;
+  const L=await T('lc_suppliers_board').catch(e=>{toast(e.message,true);return null});if(!L)return;S.supL=L;
+  const tot=L.reduce((a,x)=>a+ +x.st.balance,0);
+  $('#sm').innerHTML=`<div class="kpis"><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي المستحق للموردين</div></div><div class="kpi"><div class="v num">${L.reduce((a,x)=>a+ +x.mismatch,0)}</div><div class="l">فواتير فيها فرق</div></div></div>
+   <div class="card"><div class="list">${L.map((x,k)=>`<div class="li" style="cursor:pointer" onclick="S.supK=${k};go('supd')"><div class="t"><b>${esc(x.name)}</b><small>${x.rep?esc(x.rep):'مفيش بيانات مندوب'}${x.phone?' · '+esc(x.phone):''}${x.reps?' · له حساب':''}</small></div>${x.mismatch?`<span class="pill p-bad">${x.mismatch} فرق</span>`:''}${x.waiting?`<span class="pill p-warn">${x.waiting} مستنية</span>`:''}<b class="num">${n0(x.st.balance)}</b></div>`).join('')||'<div class="muted">مفيش موردين</div>'}</div>
+   <button class="btn" onclick="supEdit(null)">+ مورد جديد</button></div>`;
+}
+function supplierDetail(){
+  const x=(S.supL||[])[S.supK];if(!x)return go('sup');
+  $('#app').innerHTML=`${head(esc(x.name),(x.rep?esc(x.rep):'')+(x.phone?' · '+esc(x.phone):''))}
+   <div class="card"><h2>تسجيل دفعة</h2><div class="row"><div><label for="am">المبلغ</label><input id="am" type="number" inputmode="decimal"></div><div><label>الطريقة</label><select id="mt"><option>تحويل</option><option>كاش</option><option>شيك</option></select></div></div>
+   <label for="rf">رقم التحويل أو الشيك (اختياري)</label><input id="rf" dir="ltr"><button class="btn" id="pv">تسجيل الدفعة</button><p class="muted">الكاش بيتخصم من الخزنة لوحده.</p></div>
+   <div id="st">${stmtHTML(x.st)}</div><button class="btn sec" onclick="supEdit(S.supL[S.supK])">تعديل بيانات المورد والمندوب</button>`;
+  $('#pv').onclick=()=>act($('#pv'),async()=>{const st=await T('lc_supplier_pay',{p_supplier:x.name,p_amount:+$('#am').value,p_method:$('#mt').value,p_ref:$('#rf').value||null,p_note:null});x.st=st;toast('الدفعة اتسجلت ✓');supplierDetail()});
+}
+function supEdit(x){
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet"><h2 style="margin:0">${x?esc(x.name):'مورد جديد'}</h2>
+   <label for="s_n">اسم المورد</label><input id="s_n" value="${esc(x?.name||'')}" ${x?'readonly':''}>
+   <label for="s_r">اسم المندوب</label><input id="s_r" value="${esc(x?.rep||'')}"><label for="s_p">جوال المندوب</label><input id="s_p" type="tel" dir="ltr" value="${esc(x?.phone||'')}">
+   <label for="s_t">شروط الدفع (مثلًا آجل 30 يوم)</label><input id="s_t" value="${esc(x?.terms||'')}">
+   <p class="muted">علشان المندوب يرفع فواتيره بنفسه: اعمله حساب من «الموظفين (HR)» واختار المورد ده، وعلّم على «بوابة المورد».</p>
+   <button class="btn" id="ok">حفظ</button><button class="btn sec" id="no">إلغاء</button></div>`;
+  document.body.appendChild(m);m.querySelector('#no').onclick=()=>m.remove();
+  m.querySelector('#ok').onclick=()=>act(m.querySelector('#ok'),async()=>{await T('lc_supplier_save',{p:{name:m.querySelector('#s_n').value,rep:m.querySelector('#s_r').value,phone:m.querySelector('#s_p').value,terms:m.querySelector('#s_t').value}});m.remove();await boot();toast('اتحفظ ✓');suppliersMgr()});
+}
 // ---------- employee self update ----------
 async function myNote(){
   $('#app').innerHTML=`${head('رسالة للإدارة','بتوصل للإدارة باسمك، والرد بيظهرلك هنا')}
@@ -266,6 +329,7 @@ async function hrPage(){
   $('#app').innerHTML=`${head(id?esc(x.name):'موظف جديد',id?esc(x.job||''):'')}
   <div class="card"><h2>البيانات</h2>
    <label for="h_n">الاسم</label><input id="h_n" value="${v('name')}" autocomplete="off">
+   <label for="h_sup">مندوب لمورد؟ (لو هو مندوب اختار المورد)</label><select id="h_sup"><option value="">لأ، موظف في الفرع</option>${(S.b.suppliers||[]).map(n=>`<option ${x.supplier===n?'selected':''}>${esc(n)}</option>`).join('')}</select>
    <label for="h_j">الوظيفة</label><input id="h_j" value="${v('job')}" list="jobs"><datalist id="jobs">${['سوبر فايزر','كاشير','ستيوارد','شيف سخن وتجهيزات','شيف فطور وحلويات ومساعد','مدير'].map(j=>`<option>${j}</option>`).join('')}</datalist>
    ${x.photo?`<div style="text-align:center;margin:6px 0">${thumb(x.photo,110)}<div class="muted">الصورة الشخصية (المرجع)</div></div>`:''}
    <label for="h_ph">الجوال</label><input id="h_ph" type="tel" inputmode="tel" value="${v('phone')}" dir="ltr">
@@ -279,7 +343,7 @@ async function hrPage(){
    <div class="row"><div><label for="h_en">طوارئ: الاسم</label><input id="h_en" value="${v('emergency_name')}"></div><div><label for="h_ep">طوارئ: الجوال</label><input id="h_ep" type="tel" inputmode="tel" dir="ltr" value="${v('emergency_phone')}"></div></div>
    <label for="h_no">ملاحظات الإدارة</label><textarea id="h_no" rows="3" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px">${v('notes')}</textarea></div>
   ${own?'':`<div class="card"><h2>الصلاحيات</h2><p class="muted" style="margin-top:0">علّم على اللي يشوفه بس. أي حاجة من «الإدارة» بتخليه يشوف أرقام الفلوس.</p>
-   <b>المطبخ</b>${box(KITCHEN)}<b>الكاشير</b>${box(CASHIER)}<b>الإدارة</b>${box(MGMT)}
+   <b>المطبخ</b>${box(KITCHEN)}<b>الكاشير</b>${box(CASHIER)}<b>الإدارة</b>${box(MGMT)}<b>المورد</b>${box(SUPPLY)}
    <div class="row" style="margin-top:8px"><button class="btn sm sec" id="pk">مطبخ</button><button class="btn sm sec" id="pc">كاشير</button><button class="btn sm sec" id="pn">حضور بس</button></div></div>`}
   <div class="card"><h2>الدخول</h2><label for="h_pin">${id?'رقم سري جديد (سيبه فاضي لو مش هتغيره)':'الرقم السري'}</label><input id="h_pin" inputmode="numeric" maxlength="8" autocomplete="off">
    ${id&&!own?`<label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:400"><input type="checkbox" id="h_act" ${x.active?'checked':''} style="width:22px;height:22px"> شغال (لو شلت العلامة مش هيقدر يدخل)</label>`:''}
@@ -293,7 +357,7 @@ async function hrPage(){
   const setP=a=>document.querySelectorAll('[data-p]').forEach(c=>c.checked=a.includes(c.dataset.p));
   if(!own){$('#pk').onclick=()=>setP(KITCHEN.map(k=>k[0]));$('#pc').onclick=()=>setP(['shift']);$('#pn').onclick=()=>setP([])}
   $('#h_ok').onclick=()=>act($('#h_ok'),async()=>{const g=k=>$('#'+k).value;
-    const p={id:id||'',name:g('h_n'),job:g('h_j'),phone:g('h_ph'),birth:g('h_b'),marital:g('h_m'),address:g('h_a'),salary:g('h_s'),hire:g('h_h'),notes:g('h_no'),pin:g('h_pin'),nationality:g('h_nat'),id_number:g('h_id'),id_expiry:g('h_ide'),health_expiry:g('h_he'),company_start:g('h_cs'),last_leave:g('h_ll'),next_leave:g('h_nl'),emergency_name:g('h_en'),emergency_phone:g('h_ep')};
+    const p={id:id||'',name:g('h_n'),job:g('h_j'),phone:g('h_ph'),birth:g('h_b'),marital:g('h_m'),address:g('h_a'),salary:g('h_s'),hire:g('h_h'),notes:g('h_no'),pin:g('h_pin'),nationality:g('h_nat'),id_number:g('h_id'),id_expiry:g('h_ide'),health_expiry:g('h_he'),company_start:g('h_cs'),last_leave:g('h_ll'),next_leave:g('h_nl'),emergency_name:g('h_en'),emergency_phone:g('h_ep'),supplier:g('h_sup')};if(p.supplier&&!document.querySelector('[data-p="supply"]').checked)throw new Error('علّم على «بوابة المورد» في الصلاحيات');
     if(!own)p.perms=[...document.querySelectorAll('[data-p]:checked')].map(c=>c.dataset.p);
     if(id&&!own)p.active=$('#h_act').checked;if(!id&&$('#h_own').checked)p.role='owner';
     const r=await T('lc_hr_save',{p});S.hrId=r.id;toast('اتحفظ ✓');go('hr')});
@@ -866,7 +930,7 @@ async function invoices(){
   $('#app').innerHTML=`${head('الفواتير المستلمة','صورة الفاتورة الممضية وكل صنف على الميزان')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"></div><div id="il"></div>`;
   const ph=async(el,id)=>{if(!id)return;const src=await T('lc_receipt_photo',{p_id:id}).catch(()=>null);if(src)el.innerHTML=thumb(src,64)};
   const load=async()=>{const R=await T('lc_receipts',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
-    $('#il').innerHTML=R.map(r=>`<div class="card"><div class="li" style="border:0"><span data-p="${r.inv_photo||''}">${r.inv_photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(r.supplier)}${r.invoice?' · فاتورة '+esc(r.invoice):''}</b><small>${tm(r.at)} · ${esc(r.shift)} · ${esc(r.by||'')} · ${esc(r.pay)}</small></div><b class="num">${n2(r.total)}</b></div>
+    $('#il').innerHTML=R.map(r=>`<div class="card"><div class="li" style="border:0"><span data-p="${r.inv_photo||''}">${r.inv_photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(r.supplier)}${r.invoice?' · فاتورة '+esc(r.invoice):''}</b><small>${tm(r.at)} · ${esc(r.shift)} · ${esc(r.by||'')} · ${esc(r.pay)} ${r.match?`<span class="pill ${r.match==='معتمدة'?'p-ok':'p-bad'}">${r.match}</span>`:'<span class="pill">المورد لسه مارفعهاش</span>'}</small></div><b class="num">${n2(r.total)}</b></div>
       <div class="list">${(r.lines||[]).map(l=>`<div class="li"><span data-p="${l.photo||''}">${l.photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(l.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(l.unit)} × <span class="num">${n2(l.price)}</span> = <span class="num">${n2(l.qty*l.price)}</span></small></div></div>`).join('')}</div></div>`).join('')||'<div class="card muted">مفيش فواتير في اليوم ده</div>';
     $('#il').querySelectorAll('[data-p]').forEach(el=>ph(el,+el.dataset.p||0))};
   $('#d').onchange=load;load();
