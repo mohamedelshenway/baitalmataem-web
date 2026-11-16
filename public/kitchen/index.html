@@ -144,7 +144,7 @@ async function route(){
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -159,7 +159,7 @@ const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتير�
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
@@ -176,7 +176,7 @@ function home(){
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
   ${other.length?`<h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2><div class="grid">${other.map(x=>T(...x)).join('')}</div>`:''}
-  ${mg.length||isOwner()?`<h2 style="font-size:15px;margin:18px 2px 10px">الإدارة</h2><div class="grid">${isOwner()?T('hr','👥','الموظفين (HR)','الملفات والرواتب والصلاحيات',1):''}${mg.map(x=>T(...x,['subs','sales','report','menu','stats'].includes(x[0]))).join('')}</div>`:''}
+  ${mg.length||isOwner()?`<h2 style="font-size:15px;margin:18px 2px 10px">الإدارة</h2><div class="grid">${isOwner()?T('hr','👥','الموظفين (HR)','الملفات والرواتب والصلاحيات',1)+T('voice','💬','صوت الفريق','الاقتراحات والشكاوي السرية',1):''}${mg.map(x=>T(...x,['subs','sales','report','menu','stats'].includes(x[0]))).join('')}</div>`:''}
   ${isOwner()?'':`<button class="btn sec" onclick="go('mynote')">✉️ رسالة للإدارة أو تحديث لملفي</button>`}
   <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
   <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
@@ -300,15 +300,27 @@ async function myNote(){
   $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_my_note',{p_body:$('#b').value,p_photo:photo});toast('وصل للإدارة ✓');myNote()});
   const L=await T('lc_my_notes').catch(()=>[]);$('#ml').innerHTML=L.map(n=>`<div class="li"><div class="t"><b>${new Date(n.at).toLocaleDateString('ar-EG')}${n.has_photo?' · 📎 صورة':''}</b><small>${esc(n.body)}</small>${n.reply?`<div class="hint">رد الإدارة: ${esc(n.reply)}</div>`:''}</div><span class="pill ${n.seen?'p-ok':'p-warn'}">${n.reply?'اتردّ':n.seen?'اتقرت':'لسه'}</span></div>`).join('')||'<div class="muted">لسه مفيش</div>';
 }
+// ---------- team voice (owners) ----------
+async function voiceInbox(){
+  $('#app').innerHTML=`${head('صوت الفريق','الرسائل سرية، من غير اسم ولا ساعة')}<div id="vl"><div class="card muted">جاري التحميل…</div></div>`;
+  const L=await T('lc_voice_inbox').catch(e=>{toast(e.message,true);return null});if(!L)return;
+  $('#vl').innerHTML=L.map(f=>`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">${f.kind} · ${f.day}</b><span class="pill ${f.status==='جديد'?'p-warn':'p-ok'}">${esc(f.status)}</span></div><p style="white-space:pre-wrap">${esc(f.body)}</p>
+    <label>الحالة</label><select id="st${f.id}">${['جديد','تحت المراجعة','اتحل','مرفوض'].map(o=>`<option ${f.status===o?'selected':''}>${o}</option>`).join('')}</select>
+    <label>القرار أو الرد</label><input id="r${f.id}" value="${esc(f.reply||'')}" placeholder="مثلًا: اتصلّح التكييف">
+    <label style="display:flex;gap:8px;align-items:center;font-weight:400;margin-top:8px"><input type="checkbox" id="pb${f.id}" ${f.public?'checked':''} style="width:22px;height:22px"> انشره للفريق في «صوتك مسموع»</label>
+    <label>النص اللي يظهر للفريق (سيبه فاضي يظهر زي ما هو)</label><input id="pt${f.id}" value="${esc(f.public_text||'')}">
+    <button class="btn sm" onclick="voiceSave(${f.id})">حفظ</button></div>`).join('')||'<div class="card muted">مفيش رسايل لسه</div>';
+}
+async function voiceSave(id){await act(null,async()=>{await T('lc_voice_answer',{p_id:id,p_status:$('#st'+id).value,p_reply:$('#r'+id).value,p_public:$('#pb'+id).checked,p_public_text:$('#pt'+id).value});toast('اتحفظ ✓')})}
 // ---------- feedback ----------
 async function feedback(){
   $('#app').innerHTML=`${head('اقتراح أو شكوى','بيوصل للإدارة بس')}
   <div class="card"><div class="seg" id="k"><button class="on" data-k="اقتراح">اقتراح</button><button data-k="شكوى">شكوى</button></div>
   <label for="b">اكتب اللي عندك</label><textarea id="b" rows="5" style="width:100%;font:inherit;border:1px solid var(--line);border-radius:12px;padding:10px"></textarea>
-  <button class="btn" id="sv">إرسال</button></div><div class="card"><h2>اللي بعته قبل كده</h2><div class="list" id="ml"><div class="muted">جاري التحميل…</div></div></div>`;
+  <button class="btn" id="sv">إرسال</button><p class="muted">🔒 سري: اسمك مش بيتسجل مع الرسالة، ومحدش يقدر يعرف مين بعتها.</p></div><div class="card"><h2>صوتك مسموع – قرارات الإدارة</h2><div class="list" id="ml"><div class="muted">جاري التحميل…</div></div></div>`;
   let k='اقتراح';$('#k').onclick=e=>{const x=e.target.closest('button');if(!x)return;k=x.dataset.k;$('#k').querySelectorAll('button').forEach(y=>y.classList.toggle('on',y===x))};
   $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_feedback',{p_kind:k,p_body:$('#b').value});toast('وصل للإدارة ✓');feedback()});
-  const L=await T('lc_my_feedback').catch(()=>[]);$('#ml').innerHTML=L.map(f=>`<div class="li"><div class="t"><b>${f.kind} · ${esc(f.status)}</b><small>${esc(f.body)}</small>${f.reply?`<div class="hint">رد الإدارة: ${esc(f.reply)}</div>`:''}</div></div>`).join('')||'<div class="muted">لسه مفيش</div>';
+  const L=await T('lc_voice_board').catch(()=>[]);$('#ml').innerHTML=L.map(f=>`<div class="li"><div class="t"><b>${f.kind} · ${esc(f.status)}</b><small>${esc(f.body)}</small>${f.reply?`<div class="hint">قرار الإدارة: ${esc(f.reply)}</div>`:''}</div></div>`).join('')||'<div class="muted">لسه مفيش قرارات منشورة</div>';
 }
 // ---------- HR (owner only) ----------
 const MARITAL=['أعزب','متزوج','مطلق','أرمل'];
