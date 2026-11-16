@@ -116,8 +116,12 @@ async function act(btn,fn){if(btn)btn.disabled=true;try{return await fn()}catch(
 function logout(silent){S.att=null;S.b=null;if(S.token&&!silent)rpc('lc_logout',{p_token:S.token}).catch(()=>{});S.token=null;try{localStorage.removeItem('lc_token')}catch(e){};location.hash='';login()}
 const isMgr=()=>S.b&&['manager','owner'].includes(S.b.me.role);
 const item=code=>S.b.items.find(i=>i.code===code);
-function head(title,sub,back=true){return `<header class="top">${back?`<button class="back" onclick="go('')" aria-label="رجوع">→</button>`:''}<div style="flex:1"><h1>${esc(title)}</h1>${sub?`<div class="sub">${sub}</div>`:''}</div></header>`}
-function go(h){location.hash=h}
+function head(title,sub,back=true){return `<header class="top">${back?`<button class="back" onclick="goBack()" aria-label="رجوع">→</button>`:''}<div style="flex:1"><h1>${esc(title)}</h1>${sub?`<div class="sub">${sub}</div>`:''}</div></header>`}
+function go(h){const c=location.hash.slice(1);if(c!==h){(S.stack=S.stack||[]).push(c);S.tabBack=null}location.hash=h}
+function goBack(){if(S.tabBack){const f=S.tabBack;S.tabBack=null;return f()}
+  const c=location.hash.slice(1),parent={hrp:'hr',supd:'sup'}[c];S.stack=S.stack||[];
+  let p=S.stack.pop();while(p===c&&S.stack.length)p=S.stack.pop();
+  if(parent!==undefined&&(p===undefined||p===''))p=parent;location.hash=p||''}
 window.addEventListener('hashchange',route);
 
 // ---------- login ----------
@@ -595,7 +599,7 @@ async function make(){
 
 // ---------- items & recipes (manager) ----------
 async function itemsMgr(tab){
-  tab=tab||'raw';
+  tab=tab||'raw';S.tabBack=tab!=='raw'?()=>itemsMgr():null;
   $('#app').innerHTML=`${head('الأصناف والريسبي','الأسعار والفاقد وتكلفة كل تحضيرة')}<div class="chips" style="margin-bottom:12px">${[['raw','الخامات'],['rec','الريسبي والصوصات']].map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="itemsMgr('${k}')">${l}</button>`).join('')}</div><div id="im"></div>`;
   if(tab==='raw'){
     let q='',nop=false;
@@ -921,7 +925,7 @@ function guessCols(H){const f=re=>H.findIndex(h=>re.test(String(h||'')));
   let name=f(/product|item|name|الصنف|المنتج|اسم|الوجبة/i),qty=f(/quantity|qty|count|الكمية|العدد/i),sales=f(/net\s*sales|صافي/i);
   if(sales<0)sales=f(/total|sales|amount|المبيعات|الإجمالي|المبلغ|السعر/i);return {name,qty,sales}}
 async function menuMgr(tab){
-  tab=tab||'up';
+  tab=tab||'up';S.tabBack=tab!=='up'?()=>menuMgr():null;
   $('#app').innerHTML=`${head('المنيو ومبيعات الأصناف','اللي اتباع وأسعاره وتكلفة كل طبق')}<div class="chips" style="margin-bottom:12px">${[['up','رفع ملف فودكس'],['sold','اللي اتباع'],['dishes','الأطباق وتكلفتها']].map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="menuMgr('${k}')">${l}</button>`).join('')}</div><div id="mm"></div>`;
   const box=$('#mm');const today=new Date().toISOString().slice(0,10);
   if(tab==='up'){
@@ -991,7 +995,7 @@ async function invoices(){
 // ---------- subscriptions ----------
 const wa=p=>{if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('05'))d='966'+d.slice(1);else if(d.startsWith('5')&&d.length===9)d='966'+d;return `https://wa.me/${d}`};
 async function subs(tab){
-  tab=tab||S.subTab||'deliver';S.subTab=null;const mg=S.b.me.role!=='chef';
+  tab=tab||S.subTab||'deliver';S.subTab=null;S.tabBack=tab!=='deliver'?()=>subs():null;const mg=S.b.me.role!=='chef';
   const tabs=[['deliver','تسليم اليوم'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
   $('#app').innerHTML=`${head('الاشتراكات',`وردية ${S.b.me.shift}`)}<div class="chips" style="margin-bottom:12px">${tabs.map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="subs('${k}')">${l}</button>`).join('')}</div><div id="sb"><div class="muted">جاري التحميل…</div></div>`;
   if(tab==='st')return subStats();
