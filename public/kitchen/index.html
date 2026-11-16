@@ -144,7 +144,7 @@ async function route(){
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -154,7 +154,7 @@ function lowItems(){return S.b.items.filter(i=>(i.min!=null&&i.qty<=i.min)||(i.u
 // ---------- permissions ----------
 const KITCHEN=[['receive','📦','استلام','فاتورة المورد'],['prep','🍲','تحضير','صوص أو تتبيلة'],['issue','🥩','المستخدم اليومي','اللي اشتغلت بيه'],['waste','🗑️','هدر','بالكمية والسبب'],['count','📋','جرد','آخر الوردية'],['req','🛒','نواقص','اطلب اللي ناقص'],['yieldv','⚖️','اختبار فاقد','أوزان قبل وبعد']];
 const CASHIER=[['shift','💵','فتح وتقفيل الوردية','الدرج والمبيعات']];
-const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم والتجديد'],['sales','💰','مبيعات الوردية','آخر اليوم'],['stock','🏬','المخزون','عندي كام وناقص إيه'],['cash','🧾','الخزنة','كاش ومورّدين'],['invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان'],['report','📊','تقرير آخر اليوم','الربح وفين العجز'],['menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس وتكلفة الطبق'],['items','🧾','الأصناف والريسبي','الأسعار والفاقد'],['stats','📈','التحليلات','أرقام ورسوم'],['att','📸','الحضور','صور الدخول والانصراف'],['log','🕓','السجل','كل حركة باسم صاحبها'],['sup','🚚','الموردين','الفواتير والمطابقة والحسابات'],['admin','⚙️','الإعدادات','فروع ومواعيد ومصاريف']];
+const MGMT=[['subs','🥗','الاشتراكات','تسليم اليوم والتجديد'],['sales','💰','مبيعات الوردية','آخر اليوم'],['stock','🏬','المخزون','عندي كام وناقص إيه'],['cash','🧾','الخزنة','كاش ومورّدين'],['invs','📑','الفواتير المستلمة','بصور الفاتورة والميزان'],['report','📊','تقرير آخر اليوم','الربح وفين العجز'],['menu','🍽️','المنيو ومبيعات الأصناف','ملف فودكس وتكلفة الطبق'],['items','🧾','الأصناف والريسبي','الأسعار والفاقد'],['stats','📈','التحليلات','أرقام ورسوم'],['att','📸','الحضور','صور الدخول والانصراف'],['log','🕓','السجل','كل حركة باسم صاحبها'],['po','🛒','أوامر الشراء','بتتعمل لوحدها قبل ما الحاجة تخلص'],['sup','🚚','الموردين','الفواتير والمطابقة والحسابات'],['admin','⚙️','الإعدادات','فروع ومواعيد ومصاريف']];
 const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتيره ويشوف حسابه']];
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
@@ -172,6 +172,7 @@ function home(){
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>هيخلص خلال يوم (${low.length}) – اطلب دلوقتي</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}${i.use7>0?` · بيخلص في اليوم <span class="num">${n2(i.use7)}</span>`:''}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
   ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
+  ${b.po_drafts&&has('po')?`<div class="alert" onclick="go('po')"><b>${b.po_drafts} أمر شراء جاهز للاعتماد</b><br>السيستم جهّزه لوحده للحاجات اللي هتخلص ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
@@ -233,6 +234,7 @@ const ST_PILL=s=>`<span class="pill ${s==='معتمدة'?'p-ok':s==='فيها ف
 function supplierHome(){
   $('#app').innerHTML=`${head(`أهلًا يا ${S.b.me.name.split(' ')[0]}`,'مندوب '+esc(S.b.me.supplier),false)}
   <div class="steps"><button class="step" onclick="go('supinv')"><span class="ic">📸</span><span><b>ارفع فاتورة</b><small>صوّر الفاتورة واكتب رقمها وإجماليها</small></span></button>
+  <button class="step" onclick="supOrders()"><span class="ic">🛒</span><span><b>الطلبيات</b><small>أوامر الشراء اللي المطعم اعتمدها ليك</small></span></button>
   <button class="step" onclick="go('mystmt')"><span class="ic">📒</span><span><b>كشف حسابي</b><small>الفواتير المعتمدة والدفعات والباقي</small></span></button></div>
   <button class="btn sec" onclick="go('fb')">💬 رسالة أو ملاحظة للإدارة</button><button class="btn sec" onclick="logout()">خروج</button>`;
 }
@@ -288,6 +290,42 @@ function supEdit(x){
    <button class="btn" id="ok">حفظ</button><button class="btn sec" id="no">إلغاء</button></div>`;
   document.body.appendChild(m);m.querySelector('#no').onclick=()=>m.remove();
   m.querySelector('#ok').onclick=()=>act(m.querySelector('#ok'),async()=>{await T('lc_supplier_save',{p:{name:m.querySelector('#s_n').value,rep:m.querySelector('#s_r').value,phone:m.querySelector('#s_p').value,terms:m.querySelector('#s_t').value}});m.remove();await boot();toast('اتحفظ ✓');suppliersMgr()});
+}
+async function supOrders(){
+  $('#app').innerHTML=`${head('الطلبيات',esc(S.b.me.supplier))}<div id="so"><div class="card muted">جاري التحميل…</div></div>`;
+  const L=await T('lc_my_pos').catch(e=>{toast(e.message,true);return[]});
+  $('#so').innerHTML=L.map(o=>`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">طلبية رقم ${o.id}</b><span class="pill ${o.status==='اتستلم'?'p-ok':'p-warn'}">${o.status==='معتمد'?'مطلوبة':o.status}</span></div><small class="muted">${o.at?new Date(o.at).toLocaleString('ar-EG'):''}</small>
+   <div class="list">${(o.lines||[]).map(l=>`<div class="li"><div class="t">${esc(l.name)}</div><b class="num">${n2(l.qty)}</b> ${esc(l.unit)}</div>`).join('')}</div></div>`).join('')||'<div class="card muted">مفيش طلبيات</div>';
+}
+// ---------- purchase orders ----------
+function poText(o){return `أمر شراء رقم ${o.id} – ${S.b.branch.name}\n`+(o.lines||[]).filter(l=>+l.qty>0).map(l=>`• ${l.name}: ${+(+l.qty).toFixed(2)} ${l.unit}`).join('\n')+(o.note?`\nملاحظة: ${o.note}`:'')}
+async function poList(){
+  $('#app').innerHTML=`${head('أوامر الشراء','بتتعمل لوحدها للحاجات اللي هتخلص خلال يوم')}<div id="pl"><div class="card muted">جاري التحميل…</div></div>`;
+  const L=await T('lc_po_list').catch(e=>{toast(e.message,true);return null});if(!L)return;S.pos=L;const mg=isMgr();
+  $('#pl').innerHTML=(L.map((o,k)=>{const ed=o.status==='مسودة'&&mg,est=(o.lines||[]).reduce((a,l)=>a+(+l.qty)*(+l.price||0),0);
+   return `<div class="card"><div class="row" style="align-items:center"><b style="flex:1">${esc(o.supplier)} · رقم ${o.id}</b><span class="pill ${o.status==='مسودة'?'p-warn':o.status==='معتمد'?'':o.status==='اتستلم'?'p-ok':'p-bad'}">${o.status==='مسودة'?'مستني اعتمادك':o.status}</span></div>
+   <small class="muted">${o.auto?'اتعمل لوحده':'طلب يدوي'} · ${new Date(o.at).toLocaleDateString('ar-EG')}${o.rep&&o.rep.name?' · المندوب '+esc(o.rep.name):''}</small>
+   <div class="list">${(o.lines||[]).map(l=>`<div class="li"><div class="t"><b>${esc(l.name)}</b><small>الموجود ${n2(l.stock)} ${esc(l.unit)}${l.reason?' · '+esc(l.reason):''}${o.receipt?` · <b>اتستلم ${n2(l.got||0)}</b>${Math.abs((+l.got||0)-(+l.qty))>0.01?' <span style="color:var(--bad)">(مختلف عن المطلوب)</span>':''}`:''}</small></div>
+     ${ed?`<input data-po="${k}" data-l="${l.id}" type="number" inputmode="decimal" step="any" value="${+(+l.qty).toFixed(2)}" style="width:80px;flex:0 0 80px">`:`<b class="num">${n2(l.qty)}</b>`}<span class="muted">${esc(l.unit)}</span></div>`).join('')}</div>
+   ${est&&mg?`<p class="muted">التكلفة التقديرية ${n0(est)} ريال قبل الضريبة</p>`:''}
+   ${ed?`<button class="btn" onclick="poAct(${k},'approve')">اعتماد</button><button class="btn sec" onclick="poAct(${k},'save')">حفظ الكميات</button><button class="btn sec" style="color:var(--bad)" onclick="poAct(${k},'cancel')">إلغاء</button>`:''}
+   ${o.status==='معتمد'?`<a class="btn" target="_blank" rel="noopener" href="${o.rep&&o.rep.phone?wa(o.rep.phone):'https://wa.me/'}?text=${encodeURIComponent(poText(o))}">ابعته واتساب${o.rep&&o.rep.name?' لـ '+esc(o.rep.name):''}</a>${mg?`<button class="btn sec" style="color:var(--bad)" onclick="poAct(${k},'cancel')">إلغاء</button>`:''}`:''}</div>`}).join('')||'<div class="card muted">مفيش أوامر شراء دلوقتي، كل حاجة مكفّية</div>')+
+   `<button class="btn sec" onclick="poManual()">+ أمر شراء يدوي</button><p class="muted">السيستم بيعمل أمر الشراء لما الخامة تكفي يوم أو أقل (من متوسط استهلاك آخر 7 أيام) أو توصل للحد الأدنى، والكمية تكفي الأيام المحددة لكل خامة. المورد بيتاخد من آخر فاتورة استلام، والحاجات اللي ملهاش مورد بتروح «شراء خارجي (السوق)».</p>`;
+}
+async function poAct(k,a){const o=S.pos[k];if(a==='cancel'&&!confirm('إلغاء أمر الشراء؟'))return;
+  const lines=[...document.querySelectorAll(`[data-po="${k}"]`)].map(x=>({id:+x.dataset.l,qty:+x.value}));
+  await act(null,async()=>{await T('lc_po_save',{p_id:o.id,p_lines:lines,p_action:a,p_note:null});toast(a==='approve'?'اتعتمد ✓ ابعته للمورد':'اتحفظ ✓');poList();boot()})}
+function poManual(){
+  const sups=[...(S.b.suppliers||[]),'شراء خارجي (السوق)'];const L=[];
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet"><h2 style="margin:0">أمر شراء يدوي</h2><label for="ps">المورد</label><select id="ps">${sups.map(x=>`<option>${esc(x)}</option>`).join('')}</select>
+   <div class="list" id="pll"></div><button class="btn sec" id="pa">+ ضيف خامة</button><button class="btn" id="pok">حفظ</button><button class="btn sec" id="pno">إلغاء</button></div>`;
+  document.body.appendChild(m);const draw=()=>{m.querySelector('#pll').innerHTML=L.map((l,k)=>{const i=item(l.code);return `<div class="li"><div class="t">${esc(i.name)}</div><input data-k="${k}" type="number" inputmode="decimal" value="${l.qty||''}" placeholder="الكمية" style="width:80px;flex:0 0 80px"><span class="muted">${esc(i.unit)}</span></div>`}).join('')};
+  m.querySelector('#pll').oninput=e=>{const k=e.target.dataset.k;if(k!=null)L[k].qty=+e.target.value};
+  m.querySelector('#pa').onclick=()=>{m.style.display='none';pickItem(i=>{m.style.display='';L.push({code:i.code,qty:0});draw()},x=>x.kind!=='prep');
+    const obs=new MutationObserver(()=>{if(!document.querySelector('.modal .sheet #res')){m.style.display='';obs.disconnect()}});obs.observe(document.body,{childList:true})};
+  m.querySelector('#pno').onclick=()=>m.remove();
+  m.querySelector('#pok').onclick=()=>act(m.querySelector('#pok'),async()=>{const ls=L.filter(l=>l.qty>0);if(!ls.length)throw new Error('ضيف خامة وكميتها');await T('lc_po_new',{p_supplier:m.querySelector('#ps').value,p_lines:ls});m.remove();toast('اتعمل ✓');poList()});
 }
 // ---------- employee self update ----------
 async function myNote(){
@@ -808,6 +846,8 @@ function editItem(i){
   <label for="e_n">الاسم</label><input id="e_n" value="${esc(v(i?.name))}">
   <div class="row"><div><label for="e_u">الوحدة</label><select id="e_u">${['كجم','لتر','قطعة','علبة','كرتونة','رول','ربطة'].map(u=>`<option ${i?.unit===u?'selected':''}>${u}</option>`).join('')}</select></div>
   <div><label for="e_p">سعر الشراء للوحدة</label><input id="e_p" type="number" inputmode="decimal" step="any" value="${v(i?.price??i?.cost)}"></div></div>
+  <div class="row"><div><label for="e_sp">المورد المعتاد</label><input id="e_sp" list="sups" value="${esc(v(i?.sup))}" placeholder="آخر مورد استلمنا منه"><datalist id="sups">${(S.b.suppliers||[]).map(n=>`<option>${esc(n)}</option>`).join('')}<option>شراء خارجي (السوق)</option></datalist></div>
+   <div><label for="e_cv">الطلبية تكفي كام يوم</label><input id="e_cv" type="number" inputmode="numeric" value="${v(i?.cover??3)}"></div></div>
   <div class="row"><div><label for="e_m">الحد الأدنى (تنبيه)</label><input id="e_m" type="number" inputmode="decimal" step="any" value="${v(i?.min)}"></div>
   <div><label for="e_d">جرد يومي</label><select id="e_d"><option value="false">لا</option><option value="true" ${i?.daily?'selected':''}>نعم</option></select></div></div>
   <div class="hint"><b>الفاقد:</b> وزّن كمية مرة واحدة واكتب الأوزان، والنسب هتتحسب لوحدها.
@@ -825,7 +865,7 @@ function editItem(i){
   ['w_r','w_c','w_k'].forEach(x=>m.querySelector('#'+x).oninput=wt);['e_p','e_cy','e_ky'].forEach(x=>m.querySelector('#'+x).oninput=res);m.querySelector('#e_u').onchange=res;res();
   m.querySelector('#e_s').onclick=()=>scan(m.querySelector('#scanbox2'),c=>m.querySelector('#e_b').value=c);
   const g=id=>m.querySelector('#'+id).value;const p100=id=>g(id)===''?'':String(+g(id)/100);
-  m.querySelector('#e_ok').onclick=()=>act(m.querySelector('#e_ok'),async()=>{await T('lc_save_item',{p:{code:i?.code||'',name:g('e_n'),unit:g('e_u'),price:g('e_p'),min:g('e_m'),daily:g('e_d')==='true',barcode:g('e_b'),cy:p100('e_cy'),ky:p100('e_ky')}});await boot();m.remove();toast('اتحفظ ✓');if(location.hash==='#items')itemsMgr('raw')});
+  m.querySelector('#e_ok').onclick=()=>act(m.querySelector('#e_ok'),async()=>{await T('lc_save_item',{p:{code:i?.code||'',name:g('e_n'),unit:g('e_u'),price:g('e_p'),min:g('e_m'),daily:g('e_d')==='true',barcode:g('e_b'),cy:p100('e_cy'),ky:p100('e_ky'),supplier:g('e_sp'),cover:g('e_cv')}});await boot();m.remove();toast('اتحفظ ✓');if(location.hash==='#items')itemsMgr('raw')});
 }
 
 // ---------- audit ----------
