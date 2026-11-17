@@ -148,7 +148,7 @@ async function route(){
   const last=S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -163,14 +163,14 @@ const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتير�
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');if(h==='route')return has('route')||has('subs');return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
   const T=(h,ic,t,s,main)=>`<button class="tile${main?' main':''}" onclick="go('${h}')"><span class="ic">${ic}</span><b>${t}</b><span>${s}</span></button>`;
   const k=KITCHEN.filter(x=>has(x[0])),steps=k.filter(x=>['receive','prep','issue'].includes(x[0])),other=k.filter(x=>!['receive','prep','issue'].includes(x[0])),mg=MGMT.filter(x=>has(x[0]));
   const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
-  const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner();
+  const drv=myPerms()!==null&&has('route');const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner()&&!drv;
   $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
@@ -178,6 +178,7 @@ function home(){
   ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
   ${b.po_drafts&&has('po')?`<div class="alert" onclick="go('po')"><b>${b.po_drafts} أمر شراء جاهز للاعتماد</b><br>السيستم جهّزه لوحده للحاجات اللي هتخلص ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
+  ${drv?`<div class="steps"><button class="step" onclick="go('route')"><span class="ic">🚗</span><span><b>خط السير</b><small>توصيل الاشتراكات النهارده بالعناوين واللوكيشن</small></span></button></div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
   ${other.length?`<h2 style="font-size:14px;margin:16px 2px 8px;color:var(--muted)">حاجات تانية</h2><div class="grid">${other.map(x=>T(...x)).join('')}</div>`:''}
@@ -996,13 +997,14 @@ async function invoices(){
 const wa=p=>{if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('05'))d='966'+d.slice(1);else if(d.startsWith('5')&&d.length===9)d='966'+d;return `https://wa.me/${d}`};
 async function subs(tab){
   tab=tab||S.subTab||'deliver';S.subTab=null;S.tabBack=tab!=='deliver'?()=>subs():null;const mg=S.b.me.role!=='chef';
-  const tabs=[['deliver','تسليم اليوم'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
+  const tabs=[['deliver','تسليم اليوم'],['route','خط السير 🚗'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
   $('#app').innerHTML=`${head('الاشتراكات',`وردية ${S.b.me.shift}`)}<div class="chips" style="margin-bottom:12px">${tabs.map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="subs('${k}')">${l}</button>`).join('')}</div><div id="sb"><div class="muted">جاري التحميل…</div></div>`;
   if(tab==='st')return subStats();
+  if(tab==='route')return routeScreen(true);
   const L=await T('lc_sub_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
-  const box=$('#sb');
+  const box=$('#sb');S.subL=L;
   if(tab==='deliver'){
-    box.innerHTML=`<div class="card"><p class="muted" style="margin-top:0">اكتب عدد الوجبات اللي اتسلمت لكل مشترك في الوردية دي، و0 لو ما استلمش.</p><div class="list">${L.active.map(a=>`<div class="li"><div class="t"><b>${esc(a.name)}</b><small>${esc(a.package)} · فاضل <span class="num">${a.remaining}</span> من ${a.total} · لحد ${a.end}${a.status!=='نشط'?' · '+a.status:''}</small></div><input data-id="${a.id}" type="number" inputmode="numeric" min="0" style="width:80px;flex:0 0 80px" value="${a.today||''}" placeholder="${a.mpd}" ${a.status!=='نشط'?'disabled':''}></div>`).join('')||'<div class="muted">مفيش اشتراكات نشطة</div>'}</div>
+    box.innerHTML=`<div class="card"><p class="muted" style="margin-top:0">اكتب عدد الوجبات اللي اتسلمت لكل مشترك في الوردية دي، و0 لو ما استلمش.</p><div class="list">${L.active.map(a=>`<div class="li"><div class="t"><b>${esc(a.name)}</b><small>${esc(a.package)} · فاضل <span class="num">${a.remaining}</span> من ${a.total} · لحد ${a.end}${a.status!=='نشط'?' · '+a.status:''}${a.dl&&a.dl.delivery?` · 🚗 ${a.drv?RPILL(a.drv):'لسه'}`:''}</small></div><input data-id="${a.id}" type="number" inputmode="numeric" min="0" style="width:80px;flex:0 0 80px" value="${a.today||''}" placeholder="${a.mpd}" ${a.status!=='نشط'?'disabled':''}></div>`).join('')||'<div class="muted">مفيش اشتراكات نشطة</div>'}</div>
     ${L.active.length?`<button class="btn sec" id="fill" style="margin-top:0">املا الكل بالعدد اليومي</button><button class="btn" id="sv">حفظ التسليم</button>`:''}</div>`;
     if(!L.active.length)return;
     $('#fill').onclick=()=>box.querySelectorAll('input[data-id]:not([disabled])').forEach(x=>{if(x.value==='')x.value=x.placeholder});
@@ -1017,18 +1019,21 @@ async function subs(tab){
     <div class="row"><div><label for="pd">المدفوع فعلًا</label><input id="pd" type="number" inputmode="decimal"></div><div><label for="sd">يبدأ من</label><input id="sd" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>
     <div id="disc" class="muted" style="margin-top:6px"></div>
     <label>طريقة الدفع</label><div class="seg" id="pay">${['كاش','شبكة','تحويل'].map(p=>`<button>${p}</button>`).join('')}</div>
+    <label>الاستلام</label><div class="seg" id="dlv"><button class="on" data-v="0">من الفرع</button><button data-v="1">توصيل 🚗</button></div><div id="dlf" style="display:none">${DLF({})}</div>
     <label for="nt">ملاحظة</label><input id="nt"><button class="btn" id="sv">تسجيل الاشتراك</button>
     <p class="muted">لو الرقم مسجل قبل كده هيتحسب تجديد. الكاش بيدخل الخزنة لوحده.</p></div>`;
     const dsc=()=>{const o=$('#pk').selectedOptions[0];const lp=+o.dataset.price,pd=+$('#pd').value;$('#disc').textContent=pd?`سعر الباقة ${n0(lp)} · الخصم ${n0(lp-pd)} ريال (${pc((lp-pd)/lp)})`:''};
     $('#pk').onchange=dsc;$('#pd').oninput=dsc;
     let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=b.textContent;$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
-    $('#sv').onclick=()=>act($('#sv'),async()=>{const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
+    let dlv=false;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none'};DLB();
+    $('#sv').onclick=()=>act($('#sv'),async()=>{const dp=dlv?DLV():null;if(dp&&!dp.address&&!dp.map)throw new Error('اكتب عنوان التوصيل أو لينك اللوكيشن');const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
+      if(dp){const L2=await T('lc_sub_list');const ph=$('#ph').value.replace(/\D/g,'').slice(-9);const a=L2.active.find(x=>(x.phone||'').replace(/\D/g,'').slice(-9)===ph);if(a)await T('lc_sub_delivery_save',{p_subscriber:a.sid,p:{delivery:true,...dp}})}
       toast(r.renewal?'التجديد اتسجل ✓':'الاشتراك اتسجل ✓');subs('deliver')});
   }
   if(tab==='list'){
     let q='';const draw=()=>{const R=L.active.filter(a=>!q||a.name.includes(q)||(a.phone||'').includes(q));
-      $('#sl').innerHTML=`<div style="overflow-x:auto"><table class="pl" style="min-width:600px"><tr class="muted"><td>العميل</td><td>نوع الاشتراك</td><td>الدفع</td><td>تاريخ التجديد</td><td>تاريخ الانتهاء</td><td>فاضل</td></tr>
-      ${R.map(a=>{const dl=Math.round((new Date(a.end)-new Date(new Date().toISOString().slice(0,10)))/864e5);return `<tr><td><b>${esc(a.name)}</b><br><small class="muted" dir="ltr">${esc(a.phone||'')}</small></td><td>${esc(a.package)}</td><td>${esc(a.pay||'—')}</td><td class="num">${a.start}${a.renewal?' <small class="muted">تجديد</small>':''}</td><td class="num" style="color:${dl<=3?'var(--bad)':'inherit'}">${a.end}</td><td class="num">${a.remaining} وجبة${a.status!=='نشط'?' · '+a.status:''}</td></tr>`}).join('')||'<tr><td colspan="6" class="muted">مفيش مشتركين</td></tr>'}</table></div>`};
+      $('#sl').innerHTML=`<div style="overflow-x:auto"><table class="pl" style="min-width:700px"><tr class="muted"><td>العميل</td><td>نوع الاشتراك</td><td>الدفع</td><td>تاريخ التجديد</td><td>تاريخ الانتهاء</td><td>فاضل</td><td>التوصيل</td></tr>
+      ${R.map(a=>{const dl=Math.round((new Date(a.end)-new Date(new Date().toISOString().slice(0,10)))/864e5);return `<tr><td><b>${esc(a.name)}</b><br><small class="muted" dir="ltr">${esc(a.phone||'')}</small></td><td>${esc(a.package)}</td><td>${esc(a.pay||'—')}</td><td class="num">${a.start}${a.renewal?' <small class="muted">تجديد</small>':''}</td><td class="num" style="color:${dl<=3?'var(--bad)':'inherit'}">${a.end}</td><td class="num">${a.remaining} وجبة${a.status!=='نشط'?' · '+a.status:''}</td><td><button class="btn sm ${a.dl&&a.dl.delivery?'':'sec'}" style="margin:0" onclick="dlEdit(${a.sid})">${a.dl&&a.dl.delivery?'🚗 '+esc(a.dl.slot||'توصيل'):'من الفرع'}</button></td></tr>`}).join('')||'<tr><td colspan="7" class="muted">مفيش مشتركين</td></tr>'}</table></div>`};
     box.innerHTML=`<div class="card"><input id="q" placeholder="دوّر بالاسم أو الجوال"><p class="muted"><b class="num">${L.active.length}</b> مشترك نشط</p><div id="sl"></div></div>`;
     $('#q').oninput=()=>{q=$('#q').value.trim();draw()};draw();
   }
@@ -1047,6 +1052,58 @@ async function subs(tab){
     $('#ap').onclick=()=>act($('#ap'),async()=>{await T('lc_save_package',{p_id:null,p_name:$('#pn').value,p_mpd:+$('#pm').value||null,p_days:+$('#pdy').value||null,p_price:$('#pp').value===''?null:+$('#pp').value});toast('الباقة اتضافت ✓');subs('pk')});
   }
 }
+// ---------- driver route (خط السير) ----------
+const RST={'اتسلّم':'p-ok','ما ردّش':'p-bad','مؤجل':'p-warn','رجع':'p-bad'};
+const RPILL=s=>`<span class="pill ${RST[s]||'p-warn'}">${esc(s)}</span>`;
+const mapLink=a=>a.map||(a.address?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a.address+' مكة'):'');
+const DLF=d=>`<label for="d_ad">العنوان (الحي، الشارع، العمارة، الدور، الشقة)</label><input id="d_ad" value="${esc(d.address||'')}">
+  <label for="d_mp">لينك اللوكيشن (من واتساب أو خرائط جوجل)</label><input id="d_mp" dir="ltr" placeholder="https://maps.app.goo.gl/..." value="${esc(d.map||'')}">
+  <label>المنطقة</label><div class="seg" id="d_ar">${['قريب','بعيد'].map(x=>`<button class="${d.area===x?'on':''}">${x}</button>`).join('')}</div>
+  <div class="row"><div><label for="d_sl">ميعاد التوصيل</label><input id="d_sl" list="d_sls" placeholder="مثلًا 12:30" value="${esc(d.slot||'')}"><datalist id="d_sls">${(S.slots||[]).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></div><div><label for="d_or">ترتيبه في الخط</label><input id="d_or" type="number" inputmode="numeric" value="${d.ord??''}"></div></div>
+  <label for="d_nt">ملاحظة للسواق</label><input id="d_nt" placeholder="مثلًا: يتسلّم من الحارس، رن قبلها بـ10 دقايق" value="${esc(d.note||'')}">`;
+let DAREA='';
+function DLB(){DAREA=($('#d_ar .on')||{}).textContent||'';$('#d_ar').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAREA=b.textContent;$('#d_ar').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}}
+const DLV=()=>({address:$('#d_ad').value.trim(),map:$('#d_mp').value.trim(),area:DAREA,slot:$('#d_sl').value.trim(),ord:$('#d_or').value,note:$('#d_nt').value.trim()});
+function dlEdit(sid){
+  const a=(S.subL&&S.subL.active||[]).find(x=>x.sid===sid);if(!a)return;const d=a.dl||{};
+  S.tabBack=()=>subs('list');
+  $('#app').innerHTML=`${head('توصيل '+a.name,esc(a.package)+' · '+esc(a.phone||''))}
+  <div class="card"><label>الاستلام</label><div class="seg" id="dlv"><button data-v="0" class="${d.delivery?'':'on'}">من الفرع</button><button data-v="1" class="${d.delivery?'on':''}">توصيل 🚗</button></div>
+  <div id="dlf" style="${d.delivery?'':'display:none'}">${DLF(d)}</div><button class="btn" id="sv">حفظ</button></div>`;
+  let dlv=!!d.delivery;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none'};DLB();
+  $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_sub_delivery_save',{p_subscriber:sid,p:{delivery:dlv,...DLV()}});toast('اتحفظ ✓');subs('list')});
+}
+async function routeScreen(inBox){
+  const box=inBox?$('#sb'):null;
+  if(!inBox)$('#app').innerHTML=`${head('خط السير','توصيل الاشتراكات النهارده')}<div id="rt"><div class="muted">جاري التحميل…</div></div>`;
+  const el=inBox?box:$('#rt');
+  const R=await T('lc_route').catch(e=>{toast(e.message,true);return null});if(!R)return;
+  const st=R.stops;S.route=st;const done=st.filter(x=>x.status==='اتسلّم').length;
+  if(!st.length){el.innerHTML=`<div class="card" style="text-align:center"><div style="font-size:40px">🚗</div><b>مفيش توصيل النهارده</b><p class="muted">${inBox?'علشان المشترك يظهر هنا: من «المشتركين» دوس على «من الفرع» واختار توصيل واكتب العنوان والميعاد.':'لما يكون فيه طلبات توصيل هتظهر هنا.'}</p></div>`;return}
+  const pend=st.filter(x=>x.status!=='اتسلّم'&&x.address);
+  const all=pend.length?'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+encodeURIComponent(pend[pend.length-1].address+' مكة')+(pend.length>1?'&waypoints='+encodeURIComponent(pend.slice(0,-1).slice(0,8).map(x=>x.address+' مكة').join('|')):''):'';
+  let slot=null,i=0;
+  el.innerHTML=`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">اتسلّم <span class="num">${done}</span> من <span class="num">${st.length}</span></b>${all?`<a class="btn sm" style="margin:0;flex:0 0 auto" href="${all}" target="_blank" rel="noopener">🗺️ الخط كله</a>`:''}</div>
+   <div style="height:8px;background:var(--line);border-radius:9px;margin-top:10px;overflow:hidden"><div style="height:100%;width:${Math.round(done/st.length*100)}%;background:var(--ok)"></div></div>
+   ${st.some(x=>!x.address&&!x.map)?`<p class="muted" style="margin-bottom:0">⚠️ فيه مشتركين من غير عنوان، ${inBox?'كمّلهم من «المشتركين»':'كلّم الكاشير'}.</p>`:''}</div>
+  ${st.map(a=>{const h=(a.slot||'من غير ميعاد')!==slot?(slot=a.slot||'من غير ميعاد',`<h2 style="font-size:15px;margin:16px 2px 8px">⏰ ${esc(slot)}</h2>`):'';i++;const ml=mapLink(a);
+   const msg=`السلام عليكم ${a.name}، معك سواق لو كالوري، أنا في الطريق بوجباتك 🌿`;
+   return h+`<div class="card" style="${a.status==='اتسلّم'?'opacity:.6':''}"><div class="row" style="align-items:center"><b style="flex:1"><span class="num">${i}</span>. ${esc(a.name)}</b>${a.status?RPILL(a.status):''}</div>
+   <div class="muted" style="margin:4px 0">${a.mpd} وجبة · ${esc(a.package)}${a.area?' · '+esc(a.area):''}</div>
+   <div>📍 ${a.address?esc(a.address):'<span class="muted">من غير عنوان</span>'}</div>
+   ${a.note?`<div class="alert" style="margin:8px 0 0">📝 ${esc(a.note)}</div>`:''}
+   ${a.status?`<div class="muted" style="margin-top:6px">${esc(a.status)} الساعة <span class="num">${a.at}</span>${inBox&&a.by?' · '+esc(a.by):''}${a.stop_note?' · '+esc(a.stop_note):''}${inBox&&a.has_photo?` · <a href="#" onclick="event.preventDefault();routePhoto(${a.stop_id})">📷 الصورة</a>`:''}</div>`:''}
+   <div class="row" style="margin-top:10px;gap:6px">${ml?`<a class="btn sm" style="margin:0" href="${ml}" target="_blank" rel="noopener">🗺️ الخريطة</a>`:''}${a.phone?`<a class="btn sm sec" style="margin:0" href="tel:${esc(a.phone)}">📞 اتصال</a><a class="btn sm sec" style="margin:0" href="${wa(a.phone)}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">واتساب</a>`:''}</div>
+   <div class="row" style="margin-top:6px;gap:6px"><button class="btn sm" style="margin:0" onclick="routeMark(${a.id},'اتسلّم',this,${inBox?1:0})">✅ اتسلّم</button><button class="btn sm sec" style="margin:0" onclick="routeMark(${a.id},'ما ردّش',this,${inBox?1:0})">📵 ما ردّش</button><button class="btn sm sec" style="margin:0" onclick="routeMark(${a.id},'مؤجل',this,${inBox?1:0})">⏰ مؤجل</button></div></div>`}).join('')}
+  <button class="btn sec" onclick="routeScreen(${inBox?'true':''})">🔄 تحديث</button>`;
+}
+async function routeMark(id,stt,btn,inBox){await act(btn,async()=>{
+  let photo=null,note=null;
+  if(stt==='اتسلّم'){photo=await snapCam('صورة التسليم (اختياري)','تسليم اشتراك · '+((S.route||[]).find(x=>x.id===id)||{}).name,'environment')}
+  else{note=prompt(stt==='مؤجل'?'اتأجل لإمتى؟ (اختياري)':'ملاحظة (اختياري)')||null}
+  await T('lc_route_mark',{p_sub:id,p_status:stt,p_note:note,p_photo:photo});toast(stt==='اتسلّم'?'اتسلّم ✓':'اتسجل ✓',stt!=='اتسلّم');
+  routeScreen(inBox?true:undefined)})}
+async function routePhoto(id){await act(null,async()=>{const p=await T('lc_route_photo',{p_id:id});if(p)bigImg(p);else toast('مفيش صورة',true)})}
 async function subStatus(id,st){await act(null,async()=>{await T('lc_sub_status',{p_id:id,p_status:st});subs('follow')})}
 async function subResume(id){await act(null,async()=>{await T('lc_sub_status',{p_id:id,p_status:'نشط'});toast('اتشغل ✓ (لو عايز تمد الأيام كلمني)');subs('follow')})}
 async function pkgOff(id){await act(null,async()=>{await T('lc_save_package',{p_id:id,p_name:null,p_mpd:null,p_days:null,p_price:null,p_active:false});subs('pk')})}
