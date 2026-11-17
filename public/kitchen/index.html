@@ -93,6 +93,50 @@ table.pl tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
 <div class="app" id="app"></div>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
+// ---------- i18n ----------
+const I18N=(()=>{
+  const LANGS={ar:{n:'العربية',dir:'rtl',loc:'ar-EG'},ru:{n:'Русский',dir:'ltr',loc:'ru-RU'},bn:{n:'বাংলা',dir:'ltr',loc:'bn-BD'},ur:{n:'اردو',dir:'rtl',loc:'ur-PK'}};
+  let L='ar',D=null,MAXW=1,obs=null;
+  try{const q=new URLSearchParams(location.search).get('l');if(q&&LANGS[q])localStorage.setItem('lc_lang',q);L=localStorage.getItem('lc_lang')||'ar';if(!LANGS[L])L='ar'}catch(e){}
+  const RUN=/[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+(?:[ \t ،؛؟!?.:\-–—/()«»"+]*[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+)*[؟?!.:]?/g;
+  function trRun(m){
+    const lead=m.match(/^\s*/)[0],trail=m.match(/\s*$/)[0],k=m.replace(/\s+/g,' ').trim();
+    if(D[k]!==undefined)return lead+D[k]+trail;
+    const w=k.split(' '),out=[];let i=0;
+    while(i<w.length){let hit=0;for(let j=Math.min(w.length,i+MAXW);j>i;j--){const s=w.slice(i,j).join(' ');if(D[s]!==undefined&&!(j-i===1&&WEAK.has(s))){out.push(D[s]);i=j;hit=1;break}}
+      if(!hit){out.push(w[i]);i++}}
+    return lead+out.join(' ')+trail}
+  const WEAK=new Set(['من','في','و','يا','لـ','للـ','م','ر','أو','إلى','لحد','على','عندك','لسه','مفيش','رجع','خلص','جديد','نص','قطعة','صورة']);
+  const tr=s=>(!D||!s)?s:s.replace(RUN,trRun);
+  const SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1};
+  function node(n){
+    if(n.nodeType===3){const p=n.parentNode;if(!p||SKIP[p.nodeName]||p.closest&&p.closest('[data-notr]'))return;
+      const o=n.data,t=tr(o);if(t===o)return;
+      if(p.nodeType===1&&(p.childNodes.length===1||!p.hasAttribute('data-ar')))p.setAttribute('data-ar',p.textContent);
+      if(p.nodeName==='OPTION'&&!p.hasAttribute('value'))p.setAttribute('value',p.getAttribute('data-ar'));
+      n.data=t;return}
+    if(n.nodeType!==1||SKIP[n.nodeName]||n.hasAttribute('data-notr'))return;
+    for(const a of ['placeholder','title','aria-label'])if(n.hasAttribute(a)){const o=n.getAttribute(a),t=tr(o);if(t!==o)n.setAttribute(a,t)}
+    if(n.nodeName==='INPUT'&&/^(button|submit)$/.test(n.type)){const t=tr(n.value);if(t!==n.value)n.value=t}
+    for(const c of [...n.childNodes])node(c)}
+  function start(){
+    document.documentElement.lang=L;document.documentElement.dir=LANGS[L].dir;
+    if(LANGS[L].dir==='ltr'){const st=document.createElement('style');st.textContent='header .back,.back{transform:scaleX(-1)} .seg[data-notr] button{font-family:inherit}';document.head.appendChild(st)}
+    node(document.body);document.title=tr(document.title);
+    obs=new MutationObserver(ms=>{for(const m of ms){if(m.type==='characterData')node(m.target);else{for(const a of m.addedNodes)node(a);if(m.type==='attributes')node(m.target)}}});
+    obs.observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['placeholder','title']});
+    for(const f of ['alert','confirm','prompt']){const o=window[f].bind(window);window[f]=(m,...r)=>o(tr(String(m??'')),...r)}
+    document.body.style.visibility=''}
+  async function init(){
+    if(L==='ar')return;
+    document.documentElement.dir=LANGS[L].dir;document.body&&(document.body.style.visibility='hidden');
+    const t=setTimeout(()=>{document.body.style.visibility=''},4000);
+    try{D=await (await fetch('i18n/'+L+'.json?v=1')).json();for(const k in D)MAXW=Math.max(MAXW,k.split(' ').length)}catch(e){D=null}
+    clearTimeout(t);if(D)start();else document.body.style.visibility=''}
+  function set(l,reload=true){if(!LANGS[l])return;try{localStorage.setItem('lc_lang',l)}catch(e){};if(l!==L&&reload)location.reload()}
+  return {get lang(){return L},get loc(){return LANGS[L].loc},LANGS,init,set,tr};
+})();
+const TX=el=>(el&&el.getAttribute&&el.getAttribute('data-ar'))??(el?el.textContent:undefined);
 const SB='https://fstbbuattdhoszklobio.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZzdGJidWF0dGRob3N6a2xvYmlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3MzM5NTYsImV4cCI6MjExMDMwOTk1Nn0.olJT0fYgtUPGSCtLKSeBCUheqe99-wm4PE50EOtcUzs';
 const $=s=>document.querySelector(s);
@@ -100,7 +144,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const n0=v=>v==null||v===''?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:0});
 const n2=v=>v==null||v===''?'—':Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
 const pc=v=>v==null?'—':(v*100).toFixed(1)+'%';
-const tm=s=>new Date(s).toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'});
+const tm=s=>new Date(s).toLocaleTimeString(I18N.loc,{hour:'numeric',minute:'2-digit'});
 const S={token:null,b:null,lines:[],att:null};
 try{S.token=localStorage.getItem('lc_token')}catch(e){}
 
@@ -124,18 +168,20 @@ function goBack(){if(S.tabBack){const f=S.tabBack;S.tabBack=null;return f()}
   if(parent!==undefined&&(p===undefined||p===''))p=parent;location.hash=p||''}
 window.addEventListener('hashchange',route);
 
+function LANGBAR(){return `<div class="seg" data-notr style="margin-top:14px">${Object.entries(I18N.LANGS).map(([k,v])=>`<button class="${I18N.lang===k?'on':''}" onclick="setLang('${k}')">${v.n}</button>`).join('')}</div>`}
+async function setLang(l){try{if(S.token)await T('lc_set_lang',{p_lang:l})}catch(e){};I18N.set(l)}
 // ---------- login ----------
 async function login(){
   const app=$('#app');
   app.innerHTML=`<div style="padding-top:8vh">${head('دخول','بيت المطاعم · نظام المطبخ',false)}<div class="card"><label for="nm">الاسم</label><select id="nm"><option value="">جاري التحميل…</option></select>
   <label for="pin">الرقم السري</label><input id="pin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
-  <button class="btn" id="lg">دخول</button></div></div>`;
+  <button class="btn" id="lg">دخول</button></div>${LANGBAR()}</div>`;
   try{const ns=await rpc('lc_staff_names');$('#nm').innerHTML='<option value="">اختار اسمك</option>'+ns.map(x=>`<option>${esc(x.name)}</option>`).join('');
     const u=new URLSearchParams(location.search).get('u');if(u&&ns.some(x=>x.name===u)){$('#nm').value=u;$('#pin').focus()}}catch(e){toast(e.message,true)}
   const doit=()=>act($('#lg'),async()=>{const r=await rpc('lc_login',{p_name:$('#nm').value,p_pin:$('#pin').value});S.token=r.token;try{localStorage.setItem('lc_token',r.token)}catch(e){};await boot();go('');route()});
   $('#lg').onclick=doit;$('#pin').onkeydown=e=>{if(e.key==='Enter')doit()};
 }
-async function boot(){S.b=await T('lc_bootstrap')}
+async function boot(){S.b=await T('lc_bootstrap');const ml=S.b&&S.b.me&&S.b.me.lang;if(ml&&ml!==I18N.lang){I18N.set(ml);throw new Error('…')}}
 
 // ---------- router ----------
 async function route(){
@@ -186,7 +232,7 @@ function home(){
   ${isOwner()?'':`<button class="btn sec" onclick="go('mynote')">✉️ رسالة للإدارة أو تحديث لملفي</button>`}
   <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
   <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
-  <button class="btn sec" onclick="logout()">خروج من التطبيق</button>`;
+  <button class="btn sec" onclick="logout()">خروج من التطبيق</button>${LANGBAR()}`;
 }
 // ---------- first login: employee data ----------
 function profileScreen(){
@@ -241,7 +287,7 @@ function supplierHome(){
   <div class="steps"><button class="step" onclick="go('supinv')"><span class="ic">📸</span><span><b>ارفع فاتورة</b><small>صوّر الفاتورة واكتب رقمها وإجماليها</small></span></button>
   <button class="step" onclick="supOrders()"><span class="ic">🛒</span><span><b>الطلبيات</b><small>أوامر الشراء اللي المطعم اعتمدها ليك</small></span></button>
   <button class="step" onclick="go('mystmt')"><span class="ic">📒</span><span><b>كشف حسابي</b><small>الفواتير المعتمدة والدفعات والباقي</small></span></button></div>
-  <button class="btn sec" onclick="go('fb')">💬 رسالة أو ملاحظة للإدارة</button><button class="btn sec" onclick="logout()">خروج</button>`;
+  <button class="btn sec" onclick="go('fb')">💬 رسالة أو ملاحظة للإدارة</button><button class="btn sec" onclick="logout()">خروج</button>${LANGBAR()}`;
 }
 function supInvoice(){
   const today=new Date().toISOString().slice(0,10);
@@ -299,7 +345,7 @@ function supEdit(x){
 async function supOrders(){
   $('#app').innerHTML=`${head('الطلبيات',esc(S.b.me.supplier))}<div id="so"><div class="card muted">جاري التحميل…</div></div>`;
   const L=await T('lc_my_pos').catch(e=>{toast(e.message,true);return[]});
-  $('#so').innerHTML=L.map(o=>`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">طلبية رقم ${o.id}</b><span class="pill ${o.status==='اتستلم'?'p-ok':'p-warn'}">${o.status==='معتمد'?'مطلوبة':o.status}</span></div><small class="muted">${o.at?new Date(o.at).toLocaleString('ar-EG'):''}</small>
+  $('#so').innerHTML=L.map(o=>`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">طلبية رقم ${o.id}</b><span class="pill ${o.status==='اتستلم'?'p-ok':'p-warn'}">${o.status==='معتمد'?'مطلوبة':o.status}</span></div><small class="muted">${o.at?new Date(o.at).toLocaleString(I18N.loc):''}</small>
    <div class="list">${(o.lines||[]).map(l=>`<div class="li"><div class="t">${esc(l.name)}</div><b class="num">${n2(l.qty)}</b> ${esc(l.unit)}</div>`).join('')}</div></div>`).join('')||'<div class="card muted">مفيش طلبيات</div>';
 }
 // ---------- purchase orders ----------
@@ -309,7 +355,7 @@ async function poList(){
   const L=await T('lc_po_list').catch(e=>{toast(e.message,true);return null});if(!L)return;S.pos=L;const mg=isMgr();
   $('#pl').innerHTML=(L.map((o,k)=>{const ed=o.status==='مسودة'&&mg,est=(o.lines||[]).reduce((a,l)=>a+(+l.qty)*(+l.price||0),0);
    return `<div class="card"><div class="row" style="align-items:center"><b style="flex:1">${esc(o.supplier)} · رقم ${o.id}</b><span class="pill ${o.status==='مسودة'?'p-warn':o.status==='معتمد'?'':o.status==='اتستلم'?'p-ok':'p-bad'}">${o.status==='مسودة'?'مستني اعتمادك':o.status}</span></div>
-   <small class="muted">${o.auto?'اتعمل لوحده':'طلب يدوي'} · ${new Date(o.at).toLocaleDateString('ar-EG')}${o.rep&&o.rep.name?' · المندوب '+esc(o.rep.name):''}</small>
+   <small class="muted">${o.auto?'اتعمل لوحده':'طلب يدوي'} · ${new Date(o.at).toLocaleDateString(I18N.loc)}${o.rep&&o.rep.name?' · المندوب '+esc(o.rep.name):''}</small>
    <div class="list">${(o.lines||[]).map(l=>`<div class="li"><div class="t"><b>${esc(l.name)}</b><small>الموجود ${n2(l.stock)} ${esc(l.unit)}${l.reason?' · '+esc(l.reason):''}${o.receipt?` · <b>اتستلم ${n2(l.got||0)}</b>${Math.abs((+l.got||0)-(+l.qty))>0.01?' <span style="color:var(--bad)">(مختلف عن المطلوب)</span>':''}`:''}</small></div>
      ${ed?`<input data-po="${k}" data-l="${l.id}" type="number" inputmode="decimal" step="any" value="${+(+l.qty).toFixed(2)}" style="width:80px;flex:0 0 80px">`:`<b class="num">${n2(l.qty)}</b>`}<span class="muted">${esc(l.unit)}</span></div>`).join('')}</div>
    ${est&&mg?`<p class="muted">التكلفة التقديرية ${n0(est)} ريال قبل الضريبة</p>`:''}
@@ -341,7 +387,7 @@ async function myNote(){
    <button class="btn" id="sv">إرسال</button></div><div class="card"><h2>اللي بعته قبل كده</h2><div class="list" id="ml"><div class="muted">جاري التحميل…</div></div></div>`;
   let photo=null;$('#cam').onclick=async()=>{const img=await snapCam('صورة المستند','تحديث ملف · '+S.b.me.name);if(img){photo=img;$('#ph').innerHTML=thumb(img,64)}};
   $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_my_note',{p_body:$('#b').value,p_photo:photo});toast('وصل للإدارة ✓');myNote()});
-  const L=await T('lc_my_notes').catch(()=>[]);$('#ml').innerHTML=L.map(n=>`<div class="li"><div class="t"><b>${new Date(n.at).toLocaleDateString('ar-EG')}${n.has_photo?' · 📎 صورة':''}</b><small>${esc(n.body)}</small>${n.reply?`<div class="hint">رد الإدارة: ${esc(n.reply)}</div>`:''}</div><span class="pill ${n.seen?'p-ok':'p-warn'}">${n.reply?'اتردّ':n.seen?'اتقرت':'لسه'}</span></div>`).join('')||'<div class="muted">لسه مفيش</div>';
+  const L=await T('lc_my_notes').catch(()=>[]);$('#ml').innerHTML=L.map(n=>`<div class="li"><div class="t"><b>${new Date(n.at).toLocaleDateString(I18N.loc)}${n.has_photo?' · 📎 صورة':''}</b><small>${esc(n.body)}</small>${n.reply?`<div class="hint">رد الإدارة: ${esc(n.reply)}</div>`:''}</div><span class="pill ${n.seen?'p-ok':'p-warn'}">${n.reply?'اتردّ':n.seen?'اتقرت':'لسه'}</span></div>`).join('')||'<div class="muted">لسه مفيش</div>';
 }
 // ---------- team voice (owners) ----------
 async function voiceInbox(){
@@ -406,7 +452,7 @@ async function hrPage(){
   <button class="btn" id="h_ok">حفظ</button>
   ${id?`<div class="card"><h2>الحضور</h2><p><b class="num">${x.month.hours}</b> ساعة في <b class="num">${x.month.days}</b> يوم الشهر ده · الشهر اللي فات ${x.prev.hours} ساعة${x.month.open?` · <span style="color:var(--bad)">${x.month.open} وردية من غير انصراف</span>`:''}${x.month.outside?` · <span style="color:var(--bad)">${x.month.outside} تسجيل بره الفرع</span>`:''}</p>
    <div class="list">${x.days.map(d=>`<div class="li"><div class="t">${d.day}</div><span class="num">${d.first_in?tm(d.first_in):'—'}</span> ← <span class="num">${d.last_out?tm(d.last_out):'<span style="color:var(--bad)">مفيش انصراف</span>'}</span></div>`).join('')||'<div class="muted">مفيش حضور آخر أسبوعين</div>'}</div></div>`:''}
-  ${id&&(x.notes||[]).length?`<div class="card"><h2>رسائل وتحديثات من الموظف</h2><div class="list">${x.notes.map(n=>`<div class="li">${n.photo?thumb(n.photo,56):''}<div class="t"><b>${new Date(n.at).toLocaleDateString('ar-EG')} ${tm(n.at)}${n.seen?'':' <span class="pill p-warn">جديد</span>'}</b><small style="white-space:pre-wrap">${esc(n.body)}</small><div class="row" style="margin-top:6px"><input id="nr${n.id}" placeholder="ردّك (بيظهرله)" value="${esc(n.reply||'')}"><button class="btn sm" style="flex:0 0 auto" onclick="noteReply(${n.id})">رد</button></div></div></div>`).join('')}</div></div>`:''}
+  ${id&&(x.notes||[]).length?`<div class="card"><h2>رسائل وتحديثات من الموظف</h2><div class="list">${x.notes.map(n=>`<div class="li">${n.photo?thumb(n.photo,56):''}<div class="t"><b>${new Date(n.at).toLocaleDateString(I18N.loc)} ${tm(n.at)}${n.seen?'':' <span class="pill p-warn">جديد</span>'}</b><small style="white-space:pre-wrap">${esc(n.body)}</small><div class="row" style="margin-top:6px"><input id="nr${n.id}" placeholder="ردّك (بيظهرله)" value="${esc(n.reply||'')}"><button class="btn sm" style="flex:0 0 auto" onclick="noteReply(${n.id})">رد</button></div></div></div>`).join('')}</div></div>`:''}
   ${id&&(x.flags||[]).length?`<div class="card"><h2>ملاحظات على الملف</h2>${x.flags.map(f=>`<div class="alert ${f.l==='bad'?'bad':''}" style="margin-bottom:6px;${f.l==='info'?'background:#f1f6f2;border-color:#d6e4da;color:inherit':''}">${esc(f.t)}</div>`).join('')}</div>`:''}`;
   if(id&&(x.notes||[]).some(n=>!n.seen))T('lc_hr_notes_seen',{p_id:id}).catch(()=>{});
   const setP=a=>document.querySelectorAll('[data-p]').forEach(c=>c.checked=a.includes(c.dataset.p));
@@ -548,7 +594,7 @@ function waste(){
   <label>السبب</label><div class="chips" id="rs">${REASONS.map(r=>`<button class="chip">${r}</button>`).join('')}</div>
   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">تسجيل الهدر</button></div>`;
   $('#pk').onclick=()=>pickItem(i=>{it=i;$('#pk').textContent=`${i.name} (${i.unit})`});
-  $('#rs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;rs=b.textContent;$('#rs').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
+  $('#rs').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;rs=TX(b);$('#rs').querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b))};
   $('#sv').onclick=()=>act($('#sv'),async()=>{if(!it)throw new Error('اختار الخامة');
     const r=await T('lc_waste_safe',{p_code:it.code,p_qty:+$('#q').value,p_reason:rs,p_note:$('#nt').value||null});await boot();toast(r.value!=null?`اتسجل ✓ قيمة الهدر ${n2(r.value)} ريال`:'الهدر اتسجل ✓');go('')});
 }
@@ -611,7 +657,7 @@ async function itemsMgr(tab){
      <input id="q" placeholder="دوّر على خامة"><div class="seg" id="f" style="margin-top:8px"><button class="on">الكل</button><button>بدون سعر (${np})</button></div><div class="list" id="il" style="margin-top:6px"></div>
      <button class="btn sec" onclick="editItem(null)">+ خامة جديدة</button></div>`;
     $('#q').oninput=()=>{q=$('#q').value.trim();draw()};
-    $('#f').onclick=e=>{const b=e.target.closest('button');if(!b)return;nop=b.textContent!=='الكل';$('#f').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+    $('#f').onclick=e=>{const b=e.target.closest('button');if(!b)return;nop=TX(b)!=='الكل';$('#f').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
     draw();return;
   }
   const R=await T('lc_recipes').catch(e=>{toast(e.message,true);return[]});S.recipes=R;
@@ -670,7 +716,7 @@ async function requests(){
   <label for="nt">ملاحظة</label><input id="nt"><button class="btn" id="sv">إرسال الطلب</button></div>
   <div class="card"><h2>الطلبات</h2><div class="list" id="rl"><div class="muted">جاري التحميل…</div></div></div>`;
   $('#pk').onclick=()=>pickItem(i=>{it=i;$('#pk').textContent=`${i.name} (${i.unit})`});
-  $('#ug').onclick=e=>{const b=e.target.closest('button');if(!b)return;urg=b.textContent;$('#ug').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
+  $('#ug').onclick=e=>{const b=e.target.closest('button');if(!b)return;urg=TX(b);$('#ug').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
   $('#sv').onclick=()=>act($('#sv'),async()=>{await T('lc_request',{p_code:it?it.code:null,p_text:$('#tx').value||null,p_qty:$('#q').value===''?null:+$('#q').value,p_urgency:urg,p_note:$('#nt').value||null});toast('الطلب اتبعت ✓');requests()});
   const R=await T('lc_requests').catch(()=>[]);const m=isMgr();
   const cls={'جديد':'p-warn','موافق':'p-ok','مرفوض':'p-bad','تم الشراء':'p-ok'};
@@ -690,7 +736,7 @@ function stock(){
   $('#app').innerHTML=`${head('المخزون',`قيمة المخزون التقريبية <span class="num">${n0(val)}</span> ريال`)}
   <div class="card"><input id="q" placeholder="دوّر على خامة"><div class="seg" id="f" style="margin-top:8px"><button class="on">الكل</button><button>النواقص فقط</button></div><div class="list" id="sl" style="margin-top:6px"></div></div>`;
   $('#q').oninput=()=>{q=$('#q').value.trim();draw()};
-  $('#f').onclick=e=>{const b=e.target.closest('button');if(!b)return;low=b.textContent!=='الكل';$('#f').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
+  $('#f').onclick=e=>{const b=e.target.closest('button');if(!b)return;low=TX(b)!=='الكل';$('#f').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));draw()};
   draw();
 }
 
@@ -731,7 +777,7 @@ async function cash(){
     $('#kf').innerHTML=`${kind==='supplier'?`<label for="pt">المورد</label><select id="pt"><option value="">اختار</option>${M.suppliers.map(s=>`<option>${esc(s.name)}</option>`).join('')}</select>`:''}
     ${kind==='expense'?`<label>البند</label><div class="chips" id="ex">${EXP.map(x=>`<button class="chip">${x}</button>`).join('')}</div>`:''}
     <label for="am">المبلغ</label><input id="am" type="number" inputmode="decimal"><label for="nt">ملاحظة</label><input id="nt"><button class="btn" id="sv">سجّل</button>`;
-    let party='';const ex=$('#ex');if(ex)ex.onclick=e=>{const c=e.target.closest('.chip');if(!c)return;party=c.textContent;ex.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c))};
+    let party='';const ex=$('#ex');if(ex)ex.onclick=e=>{const c=e.target.closest('.chip');if(!c)return;party=TX(c);ex.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===c))};
     $('#sv').onclick=()=>act($('#sv'),async()=>{const r=await T('lc_cash',{p_kind:kind,p_amount:+$('#am').value,p_party:kind==='supplier'?$('#pt').value:party||null,p_note:$('#nt').value||null});toast(`اتسجل ✓ الرصيد ${n2(r.balance)}`);cash()})};
   $('#cc').onclick=()=>act($('#cc'),async()=>{const r=await T('lc_cash_count',{p_counted:+$('#cn').value});toast(r.diff===0?'الخزنة مظبوطة ✓':`${r.diff<0?'عجز':'زيادة'} ${n2(Math.abs(r.diff))} ريال`,r.diff<0);cash()});
 }
@@ -878,7 +924,7 @@ async function audit(){
   $('#app').innerHTML=`${head('السجل','كل حركة باسم صاحبها ووقتها')}<div class="card"><div class="list" id="al"><div class="muted">جاري التحميل…</div></div></div>`;
   const A=await T('lc_audit',{p_limit:200}).catch(()=>[]);
   const det=d=>{if(!d)return'';const o=[];if(d.item)o.push(d.item);if(d.supplier)o.push(d.supplier);if(d.total!=null)o.push(n2(d.total)+' ريال');if(d.value!=null)o.push(n2(d.value)+' ريال');if(d.qty!=null)o.push(n2(d.qty));if(d.reason)o.push(d.reason);if(d.amount!=null)o.push(n2(d.amount)+' ريال');if(d.diff!=null)o.push('فرق '+n2(d.diff));if(d.name)o.push(d.name);if(d.status)o.push(d.status);return o.map(esc).join(' · ')};
-  $('#al').innerHTML=A.map(a=>{const t=new Date(a.at);return `<div class="li"><div class="t"><b>${esc(a.action)}</b><small>${esc(a.by||'')} · ${t.toLocaleDateString('ar-EG',{day:'numeric',month:'short'})} ${tm(a.at)}${det(a.details)?' · '+det(a.details):''}</small></div></div>`}).join('')||'<div class="muted">مفيش</div>';
+  $('#al').innerHTML=A.map(a=>{const t=new Date(a.at);return `<div class="li"><div class="t"><b>${esc(a.action)}</b><small>${esc(a.by||'')} · ${t.toLocaleDateString(I18N.loc,{day:'numeric',month:'short'})} ${tm(a.at)}${det(a.details)?' · '+det(a.details):''}</small></div></div>`}).join('')||'<div class="muted">مفيش</div>';
 }
 
 // ---------- attendance (live selfie + location) ----------
@@ -1024,7 +1070,7 @@ async function subs(tab){
     <p class="muted">لو الرقم مسجل قبل كده هيتحسب تجديد. الكاش بيدخل الخزنة لوحده.</p></div>`;
     const dsc=()=>{const o=$('#pk').selectedOptions[0];const lp=+o.dataset.price,pd=+$('#pd').value;$('#disc').textContent=pd?`سعر الباقة ${n0(lp)} · الخصم ${n0(lp-pd)} ريال (${pc((lp-pd)/lp)})`:''};
     $('#pk').onchange=dsc;$('#pd').oninput=dsc;
-    let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=b.textContent;$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
+    let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=TX(b);$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
     let dlv=false;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none'};DLB();
     $('#sv').onclick=()=>act($('#sv'),async()=>{const dp=dlv?DLV():null;if(dp&&!dp.address&&!dp.map)throw new Error('اكتب عنوان التوصيل أو لينك اللوكيشن');const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
       if(dp){const L2=await T('lc_sub_list');const ph=$('#ph').value.replace(/\D/g,'').slice(-9);const a=L2.active.find(x=>(x.phone||'').replace(/\D/g,'').slice(-9)===ph);if(a)await T('lc_sub_delivery_save',{p_subscriber:a.sid,p:{delivery:true,...dp}})}
@@ -1062,7 +1108,7 @@ const DLF=d=>`<label for="d_ad">العنوان (الحي، الشارع، الع
   <div class="row"><div><label for="d_sl">ميعاد التوصيل</label><input id="d_sl" list="d_sls" placeholder="مثلًا 12:30" value="${esc(d.slot||'')}"><datalist id="d_sls">${(S.slots||[]).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></div><div><label for="d_or">ترتيبه في الخط</label><input id="d_or" type="number" inputmode="numeric" value="${d.ord??''}"></div></div>
   <label for="d_nt">ملاحظة للسواق</label><input id="d_nt" placeholder="مثلًا: يتسلّم من الحارس، رن قبلها بـ10 دقايق" value="${esc(d.note||'')}">`;
 let DAREA='';
-function DLB(){DAREA=($('#d_ar .on')||{}).textContent||'';$('#d_ar').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAREA=b.textContent;$('#d_ar').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}}
+function DLB(){DAREA=TX(($('#d_ar .on')||{}))||'';$('#d_ar').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAREA=TX(b);$('#d_ar').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}}
 const DLV=()=>({address:$('#d_ad').value.trim(),map:$('#d_mp').value.trim(),area:DAREA,slot:$('#d_sl').value.trim(),ord:$('#d_or').value,note:$('#d_nt').value.trim()});
 function dlEdit(sid){
   const a=(S.subL&&S.subL.active||[]).find(x=>x.sid===sid);if(!a)return;const d=a.dl||{};
@@ -1184,7 +1230,7 @@ function drawAn(A){
 }
 
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/kitchen/sw.js',{scope:'/kitchen/'}).catch(()=>{});
-route();
+I18N.init().then(()=>route());
 </script>
 </body>
 </html>
