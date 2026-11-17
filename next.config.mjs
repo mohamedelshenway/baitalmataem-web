@@ -19,6 +19,9 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // تطبيق المطبخ (لو كالوري) ملف ثابت في public/kitchen — اللينك القصير /kitchen يروح له مباشرة مع الحفاظ على ?u=&l=
+      { source: "/kitchen", destination: "/kitchen/index.html", permanent: false },
+      { source: "/:locale(ar|en|tr|ru|ur)/kitchen", destination: "/kitchen/index.html", permanent: false },
       // دمجنا صفحة "أعمالنا" داخل "من نحن" — تحويل دائم (308) للحفاظ على قيمة SEO
       {
         source: "/:locale(ar|en|tr|ru|ur)/our-work",
