@@ -190,8 +190,9 @@ async function route(){
   const h=location.hash.slice(1); S.lines=[];
   if(!S.b.me.profile_done){if(h!=='')go('');return profileScreen()}
   if(S.b.me.supplier){(({'':supplierHome,supinv:supInvoice,mystmt:myStatement,fb:feedback})[h]||supplierHome)();return}
-  if(S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
-  const last=S.att[S.att.length-1];
+  const noAtt=isOwner()&&S.b.me.job==='Owner';
+  if(!noAtt&&S.att==null){S.att=await T('lc_my_attendance').catch(()=>[])}
+  const last=noAtt?{kind:'دخول'}:S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
   const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen};
@@ -217,7 +218,7 @@ function home(){
   const k=KITCHEN.filter(x=>has(x[0])),steps=k.filter(x=>['receive','prep','issue'].includes(x[0])),other=k.filter(x=>!['receive','prep','issue'].includes(x[0])),mg=MGMT.filter(x=>has(x[0]));
   const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
   const drv=myPerms()!==null&&has('route');const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner()&&!drv;
-  $('#app').innerHTML=`${head(`${hi} يا ${b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
+  $('#app').innerHTML=`${head(`${hi} يا ${/^Mr\./.test(b.me.name)?b.me.name:b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>هيخلص خلال يوم (${low.length}) – اطلب دلوقتي</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}${i.use7>0?` · بيخلص في اليوم <span class="num">${n2(i.use7)}</span>`:''}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
@@ -231,7 +232,7 @@ function home(){
   ${mg.length||isOwner()?`<h2 style="font-size:15px;margin:18px 2px 10px">الإدارة</h2><div class="grid">${isOwner()?T('hr','👥','الموظفين (HR)','الملفات والرواتب والصلاحيات',1)+T('voice','💬','صوت الفريق','الاقتراحات والشكاوي السرية',1):''}${mg.map(x=>T(...x,['subs','sales','report','menu','stats'].includes(x[0]))).join('')}</div>`:''}
   ${isOwner()?'':`<button class="btn sec" onclick="go('mynote')">✉️ رسالة للإدارة أو تحديث لملفي</button>`}
   <button class="btn sec" onclick="go('fb')">💬 اقتراح أو شكوى</button>
-  <button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>
+  ${isOwner()&&b.me.job==='Owner'?'':`<button class="btn ${nothing?'':'sec'}" onclick="checkScreen('خروج')">📸 انصراف من الوردية</button>`}
   <button class="btn sec" onclick="logout()">خروج من التطبيق</button>${LANGBAR()}`;
 }
 // ---------- first login: employee data ----------
