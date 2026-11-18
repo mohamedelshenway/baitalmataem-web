@@ -3,6 +3,7 @@ import { indexableLocales } from "@/i18n/config";
 import { SITE } from "@/lib/constants";
 import { SERVICES } from "@/lib/data/services";
 import { getPublishedListings } from "@/lib/data/live-listings";
+import { FOCUS_CITIES } from "@/lib/data/focus-cities";
 import { POSTS } from "@/lib/data/posts";
 import { postLocales } from "@/lib/post-locales";
 import type { Locale } from "@/i18n/config";
@@ -28,6 +29,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       langs: indexableLocales,
       lastModified: buildDate,
     })),
+    // صفحات مدن التركيز (عربي وإنجليزي)
+    ...FOCUS_CITIES.map((c) => ({ path: `/areas/${c.slug}`, langs: ["ar", "en"] as const, lastModified: buildDate })),
     // صفحة تسجيل الوسطاء بالعربي بس
     { path: "/join-broker", langs: ["ar"] as const, lastModified: buildDate },
     // فرص السوق محتواها بالعربي بس، فتدخل الخريطة بالعربي فقط (زي المقالات غير المترجمة)
