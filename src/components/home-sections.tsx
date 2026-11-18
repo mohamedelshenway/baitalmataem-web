@@ -11,6 +11,7 @@ import { QuickSearch } from "@/components/quick-search";
 import { PostCard } from "@/components/post-card";
 import { SOCIALS } from "@/lib/constants";
 import { SAUDI_REGIONS } from "@/lib/saudi-regions";
+import { FOCUS_CITIES } from "@/lib/data/focus-cities";
 
 // ---------------------------------------------------------------------------
 // Hero — صورة خلفية كاملة العرض بتراكب داكن سينمائي، مع بحث سريع مدمج في الأسفل
@@ -52,6 +53,40 @@ export function Hero({ dict, locale, cities }: { dict: Dictionary; locale: Local
 
       <QuickSearch dict={dict} locale={locale} cities={cities} />
       <div className="h-10 sm:h-12" />
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// مدن التركيز: مكة المكرمة وجدة والطائف
+// ---------------------------------------------------------------------------
+export function FocusCitiesSection({ locale }: { locale: Locale }) {
+  const ar = locale === "ar";
+  return (
+    <section className="py-14 sm:py-16">
+      <div className="container-page">
+        <SectionHeading
+          eyebrow={ar ? "مناطق خدمتنا" : "Where we work"}
+          title={ar ? "قريبون منك في مكة وجدة والطائف" : "Close to you in Makkah, Jeddah and Taif"}
+          subtitle={
+            ar
+              ? "تركيزنا الأساسي على مكة المكرمة وجدة والطائف، مع استقبال الفرص من كل مناطق المملكة."
+              : "Our main focus is Makkah, Jeddah and Taif, while we also accept opportunities from across the Kingdom."
+          }
+          align="center"
+        />
+        <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          {FOCUS_CITIES.map((c) => (
+            <Link key={c.slug} href={`/${locale}/areas/${c.slug}`} className="focus-ring block">
+              <Card className="h-full p-6">
+                <h3 className="text-lg font-bold text-ink-900">{ar ? c.nameAr : c.nameEn}</h3>
+                <p className="mt-2 text-sm leading-7 text-ink-600">{ar ? c.taglineAr : c.taglineEn}</p>
+                <span className="mt-4 inline-block text-sm font-semibold text-ember-600">{ar ? "التفاصيل ←" : "Details →"}</span>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
