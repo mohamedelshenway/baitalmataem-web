@@ -17,6 +17,19 @@ const nextConfig = {
       },
     ],
   },
+  // ترويسات أمان أساسية آمنة (لا تؤثر على التصميم ولا الوظائف)
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // تطبيق المطبخ (لو كالوري) ملف ثابت في public/kitchen — اللينك القصير /kitchen يروح له مباشرة مع الحفاظ على ?u=&l=
