@@ -23,12 +23,12 @@ export const FOCUS_CITIES: FocusCity[] = [
     nameAr: "مكة المكرمة",
     nameEn: "Makkah",
     marketCity: "مكة المكرمة",
-    taglineAr: "سوق موسمي خاص يحتاج قراءة دقيقة للأرقام",
-    taglineEn: "A seasonal, highly specific market that demands careful numbers",
+    taglineAr: "سوق نشط طوال العام، وضغطه الأكبر في رمضان والحج",
+    taglineEn: "Active all year, with the heaviest demand in Ramadan and Hajj",
     introAr:
-      "سوق المطاعم في مكة المكرمة له طبيعة مختلفة عن باقي المدن: حركة زوار ومعتمرين وحجاج، وتفاوت واضح بين مواسم الذروة والأيام العادية. لذلك دراسة الجدوى وتقييم أي مطعم قائم هنا لازم يفصل بين مبيعات الموسم ومبيعات باقي السنة قبل أي قرار شراء أو تقبيل.",
+      "سوق المطاعم في مكة المكرمة شغال طوال العام بحركة زوار ومعتمرين وسكان، ويزيد الضغط عليه بشكل واضح في رمضان والحج. لذلك دراسة الجدوى وتقييم أي مطعم قائم هنا لازم يفصل بين مبيعات الموسم ومبيعات باقي السنة قبل أي قرار شراء أو تقبيل.",
     introEn:
-      "Makkah's restaurant market behaves differently from other cities: visitor, Umrah and Hajj traffic, with a clear gap between peak seasons and ordinary days. Any feasibility study or valuation here should separate seasonal sales from year-round sales before a buy or takeover decision.",
+      "Makkah's restaurant market is active all year with visitors, Umrah travelers and residents, and demand rises sharply in Ramadan and Hajj. Any feasibility study or valuation here should separate seasonal sales from year-round sales before a buy or takeover decision.",
     pointsAr: [
       "تقييم مطعم قبل الشراء أو التقبيل بمبيعات موسمية وغير موسمية منفصلة",
       "اختيار الموقع حسب حركة الزوار وسكان الحي ووصول المشاة والسيارات",
