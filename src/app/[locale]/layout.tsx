@@ -7,6 +7,8 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { PageViewTracker } from "@/components/page-view-tracker";
+import { AnalyticsScripts } from "@/components/analytics";
+import { WhatsAppFloat } from "@/components/whatsapp-float";
 import { LanguageBanner } from "@/components/language-banner";
 import { SITE } from "@/lib/constants";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
@@ -48,6 +50,12 @@ export async function generateMetadata({ params }: { params: { locale: string } 
     title: { default: SITE.legalName, template: `%s | ${SITE.name.ar}` },
     description: pickText(SITE.tagline, params.locale),
     icons: { icon: "/favicon.svg" },
+    // أكواد التحقق من ملكية الموقع في Google Search Console وBing Webmaster Tools — بتظهر فقط لما
+    // المتغيرات تتضاف في Vercel (فاضية = مفيش tag)
+    verification: {
+      google: process.env.NEXT_PUBLIC_GSC_VERIFICATION || undefined,
+      other: process.env.NEXT_PUBLIC_BING_VERIFICATION ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_VERIFICATION } : undefined,
+    },
   };
 }
 
@@ -86,6 +94,8 @@ export default async function LocaleLayout({
         <SiteHeader dict={dict} locale={locale} />
         <main>{children}</main>
         <SiteFooter dict={dict} locale={locale} />
+        <WhatsAppFloat locale={locale} />
+        <AnalyticsScripts />
       </body>
     </html>
   );
