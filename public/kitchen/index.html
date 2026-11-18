@@ -97,7 +97,7 @@ table.pl tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
 const I18N=(()=>{
   const LANGS={ar:{n:'العربية',dir:'rtl',loc:'ar-EG'},ru:{n:'Русский',dir:'ltr',loc:'ru-RU'},bn:{n:'বাংলা',dir:'ltr',loc:'bn-BD'},ur:{n:'اردو',dir:'rtl',loc:'ur-PK'}};
   let L='ar',D=null,MAXW=1,obs=null;
-  try{const q=new URLSearchParams(location.search).get('l');if(q&&LANGS[q])localStorage.setItem('lc_lang',q);L=localStorage.getItem('lc_lang')||'ar';if(!LANGS[L])L='ar'}catch(e){}
+  try{const u=new URL(location.href),q=u.searchParams.get('l');if(q){if(LANGS[q])localStorage.setItem('lc_lang',q);u.searchParams.delete('l');history.replaceState(null,'',u.pathname+u.search+u.hash)}L=localStorage.getItem('lc_lang')||'ar';if(!LANGS[L])L='ar'}catch(e){}
   const RUN=/[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+(?:[ \t ،؛؟!?.:\-–—/()«»"+]*[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+)*[؟?!.:]?/g;
   function trRun(m){
     const lead=m.match(/^\s*/)[0],trail=m.match(/\s*$/)[0],k=m.replace(/\s+/g,' ').trim();
@@ -108,13 +108,13 @@ const I18N=(()=>{
     return lead+out.join(' ')+trail}
   const WEAK=new Set(['من','في','و','يا','لـ','للـ','م','ر','أو','إلى','لحد','على','عندك','لسه','مفيش','رجع','خلص','جديد','نص','قطعة','صورة']);
   const tr=s=>(!D||!s)?s:s.replace(RUN,trRun);
-  const SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1};
+  const SKIP={SCRIPT:1,STYLE:1,TEXTAREA:1};const DONE=new WeakMap();
   function node(n){
     if(n.nodeType===3){const p=n.parentNode;if(!p||SKIP[p.nodeName]||p.closest&&p.closest('[data-notr]'))return;
-      const o=n.data,t=tr(o);if(t===o)return;
+      const o=n.data;if(DONE.get(n)===o)return;const t=tr(o);if(t===o)return;
       if(p.nodeType===1&&(p.childNodes.length===1||!p.hasAttribute('data-ar')))p.setAttribute('data-ar',p.textContent);
       if(p.nodeName==='OPTION'&&!p.hasAttribute('value'))p.setAttribute('value',p.getAttribute('data-ar'));
-      n.data=t;return}
+      DONE.set(n,t);n.data=t;return}
     if(n.nodeType!==1||SKIP[n.nodeName]||n.hasAttribute('data-notr'))return;
     for(const a of ['placeholder','title','aria-label'])if(n.hasAttribute(a)){const o=n.getAttribute(a),t=tr(o);if(t!==o)n.setAttribute(a,t)}
     if(n.nodeName==='INPUT'&&/^(button|submit)$/.test(n.type)){const t=tr(n.value);if(t!==n.value)n.value=t}
@@ -133,7 +133,7 @@ const I18N=(()=>{
     const t=setTimeout(()=>{document.body.style.visibility=''},4000);
     try{D=await (await fetch('i18n/'+L+'.json?v=1')).json();for(const k in D)MAXW=Math.max(MAXW,k.split(' ').length)}catch(e){D=null}
     clearTimeout(t);if(D)start();else document.body.style.visibility=''}
-  function set(l,reload=true){if(!LANGS[l])return;try{localStorage.setItem('lc_lang',l)}catch(e){};if(l!==L&&reload)location.reload()}
+  function set(l,reload=true){if(!LANGS[l])return;try{localStorage.setItem('lc_lang',l)}catch(e){};if(l!==L&&reload){let n=0;try{n=+sessionStorage.getItem('lc_lang_rl')||0;sessionStorage.setItem('lc_lang_rl',n+1)}catch(e){};if(n<2)location.reload()}}
   return {get lang(){return L},get loc(){return LANGS[L].loc},LANGS,init,set,tr};
 })();
 const TX=el=>(el&&el.getAttribute&&el.getAttribute('data-ar'))??(el?el.textContent:undefined);
