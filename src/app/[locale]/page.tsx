@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import {
   Hero,
   TrustStrip,
+  FocusCitiesSection,
   HowWeHelp,
   WhySection,
   TeamSection,
@@ -65,6 +66,7 @@ export default async function HomePage({ params }: { params: { locale: string } 
     <>
       <Hero dict={dict} locale={locale} cities={cities} />
       <TrustStrip dict={dict} />
+      <FocusCitiesSection locale={locale} />
       <HowWeHelp dict={dict} locale={locale} />
       <MarketplacePreview dict={dict} locale={locale} listings={previewListings} />
       <WhySection dict={dict} />
