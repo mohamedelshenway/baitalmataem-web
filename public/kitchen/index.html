@@ -95,7 +95,7 @@ table.pl tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
 <script>
 // ---------- i18n ----------
 const I18N=(()=>{
-  const LANGS={ar:{n:'العربية',dir:'rtl',loc:'ar-EG'},ru:{n:'Русский',dir:'ltr',loc:'ru-RU'},bn:{n:'বাংলা',dir:'ltr',loc:'bn-BD'},ur:{n:'اردو',dir:'rtl',loc:'ur-PK'}};
+  const LANGS={ar:{n:'العربية',dir:'rtl',loc:'ar-EG'},ru:{n:'Русский',dir:'ltr',loc:'ru-RU'},bn:{n:'বাংলা',dir:'ltr',loc:'bn-BD'},ur:{n:'اردو',dir:'rtl',loc:'ur-PK'},en:{n:'English',dir:'ltr',loc:'en-GB'}};
   let L='ar',D=null,MAXW=1,obs=null;
   try{const u=new URL(location.href),q=u.searchParams.get('l');if(q){if(LANGS[q])localStorage.setItem('lc_lang',q);u.searchParams.delete('l');history.replaceState(null,'',u.pathname+u.search+u.hash)}L=localStorage.getItem('lc_lang')||'ar';if(!LANGS[L])L='ar'}catch(e){}
   const RUN=/[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+(?:[ \t ،؛؟!?.:\-–—/()«»"+]*[؀-ۿݐ-ݿﭐ-﷿ﹰ-﻿]+)*[؟?!.:]?/g;
