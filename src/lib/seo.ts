@@ -86,9 +86,24 @@ export function buildMetadata({
 export function organizationJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": ["Organization", "ProfessionalService"],
     name: SITE.legalName,
+    alternateName: [SITE.name.ar, SITE.name.en],
     url: SITE.url,
+    // مجالات الخبرة — بتساعد محركات البحث ومحركات الذكاء الاصطناعي تفهم تخصص الشركة
+    knowsAbout: [
+      "تأسيس المطاعم",
+      "تشغيل المطاعم",
+      "دراسات جدوى المطاعم",
+      "تقييم المطاعم قبل الشراء",
+      "بيع وشراء وتقبيل المطاعم",
+      "ضبط تكلفة الطعام والعمالة",
+      "تسويق المطاعم",
+      "Restaurant setup",
+      "Restaurant operations",
+      "Restaurant feasibility studies",
+      "Restaurant valuation",
+    ],
     // شعار حقيقي مأخوذ من نفس رمز الهوية البصرية المستخدم في الهيدر (BrandMark)، مُصدَّر PNG
     // لأن جوجل لا يقبل صيغة SVG في حقل logo ضمن بيانات Organization المنظّمة
     logo: `${SITE.url}/images/logo-512.png`,
@@ -152,7 +167,10 @@ export function serviceJsonLd({ name, description, url, serviceType }: { name: s
     description,
     url,
     provider: { "@type": "Organization", name: SITE.legalName, url: SITE.url },
-    areaServed: { "@type": "Country", name: "Saudi Arabia" },
+    areaServed: [
+      ...SITE.focusCities.en.map((city) => ({ "@type": "City", name: city })),
+      { "@type": "Country", name: "Saudi Arabia" },
+    ],
     serviceType,
   };
 }
@@ -204,5 +222,17 @@ export function websiteJsonLd() {
       target: `${SITE.url}/ar/marketplace?activity={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
+  };
+}
+
+export function faqJsonLd(items: { q: string; a: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((i) => ({
+      "@type": "Question",
+      name: i.q,
+      acceptedAnswer: { "@type": "Answer", text: i.a },
+    })),
   };
 }
