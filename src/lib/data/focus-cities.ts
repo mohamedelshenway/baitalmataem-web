@@ -48,12 +48,12 @@ export const FOCUS_CITIES: FocusCity[] = [
     nameAr: "جدة",
     nameEn: "Jeddah",
     marketCity: "جدة",
-    taglineAr: "سوق كبير وتنافسي يحتاج تميّزًا وانضباطًا في التكاليف",
-    taglineEn: "A large, competitive market that rewards differentiation and cost discipline",
+    taglineAr: "سوق نشط طوال العام، والنجاح فيه بالتميّز وانضباط التكاليف",
+    taglineEn: "An active market all year round, won through differentiation and cost discipline",
     introAr:
-      "جدة من أكبر أسواق المطاعم في المملكة وأكثرها تنافسًا، بتنوع واسع في الأحياء والأذواق والتطبيقات والكورنيش والمجمعات. النجاح هنا يعتمد على اختيار الحي والنشاط المناسبين، وعلى انضباط التكاليف أمام منافسة قوية وإيجارات متفاوتة بحسب الموقع.",
+      "جدة من أكبر أسواق المطاعم في المملكة، والحركة فيها شغالة طوال العام وليست مرتبطة بموسم واحد، مع منافسة قوية وتنوع واسع في الأحياء والأذواق والتطبيقات والكورنيش والمجمعات. النجاح هنا يعتمد على اختيار الحي والنشاط المناسبين، وعلى انضباط التكاليف أمام منافسة قوية وإيجارات متفاوتة بحسب الموقع.",
     introEn:
-      "Jeddah is one of the largest and most competitive restaurant markets in the Kingdom, with wide variety across districts, tastes, delivery apps, the Corniche and malls. Success depends on choosing the right district and concept and keeping costs disciplined against strong competition and location-driven rents.",
+      "Jeddah is one of the largest restaurant markets in the Kingdom, active all year round rather than tied to a single season, with strong competition and wide variety across districts, tastes, delivery apps, the Corniche and malls. Success depends on choosing the right district and concept and keeping costs disciplined against strong competition and location-driven rents.",
     pointsAr: [
       "دراسة جدوى مطعم أو كافيه في جدة بأرقام واقعية وسيناريوهات متحفظة ومتوقعة ومتفائلة",
       "تحليل المنافسين والإيجار قبل اختيار الحي والمساحة",
@@ -73,20 +73,20 @@ export const FOCUS_CITIES: FocusCity[] = [
     nameAr: "الطائف",
     nameEn: "Taif",
     marketCity: "الطائف",
-    taglineAr: "مدينة سياحية بمواسم قوية وفرص للمشاريع الغذائية",
-    taglineEn: "A tourist city with strong seasons and room for food projects",
+    taglineAr: "ضغط أكبر في الأعياد والمواسم والعطلات، وفرص للمشاريع الغذائية",
+    taglineEn: "Busiest during Eids, seasons and holidays, with room for food projects",
     introAr:
-      "الطائف مدينة سياحية تنشط فيها الحركة في مواسم الصيف والإجازات، وفيها مجال لمطاعم وكافيهات ومشاريع غذائية بفكرة واضحة وموقع مدروس. المهم هنا ألا يُبنى القرار على أرقام موسم الذروة وحده، بل على تشغيل مستقر يتحمل الفترات الهادئة.",
+      "الطائف مدينة سياحية يزيد فيها الضغط على المطاعم بشكل واضح في الأعياد والمواسم والعطلات، وفيها مجال لمطاعم وكافيهات ومشاريع غذائية بفكرة واضحة وموقع مدروس. المهم هنا ألا يُبنى القرار على أرقام موسم الذروة وحده، بل على تشغيل مستقر يتحمل الفترات الهادئة، مع تجهيز مسبق للعمالة والمخزون قبل كل عيد وموسم وعطلة.",
     introEn:
-      "Taif is a tourist city that becomes busy in summer and holiday seasons, with room for restaurants, cafés and food projects built on a clear concept and a well-studied site. The key is not to base the decision on peak-season figures alone, but on stable operations that survive quiet periods.",
+      "Taif is a tourist city where restaurants come under much heavier load during Eids, seasons and holidays, with room for restaurants, cafés and food projects built on a clear concept and a well-studied site. The key is not to base the decision on peak-season figures alone, but on stable operations that survive quiet periods, with labor and stock prepared before each Eid, season and holiday.",
     pointsAr: [
-      "دراسة جدوى مطعم أو كافيه في الطائف بحساب الموسم وغير الموسم",
-      "اختيار الموقع المناسب للسياح والسكان",
+      "دراسة جدوى مطعم أو كافيه في الطائف بحساب الأعياد والمواسم والعطلات وغيرها",
+      "اختيار الموقع المناسب للسياح والسكان، وخطة جاهزية قبل الأعياد والمواسم",
       "تأسيس المطعم من الفكرة حتى الافتتاح",
       "تشغيل وإدارة المشروع بنظام واضح لا يعتمد على شخص واحد",
     ],
     pointsEn: [
-      "Feasibility studies in Taif that account for peak and off-peak periods",
+      "Feasibility studies in Taif that account for Eids, seasons, holidays and quiet periods",
       "Choosing a site that works for both tourists and residents",
       "Setting up the restaurant from idea to opening",
       "Running the project on a clear system that does not depend on one person",
