@@ -575,9 +575,9 @@
     "privacyTitle": "Privacy Policy",
     "privacyIntro": "This page explains how Bait Al Mataem handles visitor and prospective-client data. This is an early, condensed version that will be finalized and legally reviewed as the platform grows and is connected to a real database; until then, treat this page as an initial notice rather than a final legal document.",
     "privacyBody": [
-      "The data we may currently collect is limited to what a visitor submits directly through the contact form or the \"List Your Opportunity\" form (such as name, phone number, city, and listing details). This data is not yet stored in a permanent database, since the site is at an early MVP stage.",
+      "The data we collect includes what a visitor submits directly through the contact form or the \"List Your Opportunity\" form (such as name, phone number, city, and listing details). It is stored in the site database so we can follow up on and respond to the request.",
       "Bait Al Mataem does not share client data with any third party for marketing purposes without explicit consent. Contact details are used solely to respond to an inquiry or review a submitted listing.",
-      "Once the site is connected to a real database, this policy will be updated with precise details on data storage, retention, and a user's right to access or delete their data."
+      "When analytics tools (such as Google Analytics) are enabled, we may collect aggregate visit data such as approximate city, device type, pages viewed, and traffic source, using cookies and similar identifiers, without linking it to your name or contact details. You can disable cookies in your browser settings. To request access to or deletion of your data, contact us via WhatsApp or the email shown on the site."
     ],
     "termsTitle": "Terms & Conditions",
     "termsIntro": "These terms govern your use of the Bait Al Mataem website. This is an early, condensed version that will be finalized and legally reviewed as the platform grows; until then, treat this page as an initial notice rather than a final legal document.",
