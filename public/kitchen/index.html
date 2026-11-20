@@ -195,7 +195,7 @@ async function route(){
   const last=noAtt?{kind:'دخول'}:S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen,clean:cleanScreen};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -210,14 +210,14 @@ const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتير�
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');if(h==='route')return has('route')||has('subs');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');if(h==='route')return has('route')||has('subs');if(h==='clean')return has('clean');return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
   const T=(h,ic,t,s,main)=>`<button class="tile${main?' main':''}" onclick="go('${h}')"><span class="ic">${ic}</span><b>${t}</b><span>${s}</span></button>`;
   const k=KITCHEN.filter(x=>has(x[0])),steps=k.filter(x=>['receive','prep','issue'].includes(x[0])),other=k.filter(x=>!['receive','prep','issue'].includes(x[0])),mg=MGMT.filter(x=>has(x[0]));
   const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
-  const drv=myPerms()!==null&&has('route');const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner()&&!drv;
+  const drv=myPerms()!==null&&has('route');const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner()&&!drv&&!has('clean');
   $('#app').innerHTML=`${head(`${hi} يا ${/^Mr\./.test(b.me.name)?b.me.name:b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
@@ -225,6 +225,7 @@ function home(){
   ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
   ${b.po_drafts&&has('po')?`<div class="alert" onclick="go('po')"><b>${b.po_drafts} أمر شراء جاهز للاعتماد</b><br>السيستم جهّزه لوحده للحاجات اللي هتخلص ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
+  ${has('clean')?`<div class="steps"><button class="step" onclick="go('clean')"><span class="ic">🧽</span><span><b>النظافة</b><small>جدول الحمامات والمطعم، وصورة بعد كل تنظيف</small></span></button></div>`:''}
   ${drv?`<div class="steps"><button class="step" onclick="go('route')"><span class="ic">🚗</span><span><b>خط السير</b><small>توصيل الاشتراكات النهارده بالعناوين واللوكيشن</small></span></button></div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
   ${steps.length?`<div class="steps" style="margin-top:10px">${steps.map((x,i)=>`<button class="step" onclick="go('${x[0]}')"><span class="no">${i+1}</span><span class="ic">${x[1]}</span><span><b>${x[2]}</b><small>${stepTxt[x[0]]}</small></span></button>`).join('')}</div>`:''}
@@ -1105,6 +1106,34 @@ async function subs(tab){
     $('#ap').onclick=()=>act($('#ap'),async()=>{await T('lc_save_package',{p_id:null,p_name:$('#pn').value,p_mpd:+$('#pm').value||null,p_days:+$('#pdy').value||null,p_price:$('#pp').value===''?null:+$('#pp').value});toast('الباقة اتضافت ✓');subs('pk')});
   }
 }
+// ---------- cleaning ----------
+const mins=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
+async function cleanScreen(area){
+  area=area||S.cleanArea||'الحمامات';S.cleanArea=area;
+  $('#app').innerHTML=`${head('النظافة','جدول الحمامات والمطعم')}<div class="seg" id="ca">${['الحمامات','المطعم'].map(a=>`<button class="${a===area?'on':''}" onclick="cleanScreen('${a}')">${a==='الحمامات'?'🚻 ':'🍽️ '}${a}</button>`).join('')}</div><div id="cb"><div class="muted">جاري التحميل…</div></div>`;
+  const R=await T('lc_clean').catch(e=>{toast(e.message,true);return null});if(!R)return;S.clean=R;
+  const now=mins(R.now==='99:99'?'23:59':R.now),mgr=isOwner()||S.b.me.role==='manager';
+  const st=s=>s.done?'done':(mins(s.slot)+30<now?'late':(mins(s.slot)-30<=now?'due':'next'));
+  const all=R.tasks.flatMap(t=>t.slots.map(s=>({t,s,k:st(s)})));
+  const mine=all.filter(x=>x.t.area===area);
+  const cnt=k=>mine.filter(x=>x.k===k).length;
+  const tot=all.length,dn=all.filter(x=>x.k==='done').length;
+  const color={done:'var(--ok)',late:'var(--bad)',due:'#c77700',next:'var(--muted)'};
+  const lab={done:'✅',late:'🔴 متأخر',due:'🟡 دلوقتي',next:'⏳'};
+  $('#cb').innerHTML=`<div class="card"><div class="row" style="align-items:center"><b style="flex:1">النهارده: اتعمل <span class="num">${dn}</span> من <span class="num">${tot}</span></b>${cnt('late')?`<span class="pill p-bad">${cnt('late')} متأخر</span>`:''}</div>
+   <div style="height:8px;background:var(--line);border-radius:9px;margin-top:10px;overflow:hidden"><div style="height:100%;width:${tot?Math.round(dn/tot*100):0}%;background:var(--ok)"></div></div>
+   ${mgr?`<div class="row" style="margin-top:12px;gap:4px;align-items:flex-end">${R.week.map(w=>{const p=w.due?Math.round(w.done/w.due*100):0;return `<div style="flex:1;text-align:center"><div style="height:${Math.max(4,p*0.6)}px;background:${p>=90?'var(--ok)':p>=60?'#c77700':'var(--bad)'};border-radius:4px"></div><small class="num">${p}%</small><br><small class="muted">${new Date(w.day).toLocaleDateString(I18N.loc,{weekday:'short'})}</small></div>`}).join('')}</div><p class="muted" style="margin:6px 0 0">نسبة الالتزام في آخر أسبوع</p>`:''}</div>
+  ${R.tasks.filter(t=>t.area===area).map(t=>`<div class="card"><b>${esc(t.name)}</b>${t.weekly?' <span class="pill p-warn">أسبوعي</span>':''}<div class="muted" style="margin:4px 0 8px">${esc(t.details||'')}${t.who?` · ${esc(t.who)}`:''}</div>
+    <div class="row" style="flex-wrap:wrap;gap:6px">${t.slots.map(s=>{const k=st(s);return k==='done'
+      ?`<div class="btn sm sec" style="margin:0;flex:0 0 auto;border-color:${color.done};color:${color.done}" ${mgr&&s.photo?`onclick="cleanPhoto(${s.log})"`:''}>✅ <span class="num">${s.slot}</span><small style="display:block">${esc(s.by||'')} <span class="num">${s.at}</span>${mgr&&s.photo?' 📷':''}</small></div>`
+      :`<button class="btn sm ${k==='next'?'sec':''}" style="margin:0;flex:0 0 auto;${k==='late'?'background:var(--bad);border-color:var(--bad)':k==='due'?'background:#c77700;border-color:#c77700':''}" onclick="cleanDone(${t.id},'${s.slot}',this)"><span class="num">${s.slot}</span><small style="display:block">${lab[k]}</small></button>`}).join('')}</div></div>`).join('')||'<div class="card muted">مفيش مهام النهارده</div>'}
+  <p class="muted">دوس على الميعاد بعد ما تخلّص التنظيف، وصوّر المكان نضيف.</p>`;
+}
+async function cleanDone(id,slot,btn){await act(btn,async()=>{
+  const t=(S.clean.tasks||[]).find(x=>x.id===id);
+  const photo=await snapCam('صورة بعد التنظيف',(t?t.name:'')+' · '+slot,'environment');if(!photo)return;
+  await T('lc_clean_done',{p_task:id,p_slot:slot,p_photo:photo});toast('اتسجل ✓');cleanScreen()})}
+async function cleanPhoto(id){await act(null,async()=>{const p=await T('lc_clean_photo',{p_id:id});if(p)bigImg(p);else toast('مفيش صورة',true)})}
 // ---------- driver route (خط السير) ----------
 const RST={'اتسلّم':'p-ok','ما ردّش':'p-bad','مؤجل':'p-warn','رجع':'p-bad'};
 const RPILL=s=>`<span class="pill ${RST[s]||'p-warn'}">${esc(s)}</span>`;
