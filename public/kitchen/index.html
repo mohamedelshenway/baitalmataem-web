@@ -195,7 +195,7 @@ async function route(){
   const last=noAtt?{kind:'دخول'}:S.att[S.att.length-1];
   if(!last||last.kind!=='دخول'){if(h!=='')go('');return checkScreen('دخول')}
   if(!canGo(h)){go('');return}
-  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen,clean:cleanScreen};
+  const map={'':home,issue,receive,waste,yieldv:yieldScreen,prep:make,count,req:requests,items:itemsMgr,menu:menuMgr,stock,sales,cash,report,admin,log:audit,att:attendance,invs:invoices,stats:analytics,subs,fb:feedback,mynote:myNote,voice:voiceInbox,po:poList,sup:suppliersMgr,supd:supplierDetail,hr:hrList,hrp:hrPage,sopen:shiftOpen,sclose:shiftClose,route:routeScreen,clean:cleanScreen,mynotes:myNotesScreen};
   (map[h]||home)();
   window.scrollTo(0,0);
 }
@@ -210,7 +210,7 @@ const SUPPLY=[['supply','📸','بوابة المورد','يرفع فواتير�
 const isOwner=()=>S.b&&S.b.me.role==='owner';
 function myPerms(){const me=S.b.me;if(me.role==='owner')return null;if(me.role==='manager'&&me.perms==null)return MGMT.concat(KITCHEN,CASHIER).map(x=>x[0]);return me.perms||[]}
 const has=k=>{const P=myPerms();return P===null||P.includes(k)};
-function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');if(h==='route')return has('route')||has('subs');if(h==='clean')return has('clean');return has(h)}
+function canGo(h){if(h===''||h==='fb'||h==='mynote')return true;if(h==='supd')return has('sup');if(h==='hr'||h==='hrp'||h==='voice')return isOwner();if(h==='sopen'||h==='sclose')return has('shift');if(h==='route')return has('route')||has('subs');if(h==='clean')return has('clean');if(h==='mynotes')return isOwner();return has(h)}
 function home(){
   const b=S.b, low=has('stock')?lowItems():[];
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
@@ -225,6 +225,7 @@ function home(){
   ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
   ${b.po_drafts&&has('po')?`<div class="alert" onclick="go('po')"><b>${b.po_drafts} أمر شراء جاهز للاعتماد</b><br>السيستم جهّزه لوحده للحاجات اللي هتخلص ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
+  ${isOwner()?`<div class="steps"><button class="step" onclick="go('mynotes')"><span class="ic">📋</span><span><b>ملف الملاحظات</b><small>ملاحظات الموظفين كلها في مكان واحد، وملاحظاتك الشخصية</small></span></button></div>`:''}
   ${has('clean')?`<div class="steps"><button class="step" onclick="go('clean')"><span class="ic">🧽</span><span><b>النظافة</b><small>جدول الحمامات والمطعم، وصورة بعد كل تنظيف</small></span></button></div>`:''}
   ${drv?`<div class="steps"><button class="step" onclick="go('route')"><span class="ic">🚗</span><span><b>خط السير</b><small>توصيل الاشتراكات النهارده بالعناوين واللوكيشن</small></span></button></div>`:''}
   ${has('shift')?`<div class="steps"><button class="step" onclick="go('sopen')"><span class="ic">🔓</span><span><b>فتح وردية</b><small>عِد الدرج قبل ما تبدأ</small></span></button><button class="step" onclick="go('sclose')"><span class="ic">🔒</span><span><b>تقفيل الوردية</b><small>اكتب مبيعات الوردية من فودكس وعِد الدرج</small></span></button></div>`:''}
@@ -421,7 +422,7 @@ async function hrList(){
   const L=await T('lc_hr_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
   const tot=L.filter(x=>x.active&&x.salary).reduce((a,x)=>a+ +x.salary,0);
   const AL=L.flatMap(x=>(x.flags||[]).filter(f=>f.l!=='info').map(f=>({...f,n:x.name,id:x.id}))).sort((a,b)=>(a.l==='bad'?0:1)-(b.l==='bad'?0:1));
-  $('#hl').innerHTML=`${AL.length?`<div class="card"><h2>ملاحظات على الموظفين (${AL.length})</h2>${AL.map(f=>`<div class="alert ${f.l==='bad'?'bad':''}" style="margin-bottom:6px;cursor:pointer" onclick="S.hrId='${f.id}';go('hrp')"><b>${esc(f.n)}:</b> ${esc(f.t)}</div>`).join('')}</div>`:''}<div class="kpis"><div class="kpi"><div class="v num">${L.filter(x=>x.active).length}</div><div class="l">موظف شغال</div></div><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي الرواتب المسجلة</div></div></div>
+  $('#hl').innerHTML=`<div class="kpis"><div class="kpi"><div class="v num">${L.filter(x=>x.active).length}</div><div class="l">موظف شغال</div></div><div class="kpi"><div class="v num">${n0(tot)}</div><div class="l">إجمالي الرواتب المسجلة</div></div></div>
    <div class="card"><div class="list">${L.map(x=>`<div class="li" style="cursor:pointer;${x.active?'':'opacity:.5'}" onclick="S.hrId='${x.id}';go('hrp')">${x.photo?thumb(x.photo,48):'<span style="font-size:34px">👤</span>'}<div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||({owner:'مالك',manager:'مدير',chef:'موظف'}[x.role]))}${x.company_start?` · في الشركة من <span class="num">${x.company_start}</span> (${SVC(x.company_start)})`:''}${x.hire&&x.hire!==x.company_start?` · في الفرع من <span class="num">${x.hire}</span>`:''} · الشهر ده ${x.month.hours} ساعة / ${x.month.days} يوم${x.month.open?` · <span style="color:var(--bad)">${x.month.open} من غير انصراف</span>`:''}</small></div>${(()=>{const F=x.flags||[],b=F.filter(f=>f.l==='bad').length,w=F.filter(f=>f.l==='warn').length;return (x.new_notes?`<span class="pill" style="background:#e3eefc;color:#1b4d8c">📝 ${x.new_notes}</span>`:'')+(b?`<span class="pill p-bad">${b}</span>`:'')+(w?`<span class="pill p-warn">${w}</span>`:'')})()}${x.active?'':'<span class="pill">موقوف</span>'}</div>`).join('')}</div>
    <button class="btn" onclick="S.hrId=null;go('hrp')">+ موظف جديد</button></div>`;
   const V=await T('lc_visits',{p_days:7}).catch(()=>null);if(!V)return;
@@ -1106,6 +1107,24 @@ async function subs(tab){
     $('#ap').onclick=()=>act($('#ap'),async()=>{await T('lc_save_package',{p_id:null,p_name:$('#pn').value,p_mpd:+$('#pm').value||null,p_days:+$('#pdy').value||null,p_price:$('#pp').value===''?null:+$('#pp').value});toast('الباقة اتضافت ✓');subs('pk')});
   }
 }
+// ---------- owner notes file ----------
+async function myNotesScreen(tab){
+  tab=tab||S.mnTab||'staff';S.mnTab=tab;
+  $('#app').innerHTML=`${head('ملف الملاحظات','خاص بيك')}<div class="seg">${[['staff','👥 ملاحظات الموظفين'],['mine','📝 ملاحظاتي']].map(([k,l])=>`<button class="${k===tab?'on':''}" onclick="myNotesScreen('${k}')">${l}</button>`).join('')}</div><div id="mn"><div class="muted">جاري التحميل…</div></div>`;
+  if(tab==='staff'){
+    const L=await T('lc_hr_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
+    const P=L.filter(x=>x.active).map(x=>({x,F:(x.flags||[]).filter(f=>f.l!=='info').sort((a,b)=>(a.l==='bad'?0:1)-(b.l==='bad'?0:1))})).filter(p=>p.F.length||p.x.new_notes).sort((a,b)=>b.F.filter(f=>f.l==='bad').length-a.F.filter(f=>f.l==='bad').length);
+    $('#mn').innerHTML=P.length?P.map(({x,F})=>`<div class="card" style="cursor:pointer" onclick="S.hrId='${x.id}';go('hrp')"><div class="row" style="align-items:center"><b style="flex:1">${esc(x.name)}</b><small class="muted">${esc(x.job||'')}</small></div>
+      ${x.new_notes?`<div class="alert" style="margin:6px 0">💬 ${x.new_notes} رسالة جديدة منه</div>`:''}${F.map(f=>`<div class="alert ${f.l==='bad'?'bad':''}" style="margin:6px 0 0">${esc(f.t)}</div>`).join('')}</div>`).join(''):'<div class="card muted">مفيش ملاحظات على الموظفين دلوقتي</div>';
+    return}
+  const N=await T('lc_my_notes_list').catch(e=>{toast(e.message,true);return null});if(!N)return;
+  $('#mn').innerHTML=`<div class="card"><label for="mnb">ملاحظة جديدة</label><textarea id="mnb" rows="3" placeholder="مثلًا: أكلم مورد الدجاج على السعر، أراجع جرد الخميس"></textarea><button class="btn" id="mns">حفظ</button></div>
+   ${N.map(n=>`<div class="card" style="${n.done?'opacity:.55':''}"><div style="white-space:pre-wrap;${n.done?'text-decoration:line-through':''}">${esc(n.body)}</div><div class="row" style="align-items:center;margin-top:8px;gap:6px"><small class="muted num" style="flex:1">${n.at}</small>
+     <button class="btn sm ${n.done?'sec':''}" style="margin:0;flex:0 0 auto" onclick="mnSave(${n.id},${!n.done},this)">${n.done?'↩️ رجّعها':'✅ خلصت'}</button><button class="btn sm sec" style="margin:0;flex:0 0 auto" onclick="mnDel(${n.id},this)">🗑</button></div></div>`).join('')||'<div class="card muted">لسه مفيش ملاحظات</div>'}`;
+  $('#mns').onclick=()=>act($('#mns'),async()=>{await T('lc_my_notes_save',{p_id:null,p_body:$('#mnb').value});toast('اتحفظ ✓');myNotesScreen('mine')});
+}
+async function mnSave(id,done,b){await act(b,async()=>{await T('lc_my_notes_save',{p_id:id,p_body:null,p_done:done});myNotesScreen('mine')})}
+async function mnDel(id,b){if(!confirm('تمسح الملاحظة دي؟'))return;await act(b,async()=>{await T('lc_my_notes_save',{p_id:id,p_body:null,p_delete:true});myNotesScreen('mine')})}
 // ---------- cleaning ----------
 const mins=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
 async function cleanScreen(area){
