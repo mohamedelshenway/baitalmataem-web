@@ -517,6 +517,10 @@ function snapCam(title,label,facing){return new Promise(async res=>{
   m.querySelector('#cs').onclick=()=>act(m.querySelector('#cs'),async()=>{
     let src=v,sw=v.videoWidth,sh=v.videoHeight;if(!st){src=await nativePick(facing);if(!src)return;sw=src.naturalWidth;sh=src.naturalHeight}
     const w=960,h=Math.round(w*(sh||720)/(sw||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(src,0,0,w,h);
+    let desc=null,fnote=null;const fa=FA;
+    if(fa){desc=await faDesc(c);if(!desc){toast('مش شايف وشّك كويس. قرّب من الكاميرا ونوّر المكان وحاول تاني',true);return}
+      const R=await T('lc_face_ref');if(R.photo){const im=new Image();im.src=R.photo;await im.decode();const rd=await faDesc(im);if(rd)await T('lc_face_ref_save',{p_ref:rd});else fnote='ref_noface'}else if(!R.has_photo)fnote='no_ref'}
+    else fnote='no_model';
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
     x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-66,w,66);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
     x.font='600 22px "IBM Plex Sans Arabic", sans-serif';x.fillText(label,w-14,h-38);
@@ -938,6 +942,9 @@ async function audit(){
 
 // ---------- attendance (live selfie + location) ----------
 function getPos(){return new Promise(res=>{if(!navigator.geolocation)return res(null);navigator.geolocation.getCurrentPosition(p=>res({lat:p.coords.latitude,lng:p.coords.longitude,acc:p.coords.accuracy}),()=>res(null),{enableHighAccuracy:true,timeout:15000,maximumAge:0})})}
+let FA=null;async function faLoad(){if(FA)return FA;if(!window.faceapi)await new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='/kitchen/fa/face-api.js';sc.onload=res;sc.onerror=rej;document.head.appendChild(sc)});
+  const m='/kitchen/fa';await faceapi.nets.tinyFaceDetector.loadFromUri(m);await faceapi.nets.faceLandmark68Net.loadFromUri(m);await faceapi.nets.faceRecognitionNet.loadFromUri(m);FA=faceapi;return FA}
+async function faDesc(el){const r=await FA.detectSingleFace(el,new FA.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:0.4})).withFaceLandmarks().withFaceDescriptor();return r?Array.from(r.descriptor):null}
 async function checkScreen(kind){
   const shift=S.b.me.shift;
   $('#app').innerHTML=`${head(kind==='دخول'?'تسجيل الحضور':'تسجيل الانصراف',`وردية ${shift} · صورة دلوقتي من جوه الفرع`,kind!=='دخول')}
@@ -947,7 +954,9 @@ async function checkScreen(kind){
   ${kind==='دخول'?`<div class="seg" style="margin-top:12px">${['صباحي','مسائي'].map(s=>`<button class="${shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div><button class="btn sec" onclick="logout()">مش أنا – خروج</button>`:''}</div>`;
   let stream=null,pos=null;
   try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});$('#v').srcObject=stream}catch(e){stream=null;$('#v').style.display='none';$('#snap').textContent='📷 افتح الكاميرا وصوّر نفسك'}
+  const faP=faLoad().catch(()=>null);
   pos=await getPos();$('#st').textContent=pos?`الموقع اتحدد (دقة ${Math.round(pos.acc)} متر)`:'الموقع مش متاح، هيتسجل الحضور بدون موقع وهيظهر للمدير';
+  $('#st').textContent+=' · جاري تجهيز التعرّف على الوجه…';await Promise.race([faP,new Promise(r=>setTimeout(r,25000))]);$('#st').textContent=$('#st').textContent.replace(' · جاري تجهيز التعرّف على الوجه…',FA?' · التعرّف على الوجه جاهز ✓':'');
   $('#snap').disabled=false;
   const stop=()=>stream&&stream.getTracks().forEach(t=>t.stop());
   window.addEventListener('hashchange',stop,{once:true});
@@ -960,7 +969,7 @@ async function checkScreen(kind){
     x.font='600 17px "IBM Plex Sans Arabic", sans-serif';x.fillText(`${S.b.me.name} · ${kind} · وردية ${S.b.me.shift}`,w-12,h-36);
     x.font='500 15px "IBM Plex Sans Arabic", sans-serif';x.fillText(`${S.b.branch.name} · ${ts}${pos?` · ±${Math.round(pos.acc)}م`:''}`,w-12,h-13);
     const img=c.toDataURL('image/jpeg',0.6);
-    const r=await T('lc_check',{p_kind:kind,p_photo:img,p_lat:pos?.lat??null,p_lng:pos?.lng??null,p_acc:pos?.acc??null});stop();
+    const r=await T('lc_check',{p_kind:kind,p_photo:img,p_lat:pos?.lat??null,p_lng:pos?.lng??null,p_acc:pos?.acc??null,p_desc:desc,p_face_note:fnote});stop();
     S.att.push({kind,at:new Date().toISOString()});
     toast(r.branch_has_location&&r.inside===false?`اتسجل، بس انت بعيد عن الفرع ${Math.round(r.distance)} متر`:`${kind==='دخول'?'أهلًا، الحضور':'الانصراف'} اتسجل ✓`,r.inside===false);
     if(kind==='خروج'){logout()}else{go('');home()}});
