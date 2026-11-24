@@ -977,13 +977,13 @@ async function checkScreen(kind){
     const r=await T('lc_check',{p_kind:kind,p_photo:img,p_lat:pos?.lat??null,p_lng:pos?.lng??null,p_acc:pos?.acc??null,p_desc:desc,p_face_note:fnote});stop();
     S.att.push({kind,at:new Date().toISOString()});
     toast(r.branch_has_location&&r.inside===false?`اتسجل، بس انت بعيد عن الفرع ${Math.round(r.distance)} متر`:`${kind==='دخول'?'أهلًا، الحضور':'الانصراف'} اتسجل ✓`,r.inside===false);
-    if(kind==='خروج'){logout()}else{go('');home()}});
+    if(kind==='خروج'){location.hash='';route()}else{go('');home()}});
 }
 async function attendance(){
   const today=new Date(Date.now()-2*3600e3).toISOString().slice(0,10);
   $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
-    $('#al').innerHTML=A.map(a=>`<div class="li">${thumb(a.photo,64)}${a.ref?`<span style="opacity:.85">${thumb(a.ref,40)}</span>`:''}<div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
+    $('#al').innerHTML=A.map(a=>`<div class="li">${a.auto?'<span style="width:64px;text-align:center;font-size:26px">⏱️</span>':thumb(a.photo,64)}${a.ref?`<span style="opacity:.85">${thumb(a.ref,40)}</span>`:''}<div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.auto?'<span class="pill p-bad">خروج تلقائي – نسي يسجل</span>':a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
   $('#d').onchange=load;load();
 }
 
