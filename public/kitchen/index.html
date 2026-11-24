@@ -956,17 +956,18 @@ async function checkScreen(kind){
   try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640}},audio:false});$('#v').srcObject=stream}catch(e){stream=null;$('#v').style.display='none';$('#snap').textContent='📷 افتح الكاميرا وصوّر نفسك'}
   const faP=faLoad().catch(()=>null);
   pos=await getPos();$('#st').textContent=pos?`الموقع اتحدد (دقة ${Math.round(pos.acc)} متر)`:'الموقع مش متاح، هيتسجل الحضور بدون موقع وهيظهر للمدير';
-  $('#st').textContent+=' · جاري تجهيز التعرّف على الوجه…';await Promise.race([faP,new Promise(r=>setTimeout(r,25000))]);$('#st').textContent=$('#st').textContent.replace(' · جاري تجهيز التعرّف على الوجه…',FA?' · التعرّف على الوجه جاهز ✓':'');
-  $('#snap').disabled=false;
+  $('#snap').disabled=false;let fails=0;
+  if(!FA){$('#st').textContent+=' · جاري تجهيز التعرّف على الوجه…';faP.then(()=>{$('#st').textContent=$('#st').textContent.replace(' · جاري تجهيز التعرّف على الوجه…',FA?' · التعرّف على الوجه جاهز ✓':'')})}
   const stop=()=>stream&&stream.getTracks().forEach(t=>t.stop());
   window.addEventListener('hashchange',stop,{once:true});
   $('#snap').onclick=()=>act($('#snap'),async()=>{const v=$('#v'),c=$('#cv');let src=v,sw=v.videoWidth,sh=v.videoHeight;
     if(!stream){src=await nativePick('user');if(!src)return;sw=src.naturalWidth;sh=src.naturalHeight}
     const w=480,h=Math.round(w*(sh||640)/(sw||480));c.width=w;c.height=h;
     const x=c.getContext('2d');if(stream){x.save();x.translate(w,0);x.scale(-1,1);x.drawImage(src,0,0,w,h);x.restore()}else x.drawImage(src,0,0,w,h);
-    let desc=null,fnote=null;const fa=FA;
-    if(fa){desc=await faDesc(c);if(!desc){toast('مش شايف وشّك كويس. قرّب من الكاميرا ونوّر المكان وحاول تاني',true);return}
-      const R=await T('lc_face_ref');if(R.photo){const im=new Image();im.src=R.photo;await im.decode();const rd=await faDesc(im);if(rd)await T('lc_face_ref_save',{p_ref:rd});else fnote='ref_noface'}else if(!R.has_photo)fnote='no_ref'}
+    let desc=null,fnote=null;if(!FA)await Promise.race([faP,new Promise(r=>setTimeout(r,8000))]);const fa=FA;
+    if(fa){desc=await faDesc(c);if(!desc){fails++;if(fails<2){toast('مش شايف وشّك كويس. قرّب من الكاميرا ونوّر المكان وحاول تاني',true);return}fnote='no_face'}
+      if(desc){
+      const R=await T('lc_face_ref');if(R.photo){const im=new Image();im.src=R.photo;await im.decode();const rd=await faDesc(im);if(rd)await T('lc_face_ref_save',{p_ref:rd});else fnote='ref_noface'}else if(!R.has_photo)fnote='no_ref'}}
     else fnote='no_model';
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
     x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-62,w,62);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
@@ -979,7 +980,7 @@ async function checkScreen(kind){
     if(kind==='خروج'){logout()}else{go('');home()}});
 }
 async function attendance(){
-  const today=new Date().toISOString().slice(0,10);
+  const today=new Date(Date.now()-2*3600e3).toISOString().slice(0,10);
   $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
     $('#al').innerHTML=A.map(a=>`<div class="li">${thumb(a.photo,64)}${a.ref?`<span style="opacity:.85">${thumb(a.ref,40)}</span>`:''}<div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
