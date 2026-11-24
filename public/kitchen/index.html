@@ -981,10 +981,18 @@ async function checkScreen(kind){
 }
 async function attendance(){
   const today=new Date(Date.now()-2*3600e3).toISOString().slice(0,10);
-  $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
+  $('#app').innerHTML=`${head('الحضور','صورة كل دخول وانصراف ومكانه')}<div class="card" id="pres"><div class="muted">جاري التحميل…</div></div><div class="card"><label for="d">اليوم</label><input id="d" type="date" value="${today}"><div class="list" id="al" style="margin-top:8px"></div></div>`;
   const load=async()=>{const A=await T('lc_attendance',{p_day:$('#d').value}).catch(e=>{toast(e.message,true);return[]});
     $('#al').innerHTML=A.map(a=>`<div class="li">${a.auto?'<span style="width:64px;text-align:center;font-size:26px">⏱️</span>':thumb(a.photo,64)}${a.ref?`<span style="opacity:.85">${thumb(a.ref,40)}</span>`:''}<div class="t"><b>${esc(a.name)} · ${a.kind}</b><small>${tm(a.at)} · ${esc(a.shift)}${a.distance!=null?` · على بعد ${Math.round(a.distance)} متر`:' · بدون موقع'}</small></div>${a.auto?'<span class="pill p-bad">خروج تلقائي – نسي يسجل</span>':a.inside===true?'<span class="pill p-ok">في الفرع</span>':a.inside===false?'<span class="pill p-bad">بره الفرع</span>':'<span class="pill p-warn">مش متأكد</span>'}</div>`).join('')||'<div class="muted">مفيش تسجيل في اليوم ده</div>'};
   $('#d').onchange=load;load();
+  T('lc_presence').then(P=>{const hm=t=>{const m=Math.round((Date.now()-new Date(t))/60000);return m<60?m+' دقيقة':Math.floor(m/60)+' س '+(m%60)+' د'};
+    const sec=(t,c,body)=>`<div style="margin-top:10px"><b style="color:${c}">${t}</b><div style="margin-top:4px">${body}</div></div>`;
+    $('#pres').innerHTML=`<b>🟢 موجود دلوقتي (${P.inside.length})</b>`+
+      (P.inside.map(x=>`<div class="li"><div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||'')} · دخل ${tm(x.since)} · بقاله ${hm(x.since)}</small></div></div>`).join('')||'<div class="muted">مفيش حد مسجل دخول</div>')+
+      (P.left.length?sec('مشي النهاردة','var(--muted)',P.left.map(x=>`${esc(x.name)} ${tm(x.at)}${x.auto?' <span class="pill p-bad">تلقائي</span>':''}`).join(' · ')):'')+
+      (P.absent.length?sec('🔴 ماسجلش حضور النهاردة','var(--bad)',P.absent.map(esc).join(' · ')):'')+
+      (P.forgot_yesterday.length?sec('⏱️ نسيوا يسجلوا خروج امبارح','var(--bad)',P.forgot_yesterday.map(esc).join(' · ')):'')+
+      (P.noface.length?sec('⚠️ اتسجلوا من غير تحقق وش (صورة البروفايل محتاجة تتغيّر)','#b26b00',P.noface.map(esc).join(' · ')):'')}).catch(e=>{$('#pres').innerHTML=`<div class="muted">${esc(e.message)}</div>`});
 }
 
 // ---------- menu & dish sales (manager) ----------
@@ -1060,6 +1068,14 @@ async function invoices(){
       <div class="list">${(r.lines||[]).map(l=>`<div class="li"><span data-p="${l.photo||''}">${l.photo?'<span class="muted">…</span>':'<span class="pill p-warn">بدون صورة</span>'}</span><div class="t"><b>${esc(l.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(l.unit)} × <span class="num">${n2(l.price)}</span> = <span class="num">${n2(l.qty*l.price)}</span></small></div></div>`).join('')}</div></div>`).join('')||'<div class="card muted">مفيش فواتير في اليوم ده</div>';
     $('#il').querySelectorAll('[data-p]').forEach(el=>ph(el,+el.dataset.p||0))};
   $('#d').onchange=load;load();
+  T('lc_presence').then(P=>{const hm=t=>{const m=Math.round((Date.now()-new Date(t))/60000);return m<60?m+' دقيقة':Math.floor(m/60)+' س '+(m%60)+' د'};
+    const sec=(t,c,body)=>`<div style="margin-top:10px"><b style="color:${c}">${t}</b><div style="margin-top:4px">${body}</div></div>`;
+    $('#pres').innerHTML=`<b>🟢 موجود دلوقتي (${P.inside.length})</b>`+
+      (P.inside.map(x=>`<div class="li"><div class="t"><b>${esc(x.name)}</b><small>${esc(x.job||'')} · دخل ${tm(x.since)} · بقاله ${hm(x.since)}</small></div></div>`).join('')||'<div class="muted">مفيش حد مسجل دخول</div>')+
+      (P.left.length?sec('مشي النهاردة','var(--muted)',P.left.map(x=>`${esc(x.name)} ${tm(x.at)}${x.auto?' <span class="pill p-bad">تلقائي</span>':''}`).join(' · ')):'')+
+      (P.absent.length?sec('🔴 ماسجلش حضور النهاردة','var(--bad)',P.absent.map(esc).join(' · ')):'')+
+      (P.forgot_yesterday.length?sec('⏱️ نسيوا يسجلوا خروج امبارح','var(--bad)',P.forgot_yesterday.map(esc).join(' · ')):'')+
+      (P.noface.length?sec('⚠️ اتسجلوا من غير تحقق وش (صورة البروفايل محتاجة تتغيّر)','#b26b00',P.noface.map(esc).join(' · ')):'')}).catch(e=>{$('#pres').innerHTML=`<div class="muted">${esc(e.message)}</div>`});
 }
 
 // ---------- subscriptions ----------
