@@ -222,6 +222,7 @@ function home(){
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
   ${nothing?`<div class="card" style="text-align:center"><div style="font-size:44px">✅</div><b>حضورك اتسجل</b><p class="muted">ولما تخلص شغلك سجّل الانصراف بصورة.</p></div>`:''}
   ${low.length?`<div class="alert ${low.some(i=>i.qty<=0)?'bad':''}" onclick="go('stock')"><b>هيخلص خلال يوم (${low.length}) – اطلب دلوقتي</b><br>${low.slice(0,4).map(i=>`${esc(i.name)}: <span class="num">${n2(i.qty)}</span> ${esc(i.unit)}${i.use7>0?` · بيخلص في اليوم <span class="num">${n2(i.use7)}</span>`:''}`).join(' · ')}${low.length>4?' …':''}</div>`:''}
+  ${has('subs')?`<div class="steps"><button class="step" style="border-color:#f49038;background:#fff7ee" onclick="S.subTab='offer';go('subs')"><span class="ic">🎁</span><span><b>العرض</b><small>وجبتك الزيادة علينا: وجبتين + الثالثة مجانًا · 3 + الرابعة مجانًا</small></span></button></div>`:''}
   ${b.subs_expiring&&has('subs')?`<div class="alert bad" onclick="S.subTab='follow';go('subs')"><b>${b.subs_expiring} اشتراك قرّب يخلص</b><br>اعرض عليهم تجديد قبل ما يخلصوا ←</div>`:''}
   ${b.po_drafts&&has('po')?`<div class="alert" onclick="go('po')"><b>${b.po_drafts} أمر شراء جاهز للاعتماد</b><br>السيستم جهّزه لوحده للحاجات اللي هتخلص ←</div>`:''}
   ${b.open_requests&&has('req')?`<div class="alert" onclick="go('req')">في <b>${b.open_requests}</b> طلب نواقص مفتوح</div>`:''}
@@ -1082,7 +1083,7 @@ async function invoices(){
 const wa=p=>{if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('05'))d='966'+d.slice(1);else if(d.startsWith('5')&&d.length===9)d='966'+d;return `https://wa.me/${d}`};
 async function subs(tab){
   tab=tab||S.subTab||'deliver';S.subTab=null;S.tabBack=tab!=='deliver'?()=>subs():null;const mg=S.b.me.role!=='chef';
-  const tabs=[['deliver','تسليم اليوم'],['route','خط السير 🚗'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
+  const tabs=[['deliver','تسليم اليوم'],['route','خط السير 🚗'],['offer','العرض 🎁'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
   $('#app').innerHTML=`${head('الاشتراكات',`وردية ${S.b.me.shift}`)}<div class="chips" style="margin-bottom:12px">${tabs.map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="subs('${k}')">${l}</button>`).join('')}</div><div id="sb"><div class="muted">جاري التحميل…</div></div>`;
   if(tab==='st')return subStats();
   if(tab==='route')return routeScreen(true);
@@ -1096,11 +1097,17 @@ async function subs(tab){
     $('#sv').onclick=()=>act($('#sv'),async()=>{const lines=[...box.querySelectorAll('input[data-id]')].filter(x=>x.value!=='').map(x=>({id:+x.dataset.id,meals:+x.value}));
       if(!lines.length)throw new Error('اكتب عدد الوجبات');const r=await T('lc_sub_deliver',{p_lines:lines});toast(`اتسجل ✓ ${r.saved} مشترك`);subs('deliver')});
   }
+  if(tab==='offer'){
+    const O=L.packages.filter(p=>/^عرض/.test(p.name));
+    box.innerHTML=O.length?`<div class="card" style="background:#fff7ee;border-color:#f49038"><b style="font-size:18px">وجبتك الزيادة علينا 🎁</b><p class="muted" style="margin:6px 0 0">اختار باقة العرض، وهيتفتح تسجيل الاشتراك بالسعر والوجبات جاهزين. الوجبة المجانية في الدجاج: دجاج بس.</p></div>
+    <div class="grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${O.map(p=>`<button class="tile" style="border-color:#f49038" onclick="S.offerPk=${p.id};subs('new')"><span class="ic">🎁</span><b>${esc(p.name.replace(/^عرض:\s*/,'').replace(/^اشتراك\s*/,''))}</b><span>${p.mpd} وجبات يوميًا × ${p.days} يوم</span><b class="num" style="color:#c4621a">${n0(p.price)} ريال</b></button>`).join('')}</div>`:'<div class="alert">مفيش باقات عرض متسجلة.</div>';
+    return;
+  }
   if(tab==='new'){
     const P=L.packages;
     if(!P.length){box.innerHTML='<div class="alert">ضيف الباقات وأسعارها الأول من تبويب «الباقات».</div>';return}
     box.innerHTML=`<div class="card"><label for="ph">رقم الجوال</label><input id="ph" type="tel" inputmode="tel" placeholder="05xxxxxxxx"><label for="nm">اسم المشترك</label><input id="nm">
-    <label for="pk">الباقة</label><select id="pk">${P.map(p=>`<option value="${p.id}" data-price="${p.price}">${esc(p.name)} · ${p.mpd} وجبة × ${p.days} يوم · ${n0(p.price)} ريال</option>`).join('')}</select>
+    <label for="pk">الباقة</label><select id="pk">${P.map(p=>`<option value="${p.id}" data-price="${p.price}"${S.offerPk===p.id?' selected':''}>${/^عرض/.test(p.name)?'🎁 ':''}${esc(p.name)} · ${p.mpd} وجبة × ${p.days} يوم · ${n0(p.price)} ريال</option>`).join('')}</select>
     <div class="row"><div><label for="pd">المدفوع فعلًا</label><input id="pd" type="number" inputmode="decimal"></div><div><label for="sd">يبدأ من</label><input id="sd" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>
     <div id="disc" class="muted" style="margin-top:6px"></div>
     <label>طريقة الدفع</label><div class="seg" id="pay">${['كاش','شبكة','تحويل'].map(p=>`<button>${p}</button>`).join('')}</div>
@@ -1109,6 +1116,7 @@ async function subs(tab){
     <p class="muted">لو الرقم مسجل قبل كده هيتحسب تجديد. الكاش بيدخل الخزنة لوحده.</p></div>`;
     const dsc=()=>{const o=$('#pk').selectedOptions[0];const lp=+o.dataset.price,pd=+$('#pd').value;$('#disc').textContent=pd?`سعر الباقة ${n0(lp)} · الخصم ${n0(lp-pd)} ريال (${pc((lp-pd)/lp)})`:''};
     $('#pk').onchange=dsc;$('#pd').oninput=dsc;
+    if(S.offerPk){const o=$('#pk').selectedOptions[0];if(o){$('#pd').value=o.dataset.price;dsc()}S.offerPk=null}
     let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=TX(b);$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
     let dlv=false;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none'};DLB();
     $('#sv').onclick=()=>act($('#sv'),async()=>{const dp=dlv?DLV():null;if(dp&&!dp.address&&!dp.map)throw new Error('اكتب عنوان التوصيل أو لينك اللوكيشن');const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
