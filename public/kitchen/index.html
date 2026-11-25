@@ -1145,7 +1145,7 @@ async function subs(tab){
   }
   if(tab==='offer'){
     const O=L.packages.filter(p=>/^عرض/.test(p.name));
-    box.innerHTML=O.length?`<div class="card" style="background:#fff7ee;border-color:#f49038"><b style="font-size:18px">وجبتك الزيادة علينا 🎁</b><p class="muted" style="margin:6px 0 0">اختار باقة العرض، وهيتفتح تسجيل الاشتراك بالسعر والوجبات جاهزين. الوجبة المجانية في الدجاج: دجاج بس. <b>وخصم 15% على التوصيل</b> لاشتراكات العرض. <b>العرض ساري لحد 4 ديسمبر.</b></p></div>
+    box.innerHTML=O.length?`<div class="card" style="background:#fff7ee;border-color:#f49038"><b style="font-size:18px">وجبتك الزيادة علينا 🎁</b><p class="muted" style="margin:6px 0 0">اختار باقة العرض، وهيتفتح تسجيل الاشتراك بالسعر والوجبات جاهزين. الوجبة المجانية في الدجاج: دجاج بس. <b>توصيل اشتراكات العرض: قريب 89 · متوسط 129 · بعيد 169 ريال</b> (بدل 115 / 172 / 230). <b>العرض ساري لحد 4 ديسمبر.</b></p></div>
     <div class="grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${O.map(p=>`<button class="tile" style="border-color:#f49038" onclick="S.offerPk=${p.id};subs('new')"><span class="ic">🎁</span><b>${esc(p.name.replace(/^عرض:\s*/,'').replace(/^اشتراك\s*/,''))}</b><span>${p.mpd} وجبات يوميًا × ${p.days} يوم</span><b class="num" style="color:#c4621a">${n0(p.price)} ريال</b></button>`).join('')}</div>`:'<div class="alert">مفيش باقات عرض متسجلة.</div>';
     return;
   }
