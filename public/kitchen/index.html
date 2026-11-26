@@ -171,7 +171,15 @@ window.addEventListener('hashchange',route);
 function LANGBAR(){return `<div class="seg" data-notr style="margin-top:14px">${Object.entries(I18N.LANGS).map(([k,v])=>`<button class="${I18N.lang===k?'on':''}" onclick="setLang('${k}')">${v.n}</button>`).join('')}</div>`}
 async function setLang(l){try{if(S.token)await T('lc_set_lang',{p_lang:l})}catch(e){};I18N.set(l)}
 // ---------- login ----------
+async function pinReset(tk){
+  const app=$('#app');
+  app.innerHTML=`<div style="padding-top:8vh">${head('رقم سري جديد','بيت المطاعم · نظام المطبخ',false)}<div class="card" id="rs"><div class="muted">جاري التحميل…</div></div></div>`;
+  let info;try{info=await rpc('lc_pin_reset_info',{p_reset:tk})}catch(e){$('#rs').innerHTML=`<div class="alert">${esc(e.message)}</div><button class="btn" onclick="location.href=location.pathname">الدخول</button>`;return}
+  $('#rs').innerHTML=`<p>الحساب: <b>${esc(info.name)}</b></p><label for="p1">الرقم السري الجديد (4 لـ 8 أرقام)</label><input id="p1" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"><label for="p2">اكتبه تاني للتأكيد</label><input id="p2" class="pin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"><button class="btn" id="go">حفظ الرقم السري</button><p class="muted">اللينك ده بيشتغل مرة واحدة بس.</p>`;
+  $('#go').onclick=()=>act($('#go'),async()=>{if($('#p1').value!==$('#p2').value)throw new Error('الرقمين مش زي بعض');await rpc('lc_pin_reset',{p_reset:tk,p_new:$('#p1').value});toast('الرقم السري اتغير ✓');setTimeout(()=>{location.href=location.pathname+'?u='+encodeURIComponent(info.name)},900)});
+}
 async function login(){
+  const rsT=new URLSearchParams(location.search).get('reset');if(rsT&&/^[0-9a-f-]{36}$/i.test(rsT))return pinReset(rsT);
   const app=$('#app');
   app.innerHTML=`<div style="padding-top:8vh">${head('دخول','بيت المطاعم · نظام المطبخ',false)}<div class="card"><label for="nm">الاسم</label><select id="nm"><option value="">جاري التحميل…</option></select>
   <label for="pin">الرقم السري</label><input id="pin" class="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
