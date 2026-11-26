@@ -1217,13 +1217,14 @@ const mins=t=>{const [h,m]=t.split(':').map(Number);return h*60+m};
 async function cleanScreen(area){
   $('#app').innerHTML=`${head('النظافة','مهام النظافة بتاعتك')}<div class="seg" id="ca"></div><div id="cb"><div class="muted">جاري التحميل…</div></div>`;
   const R=await T('lc_clean').catch(e=>{toast(e.message,true);return null});if(!R)return;S.clean=R;
-  const AL={'الحمامات':'🚻 الحمامات','المطعم':'🍽️ الصالة والكاشير','المطبخ':'🔪 المطبخ','السيارة':'🚗 السيارة'};
+  const AL={'الحمامات':'🚻 الحمامات','المطعم':'🍽️ الصالة والكاشير','المطبخ':'🔪 المطبخ','السيارة':'🚗 السيارة','القفل':'🌙 القفل الليلي'};
   const areas=Object.keys(AL).filter(a=>R.tasks.some(t=>t.area===a));
   area=area||S.cleanArea;if(!areas.includes(area))area=areas[0]||'الحمامات';S.cleanArea=area;
   $('#ca').innerHTML=areas.length>1?areas.map(a=>`<button class="${a===area?'on':''}" onclick="cleanScreen('${a}')">${AL[a]}</button>`).join(''):'';
   const now=mins(R.now==='99:99'?'23:59':R.now),mgr=isOwner()||S.b.me.role==='manager';
-  const st=s=>s.done?'done':(mins(s.slot)+30<now?'late':(mins(s.slot)-30<=now?'due':'next'));
-  const all=R.tasks.filter(t=>!t.locked).flatMap(t=>t.slots.map(s=>({t,s,k:st(s)})));
+  const nowN=now<300?now+1440:now;
+  const st=(s,t)=>{if(s.done)return 'done';if(t&&t.closing){const sm=mins(s.slot)+(mins(s.slot)<300?1440:0);return sm+60<nowN?'late':(sm-60<=nowN?'due':'next')}return mins(s.slot)+30<now?'late':(mins(s.slot)-30<=now?'due':'next')};
+  const all=R.tasks.filter(t=>!t.locked).flatMap(t=>t.slots.map(s=>({t,s,k:st(s,t)})));
   const mine=all.filter(x=>x.t.area===area);
   const cnt=k=>mine.filter(x=>x.k===k).length;
   const tot=all.length,dn=all.filter(x=>x.k==='done').length;
@@ -1233,7 +1234,7 @@ async function cleanScreen(area){
    <div style="height:8px;background:var(--line);border-radius:9px;margin-top:10px;overflow:hidden"><div style="height:100%;width:${tot?Math.round(dn/tot*100):0}%;background:var(--ok)"></div></div>
    ${mgr?`<div class="row" style="margin-top:12px;gap:4px;align-items:flex-end">${R.week.map(w=>{const p=w.due?Math.round(w.done/w.due*100):0;return `<div style="flex:1;text-align:center"><div style="height:${Math.max(4,p*0.6)}px;background:${p>=90?'var(--ok)':p>=60?'#c77700':'var(--bad)'};border-radius:4px"></div><small class="num">${p}%</small><br><small class="muted">${new Date(w.day).toLocaleDateString(I18N.loc,{weekday:'short'})}</small></div>`}).join('')}</div><p class="muted" style="margin:6px 0 0">نسبة الالتزام في آخر أسبوع</p>`:''}</div>
   ${R.tasks.filter(t=>t.area===area).map(t=>`<div class="card"><b>${esc(t.name)}</b>${t.blind?' <span class="pill p-bad">🔦 نقطة عمياء</span>':''}${t.weekly?' <span class="pill p-warn">أسبوعي</span>':''}<div class="muted" style="margin:4px 0 8px">${esc(t.details||'')}${t.who?` · ${esc(t.who)}`:''}</div>
-    <div class="row" style="flex-wrap:wrap;gap:6px">${t.locked?`<div class="btn sm sec" style="margin:0;flex:0 0 auto;opacity:.6;cursor:default">🔒 يوم ${['الأحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'][t.wday]} <span class="num">${t.slots.join(' ، ')}</span></div>`:t.slots.map(s=>{const k=st(s);return k==='done'
+    <div class="row" style="flex-wrap:wrap;gap:6px">${t.locked?`<div class="btn sm sec" style="margin:0;flex:0 0 auto;opacity:.6;cursor:default">🔒 يوم ${['الأحد','الاتنين','التلات','الأربع','الخميس','الجمعة','السبت'][t.wday]} <span class="num">${t.slots.join(' ، ')}</span></div>`:t.slots.map(s=>{const k=st(s,t);return k==='done'
       ?`<div class="btn sm sec" style="margin:0;flex:0 0 auto;border-color:${color.done};color:${color.done}" ${mgr&&s.photo?`onclick="cleanPhoto(${s.log})"`:''}>✅ <span class="num">${s.slot}</span><small style="display:block">${esc(s.by||'')} <span class="num">${s.at}</span>${mgr&&s.photo?' 📷':''}</small></div>`
       :`<button class="btn sm ${k==='next'?'sec':''}" style="margin:0;flex:0 0 auto;${k==='late'?'background:var(--bad);border-color:var(--bad)':k==='due'?'background:#c77700;border-color:#c77700':''}" onclick="cleanDone(${t.id},'${s.slot}',this)"><span class="num">${s.slot}</span><small style="display:block">${lab[k]}</small></button>`}).join('')}</div></div>`).join('')||'<div class="card muted">مفيش مهام النهارده</div>'}
   <p class="muted">دوس على الميعاد بعد ما تخلّص التنظيف، وصوّر المكان نضيف.</p>`;
