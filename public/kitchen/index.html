@@ -1157,15 +1157,18 @@ async function subs(tab){
     <div class="row"><div><label for="pd">المدفوع فعلًا</label><input id="pd" type="number" inputmode="decimal"></div><div><label for="sd">يبدأ من</label><input id="sd" type="date" value="${new Date().toISOString().slice(0,10)}"></div></div>
     <div id="disc" class="muted" style="margin-top:6px"></div>
     <label>طريقة الدفع</label><div class="seg" id="pay">${['كاش','شبكة','تحويل'].map(p=>`<button>${p}</button>`).join('')}</div>
-    <label>الاستلام</label><div class="seg" id="dlv"><button class="on" data-v="0">من الفرع</button><button data-v="1">توصيل 🚗</button></div><div id="dlf" style="display:none">${DLF({})}</div>
+    <label>الاستلام</label><div class="seg" id="dlv"><button class="on" data-v="0">من الفرع</button><button data-v="1">توصيل 🚗</button></div><div id="dlf" style="display:none">${DLF({})}<div class="row"><div><label for="df">رسوم التوصيل</label><input id="df" type="number" inputmode="decimal"></div><div><label>المطلوب من العميل</label><div id="dtot" class="num" style="padding:10px 0;font-weight:800">—</div></div></div><div id="dfn" class="muted"></div></div>
     <label for="nt">ملاحظة</label><input id="nt"><button class="btn" id="sv">تسجيل الاشتراك</button>
     <p class="muted">لو الرقم مسجل قبل كده هيتحسب تجديد. الكاش بيدخل الخزنة لوحده.</p></div>`;
     const dsc=()=>{const o=$('#pk').selectedOptions[0];const lp=+o.dataset.price,pd=+$('#pd').value;$('#disc').textContent=pd?`سعر الباقة ${n0(lp)} · الخصم ${n0(lp-pd)} ريال (${pc((lp-pd)/lp)})`:''};
-    $('#pk').onchange=dsc;$('#pd').oninput=dsc;
+    const isOffer=()=>/^عرض/.test(($('#pk').selectedOptions[0]||{}).textContent.replace(/^🎁\s*/,''));
+    const fee=()=>{const f=DFEE[DAREA];if(!f){$('#dfn').textContent='اختار المنطقة علشان رسوم التوصيل تتحسب';return}const v=isOffer()?f[1]:f[0];$('#df').value=v;$('#dfn').innerHTML=isOffer()?`رسوم توصيل العرض: <s>${f[0]}</s> ← <b>${f[1]} ريال</b> (خصم ${f[0]-f[1]})`:`رسوم التوصيل العادية ${f[0]} ريال`;tot()};
+    const tot=()=>{const t=(+$('#pd').value||0)+(dlv?(+$('#df').value||0):0);$('#dtot').textContent=t?n0(t)+' ريال':'—'};
+    $('#pk').onchange=()=>{dsc();if(dlv)fee()};$('#pd').oninput=()=>{dsc();tot()};
     if(S.offerPk){const o=$('#pk').selectedOptions[0];if(o){$('#pd').value=o.dataset.price;dsc()}S.offerPk=null}
     let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=TX(b);$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
-    let dlv=false;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none'};DLB();
-    $('#sv').onclick=()=>act($('#sv'),async()=>{const dp=dlv?DLV():null;if(dp&&!dp.address&&!dp.map)throw new Error('اكتب عنوان التوصيل أو لينك اللوكيشن');const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null}});
+    var dlv=false;$('#dlv').onclick=e=>{const b=e.target.closest('button');if(!b)return;dlv=b.dataset.v==='1';$('#dlv').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));$('#dlf').style.display=dlv?'':'none';if(dlv)fee();tot()};DLB(fee);$('#df').oninput=tot;
+    $('#sv').onclick=()=>act($('#sv'),async()=>{const dp=dlv?DLV():null;if(dp&&!dp.address&&!dp.map)throw new Error('اكتب عنوان التوصيل أو لينك اللوكيشن');if(dp&&!DAREA)throw new Error('اختار منطقة التوصيل');const f=dp?DFEE[DAREA]:null;const r=await T('lc_subscribe',{p:{name:$('#nm').value,phone:$('#ph').value,package:+$('#pk').value,paid:$('#pd').value,start:$('#sd').value,pay,note:$('#nt').value||null,darea:dp?DAREA:null,dfee:dp?$('#df').value:null,dlist:f?f[0]:null}});
       if(dp){const L2=await T('lc_sub_list');const ph=$('#ph').value.replace(/\D/g,'').slice(-9);const a=L2.active.find(x=>(x.phone||'').replace(/\D/g,'').slice(-9)===ph);if(a)await T('lc_sub_delivery_save',{p_subscriber:a.sid,p:{delivery:true,...dp}})}
       toast(r.renewal?'التجديد اتسجل ✓':'الاشتراك اتسجل ✓');subs('deliver')});
   }
@@ -1246,11 +1249,12 @@ const RPILL=s=>`<span class="pill ${RST[s]||'p-warn'}">${esc(s)}</span>`;
 const mapLink=a=>a.map||(a.address?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(a.address+' مكة'):'');
 const DLF=d=>`<label for="d_ad">العنوان (الحي، الشارع، العمارة، الدور، الشقة)</label><input id="d_ad" value="${esc(d.address||'')}">
   <label for="d_mp">لينك اللوكيشن (من واتساب أو خرائط جوجل)</label><input id="d_mp" dir="ltr" placeholder="https://maps.app.goo.gl/..." value="${esc(d.map||'')}">
-  <label>المنطقة</label><div class="seg" id="d_ar">${['قريب','بعيد'].map(x=>`<button class="${d.area===x?'on':''}">${x}</button>`).join('')}</div>
+  <label>المنطقة</label><div class="seg" id="d_ar">${['قريب','متوسط','بعيد'].map(x=>`<button class="${d.area===x?'on':''}">${x}</button>`).join('')}</div>
   <div class="row"><div><label for="d_sl">ميعاد التوصيل</label><input id="d_sl" list="d_sls" placeholder="مثلًا 12:30" value="${esc(d.slot||'')}"><datalist id="d_sls">${(S.slots||[]).map(x=>`<option value="${esc(x)}">`).join('')}</datalist></div><div><label for="d_or">ترتيبه في الخط</label><input id="d_or" type="number" inputmode="numeric" value="${d.ord??''}"></div></div>
   <label for="d_nt">ملاحظة للسواق</label><input id="d_nt" placeholder="مثلًا: يتسلّم من الحارس، رن قبلها بـ10 دقايق" value="${esc(d.note||'')}">`;
 let DAREA='';
-function DLB(){DAREA=TX(($('#d_ar .on')||{}))||'';$('#d_ar').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAREA=TX(b);$('#d_ar').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))}}
+const DFEE={'قريب':[115,89],'متوسط':[172,129],'بعيد':[230,169]};
+function DLB(cb){DAREA=TX(($('#d_ar .on')||{}))||'';$('#d_ar').onclick=e=>{const b=e.target.closest('button');if(!b)return;DAREA=TX(b);$('#d_ar').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));cb&&cb()}}
 const DLV=()=>({address:$('#d_ad').value.trim(),map:$('#d_mp').value.trim(),area:DAREA,slot:$('#d_sl').value.trim(),ord:$('#d_or').value,note:$('#d_nt').value.trim()});
 function dlEdit(sid){
   const a=(S.subL&&S.subL.active||[]).find(x=>x.sid===sid);if(!a)return;const d=a.dl||{};
