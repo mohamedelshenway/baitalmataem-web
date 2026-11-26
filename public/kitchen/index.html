@@ -1127,12 +1127,29 @@ async function invoices(){
 
 // ---------- subscriptions ----------
 const wa=p=>{if(!p)return'';let d=String(p).replace(/\D/g,'');if(d.startsWith('05'))d='966'+d.slice(1);else if(d.startsWith('5')&&d.length===9)d='966'+d;return `https://wa.me/${d}`};
+async function subFresh(days){
+  S.freshDays=days;const box=$('#sb');
+  const R=await T('lc_sub_recent',{p_days:days}).catch(e=>{toast(e.message,true);return null});if(!R)return;
+  const per=[[0,'النهارده'],[6,'آخر 7 أيام'],[29,'آخر 30 يوم']];
+  const sum=R.reduce((a,x)=>a+ +x.paid,0),fee=R.reduce((a,x)=>a+(+x.dfee||0),0);
+  box.innerHTML=`<div class="seg" style="margin-bottom:10px">${per.map(([d,l])=>`<button class="${d===days?'on':''}" onclick="subFresh(${d})">${l}</button>`).join('')}</div>
+  <div class="card"><div class="row"><div><small class="muted">عدد الاشتراكات</small><div class="num" style="font-size:22px;font-weight:800">${R.length}</div></div><div><small class="muted">الاشتراكات</small><div class="num" style="font-size:22px;font-weight:800">${n0(sum)}</div></div><div><small class="muted">التوصيل</small><div class="num" style="font-size:22px;font-weight:800">${n0(fee)}</div></div></div></div>
+  <div style="overflow-x:auto"><table class="pl" style="min-width:720px"><tr class="muted"><td>رقم</td><td>صاحب الاشتراك</td><td>الباقة</td><td>عدد الوجبات</td><td>السعر</td><td>التوصيل</td><td>الإجمالي</td></tr>
+  ${R.map(x=>`<tr><td class="num"><b>#${x.id}</b><br><small class="muted">${x.at.slice(5)}</small></td>
+   <td><b>${esc(x.name)}</b>${x.renewal?' <span class="pill p-warn">تجديد</span>':' <span class="pill p-ok">جديد</span>'}<br><small class="muted num">${esc(x.phone||'')}</small></td>
+   <td>${x.offer?'🎁 ':''}${esc(x.package.replace(/^عرض:\s*/,''))}</td>
+   <td class="num"><b>${x.mpd}</b> × ${x.days} يوم<br><small class="muted">${x.total} وجبة</small></td>
+   <td class="num"><b>${n0(x.paid)}</b>${+x.paid<+x.list?`<br><small class="muted"><s>${n0(x.list)}</s></small>`:''}<br><small class="muted">${esc(x.pay||'')}</small></td>
+   <td class="num">${x.dfee!=null?`<b>${n0(x.dfee)}</b> <small class="muted">${esc(x.darea||'')}</small>${x.dlist&&+x.dlist>+x.dfee?`<br><small class="muted"><s>${n0(x.dlist)}</s></small>`:''}`:'<span class="muted">من الفرع</span>'}</td>
+   <td class="num"><b>${n0(+x.paid+(+x.dfee||0))}</b><br><small class="muted">${esc(x.by||'')}</small></td></tr>`).join('')||'<tr><td colspan="7" class="muted">مفيش اشتراكات في الفترة دي</td></tr>'}</table></div>`;
+}
 async function subs(tab){
   tab=tab||S.subTab||'deliver';S.subTab=null;S.tabBack=tab!=='deliver'?()=>subs():null;const mg=S.b.me.role!=='chef';
-  const tabs=[['deliver','تسليم اليوم'],['route','خط السير 🚗'],['offer','العرض 🎁'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
+  const tabs=[['deliver','تسليم اليوم'],['route','خط السير 🚗'],['offer','العرض 🎁'],['fresh','الجديدة 🆕'],['new','اشتراك / تجديد'],['list','المشتركين'],['follow','قرّب يخلص'],...(mg?[['pk','الباقات'],['st','الأرقام']]:[])];
   $('#app').innerHTML=`${head('الاشتراكات',`وردية ${S.b.me.shift}`)}<div class="chips" style="margin-bottom:12px">${tabs.map(([k,l])=>`<button class="chip${k===tab?' on':''}" onclick="subs('${k}')">${l}</button>`).join('')}</div><div id="sb"><div class="muted">جاري التحميل…</div></div>`;
   if(tab==='st')return subStats();
   if(tab==='route')return routeScreen(true);
+  if(tab==='fresh')return subFresh(S.freshDays||0);
   const L=await T('lc_sub_list').catch(e=>{toast(e.message,true);return null});if(!L)return;
   const box=$('#sb');S.subL=L;
   if(tab==='deliver'){
