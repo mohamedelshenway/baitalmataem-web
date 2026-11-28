@@ -268,7 +268,7 @@ function home(){
   const hr=new Date().getHours(); const hi=hr<12?'صباح الخير':hr<17?'أهلًا':'مساء الخير';
   const T=(h,ic,t,s,main)=>`<button class="tile${main?' main':''}" onclick="go('${h}')"><span class="ic">${ic}</span><b>${t}</b><span>${s}</span></button>`;
   const k=KITCHEN.filter(x=>has(x[0])),steps=k.filter(x=>['receive','prep','issue'].includes(x[0])),other=k.filter(x=>!['receive','prep','issue'].includes(x[0])),mg=MGMT.filter(x=>has(x[0]));
-  const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
+  const stepTxt={receive:'البضاعة اللي جت من المورد + صورة الفاتورة والميزان أو الكراتين',prep:'عملت صوص أو تتبيلة؟ اختار الريسبي واكتب الوزن اللي طلع',issue:'اللي اشتغلت بيه النهارده من الخامات والتحضيرات'};
   const drv=myPerms()!==null&&has('route');const nothing=!k.length&&!mg.length&&!has('shift')&&!isOwner()&&!drv&&!has('clean');
   $('#app').innerHTML=`${head(`${hi} يا ${/^Mr\./.test(b.me.name)?b.me.name:b.me.name.split(' ')[0]}`,esc(b.branch.name)+(b.me.job?' · '+esc(b.me.job):''),false)}
   ${k.length||mg.length?`<div class="card" style="padding:10px"><div class="shiftbar"><span class="muted" style="white-space:nowrap">الوردية</span><div class="seg" style="flex:1">${['صباحي','مسائي'].map(s=>`<button class="${b.me.shift===s?'on':''}" onclick="setShift('${s}')">${s}</button>`).join('')}</div></div></div>`:''}
@@ -590,7 +590,7 @@ function bigImg(src){const m=document.createElement('div');m.className='modal';m
 function linesUI(withPrice){
   const rows=S.lines.map((l,k)=>{const i=item(l.code);const cost=withPrice?l.qty*l.price:l.qty*(i.cost||0);
     const money=withPrice||isMgr();
-    return `<div class="li">${l.photo?thumb(l.photo,48):''}<div class="t"><b>${esc(i.name)}</b><small><span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
+    return `<div class="li">${l.photo?thumb(l.photo,48):''}<div class="t"><b>${esc(i.name)}</b><small>${l.cartons?`<span class="num">${n2(l.cartons)}</span> كرتونة × <span class="num">${n2(l.pack)}</span> = `:''}<span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
   const tot=S.lines.reduce((a,l)=>a+(withPrice?l.qty*l.price:l.qty*(item(l.code).cost||0)),0);
   return `<div class="list">${rows||'<div class="muted">لسه مضفتش خامات</div>'}</div>${S.lines.length&&(withPrice||isMgr())?`<div class="row" style="margin-top:10px"><b>الإجمالي</b><b class="num" style="text-align:left">${n2(tot)} ريال</b></div>`:''}`;
 }
@@ -599,20 +599,37 @@ function addLine(withPrice){
   pickItem(i=>{
     const m=document.createElement('div');m.className='modal';
     m.innerHTML=`<div class="sheet"><h2 style="margin:0 0 4px">${esc(i.name)}</h2><div class="muted">${esc(i.unit)}${i.qty!=null?` · عندك <span class="num">${n2(i.qty)}</span>`:''}${i.cost?` · التكلفة <span class="num">${n2(i.cost)}</span> للـ${esc(i.unit)}`:''}</div>
-    <label for="lq">الكمية (${esc(i.unit)})</label><input id="lq" type="number" inputmode="decimal" step="any"><div id="yh"></div>
-    ${withPrice?`<label for="lp">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="lp" type="number" inputmode="decimal" step="any" value="${i.last??i.price??''}">
-    <label>صورة الصنف على الميزان (إجباري)</label><div class="row" style="align-items:center"><div id="ph" class="muted" style="flex:1">لسه متصورش</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر على الميزان</button></div>`:''}
+    ${withPrice?`<div class="seg" id="mode" style="margin-top:10px"><button class="on" data-m="w">⚖️ بالميزان</button><button data-m="c">📦 بالكرتونة</button></div>
+    <div id="cbox" style="display:none"><div class="row"><div><label for="cn">عدد الكراتين</label><input id="cn" type="number" inputmode="decimal" step="any"></div>
+    <div><label for="cp">الكرتونة فيها كام ${esc(i.unit)}</label><input id="cp" type="number" inputmode="decimal" step="any" value="${(S.packs||{})[i.code]??''}"></div></div>
+    <label for="cpr">سعر الكرتونة بدون ضريبة</label><input id="cpr" type="number" inputmode="decimal" step="any">
+    <div id="ccalc" class="muted" style="margin-top:6px"></div></div>`:''}
+    <div id="wbox"><label for="lq">الكمية (${esc(i.unit)})</label><input id="lq" type="number" inputmode="decimal" step="any"><div id="yh"></div>
+    ${withPrice?`<label for="lp">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="lp" type="number" inputmode="decimal" step="any" value="${i.last??i.price??''}">`:''}</div>
+    ${withPrice?`<label id="phl">صورة الصنف على الميزان (إجباري)</label><div class="row" style="align-items:center"><div id="ph" class="muted" style="flex:1">لسه متصورش</div><button class="btn sm sec" id="cam" style="flex:0 0 auto;margin:0">📷 صوّر على الميزان</button></div>`:''}
     <button class="btn" id="ok">إضافة</button><button class="btn sec" id="no">إلغاء</button></div>`;
     document.body.appendChild(m);m.querySelector('#lq').focus();
     m.querySelector('#lq').oninput=()=>{m.querySelector('#yh').innerHTML=yieldHint(i,+m.querySelector('#lq').value)};
-    m.querySelector('#no').onclick=()=>m.remove();let photo=null;
+    m.querySelector('#no').onclick=()=>m.remove();let photo=null,mode='w';
+    if(withPrice){const q=x=>m.querySelector(x);
+      const calc=()=>{const cn=+q('#cn').value,cp=+q('#cp').value,pr=q('#cpr').value;
+        if(cn>0&&cp>0){q('#lq').value=+(cn*cp).toFixed(3);if(pr!=='')q('#lp').value=+(+pr/cp).toFixed(4);
+          q('#ccalc').innerHTML=`هيتسجل أوتوماتيك: <b class="num">${n2(cn*cp)}</b> ${esc(i.unit)}${pr!==''?` · سعر ال${esc(i.unit)} <b class="num">${n2(+pr/cp)}</b>`:''}`}else q('#ccalc').textContent=''};
+      ['#cn','#cp','#cpr'].forEach(x=>q(x).oninput=calc);
+      q('#mode').onclick=e=>{const b=e.target.closest('button');if(!b)return;mode=b.dataset.m;q('#mode').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+        q('#cbox').style.display=mode==='c'?'':'none';q('#wbox').style.display=mode==='c'?'none':'';
+        q('#phl').textContent=mode==='c'?'صورة الكراتين (إجباري)':'صورة الصنف على الميزان (إجباري)';q('#cam').textContent=photo?'📷 إعادة التصوير':(mode==='c'?'📷 صوّر الكراتين':'📷 صوّر على الميزان')}}
     if(withPrice)m.querySelector('#cam').onclick=async()=>{m.style.display='none';const q=m.querySelector('#lq').value;
-      const img=await snapCam(`${i.name} على الميزان`,`استلام · ${i.name}${q?` · ${q} ${i.unit}`:''}`);m.style.display='';
+      const img=await snapCam(mode==='c'?`كراتين ${i.name}`:`${i.name} على الميزان`,`استلام · ${i.name}${mode==='c'&&m.querySelector('#cn').value?` · ${m.querySelector('#cn').value} كرتونة`:''}${q?` · ${q} ${i.unit}`:''}`);m.style.display='';
       if(img){photo=img;m.querySelector('#ph').innerHTML=thumb(img,64);m.querySelector('#cam').textContent='📷 إعادة التصوير'}};
-    m.querySelector('#ok').onclick=()=>{const q=+m.querySelector('#lq').value;const p=withPrice?+m.querySelector('#lp').value:null;
+    m.querySelector('#ok').onclick=()=>{const C=mode==='c';
+      if(C){const cn=+m.querySelector('#cn').value,cp=+m.querySelector('#cp').value;if(!(cn>0))return toast('اكتب عدد الكراتين',true);if(!(cp>0))return toast('اكتب الكرتونة فيها كام '+i.unit,true);if(m.querySelector('#cpr').value==='')return toast('اكتب سعر الكرتونة',true)}
+      const q=+m.querySelector('#lq').value;const p=withPrice?+m.querySelector('#lp').value:null;
       if(!(q>0))return toast('اكتب الكمية',true); if(withPrice&&!(m.querySelector('#lp').value!==''&&p>=0))return toast('اكتب السعر',true);
-      if(withPrice&&!photo)return toast('صوّر الصنف على الميزان الأول',true);
-      S.lines.push(withPrice?{code:i.code,qty:q,price:p,photo}:{code:i.code,qty:q,price:p});m.remove();redrawLines(withPrice)};
+      if(withPrice&&!photo)return toast(C?'صوّر الكراتين الأول':'صوّر الصنف على الميزان الأول',true);
+      const ln=withPrice?{code:i.code,qty:q,price:p,photo}:{code:i.code,qty:q,price:p};
+      if(C){ln.pack=+m.querySelector('#cp').value;ln.cartons=+m.querySelector('#cn').value;ln.cprice=+m.querySelector('#cpr').value;(S.packs=S.packs||{})[i.code]=ln.pack}
+      S.lines.push(ln);m.remove();redrawLines(withPrice)};
   },withPrice?(x=>x.kind!=='prep'):null);
 }
 
@@ -632,14 +649,14 @@ function issue(){
 
 // ---------- receive ----------
 function receive(){
-  const sup=S.b.suppliers;
+  const sup=S.b.suppliers;T('lc_item_packs',{}).then(x=>S.packs=x||{}).catch(()=>{});
   $('#app').innerHTML=`${head('استلام بضاعة','سجّل الفاتورة وانت بتستلم')}
   <div class="card"><label for="sp">المورد</label><select id="sp"><option value="">اختار المورد</option>${sup.map(s=>`<option>${esc(s)}</option>`).join('')}<option value="__new">+ مورد جديد</option></select>
   <input id="spn" placeholder="اسم المورد الجديد" style="display:none;margin-top:8px">
   <div class="row"><div><label for="inv">رقم الفاتورة</label><input id="inv" inputmode="numeric"></div>
   <div><label>الدفع</label><div class="seg" id="pay"><button data-p="كاش">كاش</button><button data-p="آجل">آجل</button></div></div></div>
   <label>صورة الفاتورة وهي ممضية (إجباري)</label><div class="row" style="align-items:center"><div id="invph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm sec" id="invcam" style="flex:0 0 auto;margin:0">📷 صوّر الفاتورة</button></div>
-  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة (وصوّرها على الميزان)</button>
+  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة (بالميزان أو بالكرتونة)</button>
   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">حفظ الفاتورة</button>
   <p class="muted">فاتورة الكاش بتتخصم من الخزنة لوحدها، والآجل بيتضاف على حساب المورد.</p></div>`;
   $('#sp').onchange=()=>{$('#spn').style.display=$('#sp').value==='__new'?'block':'none'};
