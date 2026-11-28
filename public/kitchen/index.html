@@ -563,7 +563,7 @@ function nativePick(facing){return new Promise(res=>{const i=document.createElem
   i.onchange=()=>{const f=i.files[0];if(!f)return res(null);const u=URL.createObjectURL(f);const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);im.src=u};i.click()})}
 function galleryPick(){return new Promise(res=>{const i=document.createElement('input');i.type='file';i.accept='image/*';
   i.onchange=()=>{const f=i.files[0];if(!f)return res(null);const u=URL.createObjectURL(f);const im=new Image();im.onload=()=>res(im);im.onerror=()=>res(null);im.src=u};i.click()})}
-function snapCam(title,label,facing){return new Promise(async res=>{
+function snapCam(title,label,facing,hi){S.hiImg=null;return new Promise(async res=>{
   const m=document.createElement('div');m.className='modal';
   m.innerHTML=`<div class="sheet" style="text-align:center"><h2 style="margin:0 0 8px;font-size:17px">${esc(title)}</h2><video playsinline autoplay muted style="width:100%;max-height:58vh;border-radius:14px;background:#000"></video><canvas style="display:none"></canvas>
   <button class="btn" id="cs" disabled>📸 صوّر</button>${/^(فاتورة|استلام|تحديث ملف)/.test(label)?'<button class="btn sec" id="cg">🖼️ ارفع صورة من الجهاز</button>':''}<button class="btn sec" id="cx">إلغاء</button></div>`;
@@ -574,6 +574,7 @@ function snapCam(title,label,facing){return new Promise(async res=>{
   const shoot=async(gal)=>{
     let src=v,sw=v.videoWidth,sh=v.videoHeight;if(gal||!st){src=await (gal?galleryPick():nativePick(facing));if(!src)return;sw=src.naturalWidth;sh=src.naturalHeight}
     const w=960,h=Math.round(w*(sh||720)/(sw||960));c.width=w;c.height=h;const x=c.getContext('2d');x.drawImage(src,0,0,w,h);
+    if(hi){const hc=document.createElement('canvas'),hw=Math.min(1800,sw||1600),hh=Math.round(hw*(sh||720)/(sw||960));hc.width=hw;hc.height=hh;hc.getContext('2d').drawImage(src,0,0,hw,hh);S.hiImg=hc.toDataURL('image/jpeg',0.8)}
     const now=await rpc('lc_now').catch(()=>null);const ts=now?now.riyadh.slice(0,16):new Date().toLocaleString('en-GB');
     x.fillStyle='rgba(0,0,0,.62)';x.fillRect(0,h-66,w,66);x.fillStyle='#fff';x.direction='rtl';x.textAlign='right';
     x.font='600 22px "IBM Plex Sans Arabic", sans-serif';x.fillText(label,w-14,h-38);
@@ -590,7 +591,7 @@ function bigImg(src){const m=document.createElement('div');m.className='modal';m
 function linesUI(withPrice){
   const rows=S.lines.map((l,k)=>{const i=item(l.code);const cost=withPrice?l.qty*l.price:l.qty*(i.cost||0);
     const money=withPrice||isMgr();
-    return `<div class="li">${l.photo?thumb(l.photo,48):''}<div class="t"><b>${esc(i.name)}</b><small>${l.cartons?`<span class="num">${n2(l.cartons)}</span> كرتونة × <span class="num">${n2(l.pack)}</span> = `:''}<span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
+    return `<div class="li" ${withPrice?`onclick="editLine(${k})" style="cursor:pointer${l.low?';background:#fff6e5':''}"`:''}>${l.photo?thumb(l.photo,48):''}<div class="t"><b>${l.low?'⚠️ ':''}${esc(i.name)}</b>${l.text?`<small class="muted">على الفاتورة: ${esc(l.text)}</small>`:''}<small>${l.cartons?`<span class="num">${n2(l.cartons)}</span> كرتونة × <span class="num">${n2(l.pack)}</span> = `:''}<span class="num">${n2(l.qty)}</span> ${esc(i.unit)}${withPrice?` × <span class="num">${n2(l.price)}</span>`:''}${money?` = <span class="num">${n2(cost)}</span> ريال`:''}</small></div><button class="x" onclick="event.stopPropagation();S.lines.splice(${k},1);redrawLines(${withPrice})">✕</button></div>`}).join('');
   const tot=S.lines.reduce((a,l)=>a+(withPrice?l.qty*l.price:l.qty*(item(l.code).cost||0)),0);
   return `<div class="list">${rows||'<div class="muted">لسه مضفتش خامات</div>'}</div>${S.lines.length&&(withPrice||isMgr())?`<div class="row" style="margin-top:10px"><b>الإجمالي</b><b class="num" style="text-align:left">${n2(tot)} ريال</b></div>`:''}`;
 }
@@ -647,6 +648,35 @@ function issue(){
     go('')});
 }
 
+function editLine(k){const l=S.lines[k],i=item(l.code);const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="sheet"><h2 style="margin:0 0 4px">${esc(i.name)}</h2>${l.text?`<div class="muted">على الفاتورة: ${esc(l.text)}</div>`:''}
+  <label for="eq">الكمية (${esc(i.unit)})</label><input id="eq" type="number" inputmode="decimal" step="any" value="${l.qty}">
+  <label for="ep">سعر ال${esc(i.unit)} بدون ضريبة</label><input id="ep" type="number" inputmode="decimal" step="any" value="${l.price}">
+  <button class="btn" id="ok">حفظ</button><button class="btn sec" id="ch">غيّر الصنف</button><button class="btn sec" id="no">إلغاء</button></div>`;
+  document.body.appendChild(m);m.querySelector('#no').onclick=()=>m.remove();
+  m.querySelector('#ch').onclick=()=>{m.remove();pickItem(x=>{l.code=x.code;l.low=false;redrawLines(true)},x=>x.kind!=='prep')};
+  m.querySelector('#ok').onclick=()=>{const q=+m.querySelector('#eq').value,p=+m.querySelector('#ep').value;if(!(q>0))return toast('اكتب الكمية',true);if(!(p>=0))return toast('اكتب السعر',true);l.qty=q;l.price=p;l.low=false;m.remove();redrawLines(true)}}
+async function readInvoice(img){
+  const st=$('#ai');st.innerHTML='<div class="alert">⏳ بقرأ الفاتورة… ثواني</div>';
+  try{const items=S.b.items.filter(x=>x.kind!=='prep').map(x=>({code:x.code,name:x.name,unit:x.unit,pack:(S.packs||{})[x.code]||null}));
+    const r=await fetch('/api/invoice-read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:S.token,image:img,items,suppliers:S.b.suppliers})});
+    const j=await r.json();if(!j.ok)throw new Error(j.error||'ماقدرتش أقرا الفاتورة');const d=j.data||{};
+    const sp=$('#sp');if(d.supplier_match&&S.b.suppliers.includes(d.supplier_match))sp.value=d.supplier_match;else if(d.supplier){sp.value='__new';$('#spn').style.display='block';$('#spn').value=d.supplier}
+    if(d.invoice_no)$('#inv').value=d.invoice_no;
+    if(d.pay==='كاش'||d.pay==='آجل'){const b=$('#pay').querySelector(`[data-p="${d.pay}"]`);if(b)b.click()}
+    const miss=[];let added=0;
+    (d.lines||[]).forEach(x=>{const it=x.code&&S.b.items.find(y=>y.code===x.code);
+      if(!it||!(+x.qty>0)){miss.push(x);return}
+      let price=x.unit_price!=null?+x.unit_price:(x.line_total!=null?+x.line_total/+x.qty:null);if(price==null||!(price>=0)){miss.push(x);return}
+      const ln={code:it.code,qty:+(+x.qty).toFixed(3),price:+price.toFixed(4),photo:null,text:x.text,low:x.confidence==='low'};
+      if(+x.pack>0&&/كرتون|كرتونة|carton|ctn|box/i.test(x.inv_unit||'')){ln.pack=+x.pack;ln.cartons=+x.inv_qty||null}
+      S.lines.push(ln);added++});
+    redrawLines(true);
+    const tot=S.lines.reduce((a,l)=>a+l.qty*l.price,0);
+    st.innerHTML=`<div class="alert">✅ قريت الفاتورة: ${added} صنف اتضاف${d.net!=null?` · إجمالي الفاتورة قبل الضريبة <b class="num">${n2(d.net)}</b> وإجمالي السطور <b class="num">${n2(tot)}</b>${Math.abs(+d.net-tot)>1?' <b style="color:var(--bad)">فيه فرق، راجع الأصناف</b>':' ✓'}`:''}.<br>راجع كل سطر (دوس عليه تعدّل)، واللي عليه ⚠️ اتأكد منه.</div>`+
+      (miss.length?`<div class="alert" style="background:#fff6e5">أصناف ماعرفتش أطابقها، ضيفها بإيدك: ${miss.map(x=>esc(x.text||'')+(x.inv_qty?` (${x.inv_qty} ${esc(x.inv_unit||'')})`:'')).join('، ')}</div>`:'');
+  }catch(e){st.innerHTML=`<div class="alert" style="background:#fdecec">${esc(e.message)} — تقدر تكمل يدوي.</div>`}}
+
 // ---------- receive ----------
 function receive(){
   const sup=S.b.suppliers;T('lc_item_packs',{}).then(x=>S.packs=x||{}).catch(()=>{});
@@ -655,17 +685,22 @@ function receive(){
   <input id="spn" placeholder="اسم المورد الجديد" style="display:none;margin-top:8px">
   <div class="row"><div><label for="inv">رقم الفاتورة</label><input id="inv" inputmode="numeric"></div>
   <div><label>الدفع</label><div class="seg" id="pay"><button data-p="كاش">كاش</button><button data-p="آجل">آجل</button></div></div></div>
-  <label>صورة الفاتورة وهي ممضية (إجباري)</label><div class="row" style="align-items:center"><div id="invph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm sec" id="invcam" style="flex:0 0 auto;margin:0">📷 صوّر الفاتورة</button></div>
-  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة (بالميزان أو بالكرتونة)</button>
+  <label>صورة الفاتورة وهي ممضية (إجباري)</label><div class="row" style="align-items:center"><div id="invph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm" id="invcam" style="flex:0 0 auto;margin:0">📷 صوّر الفاتورة</button></div>
+  <div id="ai"><p class="muted" style="margin:6px 0 0">صوّر الفاتورة والسيستم هيقرا المورد والأصناف والكميات والأسعار لوحده.</p></div>
+  <label>صورة البضاعة أو الكراتين (إجباري)</label><div class="row" style="align-items:center"><div id="gph" class="muted" style="flex:1">لسه متصورتش</div><button class="btn sm sec" id="gcam" style="flex:0 0 auto;margin:0">📷 صوّر البضاعة</button></div>
+  <div id="lines" style="margin-top:12px">${linesUI(true)}</div><button class="btn sec" onclick="addLine(true)">+ ضيف خامة بإيدك</button>
   <label for="nt">ملاحظة (اختياري)</label><input id="nt"><button class="btn" id="sv">حفظ الفاتورة</button>
   <p class="muted">فاتورة الكاش بتتخصم من الخزنة لوحدها، والآجل بيتضاف على حساب المورد.</p></div>`;
   $('#sp').onchange=()=>{$('#spn').style.display=$('#sp').value==='__new'?'block':'none'};
   let invPhoto=null;
-  $('#invcam').onclick=async()=>{const img=await snapCam('صوّر الفاتورة كاملة وهي ممضية','فاتورة استلام'+($('#inv').value?` رقم ${$('#inv').value}`:''));if(img){invPhoto=img;$('#invph').innerHTML=thumb(img,64);$('#invcam').textContent='📷 إعادة التصوير'}};
+  $('#invcam').onclick=async()=>{const img=await snapCam('صوّر الفاتورة كاملة وهي ممضية، قريب وواضحة','فاتورة استلام'+($('#inv').value?` رقم ${$('#inv').value}`:''),null,true);if(img){invPhoto=img;$('#invph').innerHTML=thumb(img,64);$('#invcam').textContent='📷 إعادة التصوير';S.lines=S.lines.filter(l=>!l.text);redrawLines(true);readInvoice(S.hiImg||img)}};
+  let goods=null;$('#gcam').onclick=async()=>{const img=await snapCam('صوّر البضاعة أو الكراتين كلها','استلام · بضاعة '+($('#sp').value==='__new'?$('#spn').value:$('#sp').value));if(img){goods=img;$('#gph').innerHTML=thumb(img,64);$('#gcam').textContent='📷 إعادة التصوير'}};
   let pay='';$('#pay').onclick=e=>{const b=e.target.closest('button');if(!b)return;pay=b.dataset.p;$('#pay').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b))};
   $('#sv').onclick=()=>act($('#sv'),async()=>{const s=$('#sp').value==='__new'?$('#spn').value:$('#sp').value;
     if(!pay)throw new Error('اختار كاش ولا آجل');if(!invPhoto)throw new Error('صوّر الفاتورة وهي ممضية الأول');if(!S.lines.length)throw new Error('ضيف خامة واحدة على الأقل');
-    const r=await T('lc_receive_v2',{p_supplier:s,p_invoice:$('#inv').value||null,p_pay:pay,p_lines:S.lines,p_invoice_photo:invPhoto,p_note:$('#nt').value||null});
+    if(S.lines.some(l=>!l.photo)){if(!goods)throw new Error('صوّر البضاعة أو الكراتين الأول');S.lines.forEach(l=>{if(!l.photo)l.photo=goods})}
+    if(S.lines.some(l=>l.low)&&!confirm('فيه أصناف عليها ⚠️ لسه ماراجعتهاش. تحفظ كده؟'))return;
+    const r=await T('lc_receive_v2',{p_supplier:s,p_invoice:$('#inv').value||null,p_pay:pay,p_lines:S.lines.map(({text,low,...l})=>l),p_invoice_photo:invPhoto,p_note:$('#nt').value||null});
     await boot();toast(r.total!=null?`الفاتورة اتسجلت ✓ ${n2(r.total)} ريال`:'الفاتورة اتسجلت ✓');go('')});
 }
 
